@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="../resources/css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="../resources/css/custom.css" />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Qué anime estoy viendo?</title>
+
+    <script src="../resources/js/main.js"></script>
+    <script src="../resources/js/materialize.min.js"></script>
+    <!--
+    <script src="../resources/js/tabs.js"></script>
+    <script src="../resources/js/animeController.js"></script>
+    <script src="../resources/js/ui.js"></script>
+    -->
+
+</head>
+
+<body>
+    <!--Navbar-->
+    <div class="navbar-fixed">
+        <nav class="nav-extended grey darken-4">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo center">¿Qué anime estoy viendo?</a>
+                <ul id="nav-mobile" class="right">
+                    <li><a id="minimizeBut" class="waves-effect waves-light"><i class="material-icons">minimize</i></a></li>
+                    <li><a id="maximizeBut" class="waves-effect waves-light"><i class="material-icons">aspect_ratio</i></a></li>
+                    <li><a id="closeBut" class="waves-effect waves-light"><i class="material-icons">close</i></a></li>
+                </ul>
+                <ul class="left">
+                    <li><a id="toggleMenu" class="waves-effect waves-light"><i class="material-icons">menu</i></a></li>
+                </ul>
+            </div>
+            <div class="nav-content" class="waves-effect waves-light">
+                <ul class="tabs tabs-transparent" class="waves-effect waves-light">
+                    <li class="tab"><a id="viendo-a" class="waves-effect waves-light">Viendo</a></li>
+                    <li class="tab"><a id="vistos-a" class="waves-effect waves-light">Vistos</a></li>
+                    <li class="tab"><a id="favoritos-a" class="waves-effect waves-light">Favoritos</a></li>
+                    <li class="tab"><a id="odiados-a" class="waves-effect waves-light">Odiados</a></li>
+                    <li class="tab"><a id="pendientes-a" class="waves-effect waves-light">Pendientes</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col grey darken-4 menu-active" id="animeMenu">
+            <h5 class="white-text" id="menu-title">Añadir anime</h5>
+            <form id="add-anime-form">
+                <div class="input-field">
+                    <input type="text" id="namae">
+                    <label for="namae" class="labelfor">Nombre en japonés</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="nombre">
+                    <label for="nombre" class="labelfor">Nombre en inglés</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="generos">
+                    <label for="generos" class="labelfor">Géneros</label>
+                </div>
+                <div class="input-field">
+                    <input type="number" id="salida">
+                    <label for="salida" class="labelfor">Año</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="imagen">
+                    <label for="imagen" class="labelfor">Link de una imágen</label>
+                </div>
+                <button type="submit" id="menu-submit" class="btn waves-effect waves-light addAnime grey darken-4">Añadir</button>
+            </form>
+        </div>
+        <div class="col m8 l9">
+            <div id="viendo" class="section">Viendo</div>
+            <div id="vistos" class="section">Vistos</div>
+            <div id="favoritos" class="section">Favoritos</div>
+            <div id="odiados" class="section">Odiados</div>
+            <div id="pendientes" class="section">Pendientes</div>
+        </div>
+    </div>
+</body>
+
+</html>

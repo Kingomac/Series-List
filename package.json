@@ -1,0 +1,36 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "electron src/index.js",
+        "pack": "electron-builder src/index.js",
+        "dist": "electron-builder"
+    },
+    "keywords": [],
+    "author": "Kingomac",
+    "license": "MIT",
+    "dependencies": {
+
+        "electron-build": "0.0.3",
+        "electron-reload": "^1.5.0",
+        "firebase": "^6.6.1",
+        "firebase-admin": "^8.5.0",
+        "firebase-functions": "^3.2.0",
+        "grpc": "^1.23.3"
+    },
+    "devDependencies": {
+        "electron": "^6.0.9",
+        "electron-packager": "^14.0.6",
+        "electron-rebuild": "^1.8.6"
+    },
+    "build": {
+        "appId": "com.kingo.pepe",
+        "target": "win",
+        "win": {
+            "target": "portable"
+        },
+        "productName": "¿Qué animes estoy viendo?"
+    }
+}

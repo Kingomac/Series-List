@@ -1,0 +1,82 @@
+nav {
+    -webkit-app-region: drag;
+}
+
+nav li {
+    -webkit-app-region: no-drag;
+}
+
+.menu {
+    opacity: 0;
+}
+
+.menu-active {
+    opacity: 1;
+}
+
+.menu-closed {
+    display: none;
+}
+
+.menu,
+.menu-active {
+    padding: 20px !important;
+    margin-left: 0px;
+    transition-duration: .5s;
+    transition-property: all;
+    display: block;
+}
+
+.section,
+.container {
+    margin-top: 15px;
+    margin-bottom: 7px;
+}
+
+.addAnime {
+    width: 100%;
+}
+
+.input-field input {
+    color: white !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid white !important;
+    box-shadow: 0 1px 0 0 white !important;
+}
+
+.input-field input:focus+label {
+    color: white !important;
+}
+
+.row {
+    display: flex;
+    min-height: 100vh !important;
+    overflow: hidden;
+}
+
+.col {
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 45px;
+    padding-bottom: 50px;
+}
+
+body {
+    overflow: hidden;
+}
+
+.material-icons.md-dark {
+    color: black;
+}
+
+.dropdown-content ul li a a:link a:visited {
+    color: black;
+}
+
+.card {
+    height: 350px !important;
+    width: 250px !important;
+}
