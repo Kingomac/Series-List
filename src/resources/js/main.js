@@ -51,10 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     require('electron').remote.BrowserWindow.getFocusedWindow().minimize();
   });
   document.querySelector('#toggleMenu').addEventListener('click', (e) => {
-    /*let display = document.querySelector('#animeMenu').style.display;
-    if (display !== 'block') display = 'block';
-    else display = 'none';
-    document.querySelector('#animeMenu').style.display = display;*/
     let menu = document.querySelector('#animeMenu');
     if (menu.getAttribute('class').includes('menu-active')) {
       menu.setAttribute('class', 'col m3 l2 grey darken-4 menu');

@@ -62,6 +62,7 @@ nav li {
     overflow-y: auto;
     margin-top: 45px;
     padding-bottom: 50px;
+    margin-left: 0px !important;
 }
 
 body {

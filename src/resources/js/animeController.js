@@ -22,7 +22,6 @@ function loadAnime(anime) {
 }
 
 function moveTo(id, nombre_en, generos, salida, imagen, where) {
-  db.collection(tabs.getSelectedTab()).doc(id).delete();
   db.collection(where).doc(id).set({
     nombre_en,
     generos,
@@ -30,7 +29,7 @@ function moveTo(id, nombre_en, generos, salida, imagen, where) {
     imagen,
     actualizado_en: timestamp
   });
-  setTimeout(tabs.changeTab(actualTab), 1000);
+  db.collection(tabs.getSelectedTab()).doc(id).delete();
 }
 
 function updateCards() {
@@ -55,10 +54,11 @@ function updateCards() {
               </div>
             </div>
             <ul id="dropdown-${doc.id.toLowerCase().replace(' ', '-')}" class="dropdown-content" style="width: 100px">
-            <li><a role="button" onclick="moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'viendo')">Mover a viendo</a></li>
-            <li><a role="button" onclick="moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'vistos')">Mover a vistos</a></li>
-            <li><a role="button" onclick="moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'favoritos')">Mover a favoritos</a></li>
-            <li><a role="button" onclick="moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'odiados')">Mover a odiados</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'viendo')">Mover a viendo</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'vistos')">Mover a vistos</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'favoritos')">Mover a favoritos</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'odiados')">Mover a odiados</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'pendientes')">Mover a pendientes</a></li>
             </ul>
               `
     })
@@ -68,5 +68,6 @@ function updateCards() {
 }
 module.exports = {
   deleteAnime,
-  updateCards
+  updateCards,
+  moveTo
 }
