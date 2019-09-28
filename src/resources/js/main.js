@@ -51,29 +51,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.querySelector('#toggleMenu').addEventListener('click', (e) => {
     let menu = document.querySelector('#animeMenu');
-    let content = document.querySelector('#content');
     if (menu.getAttribute('class').includes('menu-active')) {
       menu.setAttribute('class', 'col m3 l2 grey darken-4 menu');
-      setTimeout(() => {
-        console.log('set display none');
-        menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-closed');
-        content.setAttribute('class', 'col s12 m12 l12');
-      }, 500);
     } else {
-      menu.setAttribute('class', 'col m3 l2 grey darken-4 menu');
-      setTimeout(() => {
-        menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-active');
-        content.setAttribute('class', 'col s8 m9 l10');
-      }, 300);
+      menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-active');
     }
   });
 
   //Tabs system
   tabs.changeTab('viendo');
   document.querySelectorAll('.tab').forEach(tab => {
-    tab.firstChild.addEventListener('click', (e) => {
-      tabs.changeTab(tab.firstChild.id.replace('-a', ''));
+      tab.firstChild.addEventListener('click', (e) => {
+        tabs.changeTab(tab.firstChild.id.replace('-a', ''));
+      })
     })
+    //Toggle filter
+  document.querySelector('#toggleFilter').addEventListener('click', () => {
+    let filter = document.querySelector('#filterBar');
+    if (filter.getAttribute('class').includes('active')) {
+      filter.setAttribute('class', 'col s12 grey darken-4');
+    } else {
+      filter.setAttribute('class', 'col s12 grey darken-4 active');
+    }
+  })
+
+  //Initialize search
+  document.querySelector('#searchBox').addEventListener('input', () => {
+    controller.buscar(document.querySelector('#searchBox').value);
+    ui.mostrarBusqueda();
   })
 
   window.addEventListener('resize', () => {

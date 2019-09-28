@@ -61,9 +61,46 @@ function updateCards() {
     ui.initDropdowns();
   });
 }
+
+function buscar(termino) {
+  let db = firebase.firestore();
+  db.collection(tabs.getSelectedTab()).orderBy('nombre_en').onSnapshot((resp) => {
+    let template = '';
+    resp.forEach((doc) => {
+      let data = doc.data();
+      if (doc.id.toLowerCase().includes(termino.toLowerCase()) || data.nombre_en.toLowerCase().includes(termino.toLowerCase())) {
+        template += //html
+          ` 
+      <div class="card align-center" style="display: inline-block">
+      <div class="card-image">
+        <img class="responsive-img" src="${data.imagen}">
+      </div>
+      <div class="card-content">
+      <span class="card-title">${doc.id}</span>
+      </div>
+      <div class="card-action grey darken-4 right-align">
+          <button class="btn-floating waves-effect waves-dark white" onclick="controller.loadAnime('${doc.id}')"><i class="material-icons md-dark">edit</i></button>
+        <button class="btn-floating waves-effect waves-dark white" onclick="controller.deleteAnime('${doc.id}')"><i class="material-icons md-dark">delete</i></button>
+        <button class="btn-floating waves-effect waves-dark white dropdown-trigger" data-target="dropdown-${doc.id.toLowerCase().replace(' ', '-')}"><i class="material-icons md-dark">more_vert</i></button>
+      </div>
+    </div>
+    <ul id="dropdown-${doc.id.toLowerCase().replace(' ', '-')}" class="dropdown-content" style="width: 100px">
+    <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'viendo')">Mover a viendo</a></li>
+    <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'vistos')">Mover a vistos</a></li>
+    <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'favoritos')">Mover a favoritos</a></li>
+    <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'odiados')">Mover a odiados</a></li>
+    <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'pendientes')">Mover a pendientes</a></li>
+    </ul>
+      `
+      }
+    })
+    document.getElementById('busqueda').innerHTML = template;
+  })
+}
 module.exports = {
   deleteAnime,
   updateCards,
   moveTo,
-  loadAnime
+  loadAnime,
+  buscar
 }

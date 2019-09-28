@@ -40,11 +40,20 @@
                     <li class="tab"><a id="favoritos-a" class="waves-effect waves-light">Favoritos</a></li>
                     <li class="tab"><a id="odiados-a" class="waves-effect waves-light">Odiados</a></li>
                     <li class="tab"><a id="pendientes-a" class="waves-effect waves-light">Pendientes</a></li>
+                    <li class="btn-floating btn-flat waves-effect waves-light grey darken-4 white-text" id="toggleFilter"><i class="material-icons">filter_list</i></li>
                 </ul>
             </div>
         </nav>
     </div>
+    <!--Body-->
     <div class="row">
+        <div class="col s12 grey darken-4 active" id="filterBar">
+            <div class="input-field">
+                <input type="text" id="searchBox">
+                <label for="searchBox" class="labelfor">Buscar</label>
+            </div>
+        </div>
+        <!--Add anime-->
         <div class="col s4 m3 l2 grey darken-4 menu-active" id="animeMenu">
             <h5 class="white-text" id="menu-title">Añadir anime</h5>
             <form id="add-anime-form">
@@ -64,6 +73,7 @@
             </form>
         </div>
         <div class="col s8 m9 l10" id="content">
+            <div id="busqueda" style="display: none">Busqueda</div>
             <div id="viendo" class="section">Viendo</div>
             <div id="vistos" class="section">Vistos</div>
             <div id="favoritos" class="section">Favoritos</div>

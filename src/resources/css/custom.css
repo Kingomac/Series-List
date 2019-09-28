@@ -7,26 +7,20 @@ nav li {
 }
 
 .menu {
-    opacity: 0;
+    max-width: 0px;
+    padding: 0px !important;
+    max-height: 0px !important;
+    transition: max-width .5s;
 }
 
-.menu-active {
-    opacity: 1;
-}
-
-.menu-closed {
-    display: none;
-}
-
-.menu,
 .menu-active {
     padding: 20px !important;
-    margin-left: 0px;
-    transition-duration: .5s;
-    transition-property: all;
-    display: block;
+    max-width: 220px;
+    transition: max-width .5s;
+    max-height: fit-content !important;
 }
 
+#busqueda,
 .section,
 .container {
     margin-top: 15px;
@@ -51,7 +45,6 @@ nav li {
 }
 
 .row {
-    display: flex;
     min-height: 100vh !important;
     overflow: hidden;
 }
@@ -60,7 +53,6 @@ nav li {
     height: 400px;
     overflow-x: hidden;
     overflow-y: auto;
-    margin-top: 45px;
     padding-bottom: 50px;
     margin-left: 0px !important;
 }
@@ -96,4 +88,18 @@ body {
 .card-download .btn {
     width: 100%;
     font-size: 12px;
+}
+
+#filterBar {
+    max-height: 8vh;
+    margin-top: 50px !important;
+    overflow: hidden;
+    padding: 1px 5px 15px 5px !important;
+    transition-duration: .5s;
+}
+
+#filterBar.active {
+    transition-duration: .5s;
+    max-height: 0px;
+    padding: 0px !important;
 }
