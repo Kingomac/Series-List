@@ -15,8 +15,6 @@ function loadAnime(anime) {
     document.querySelector('#menu-submit').innerHTML = 'Actualizar';
     document.querySelector('#namae').value = anime;
     document.querySelector('#nombre').value = data.nombre_en;
-    document.querySelector('#generos').value = data.generos;
-    document.querySelector('#salida').value = data.salida;
     document.querySelector('#imagen').value = data.imagen;
   });
 }
@@ -24,8 +22,6 @@ function loadAnime(anime) {
 function moveTo(id, nombre_en, generos, salida, imagen, where) {
   db.collection(where).doc(id).set({
     nombre_en,
-    generos,
-    salida,
     imagen,
     actualizado_en: timestamp
   });
@@ -33,7 +29,7 @@ function moveTo(id, nombre_en, generos, salida, imagen, where) {
 }
 
 function updateCards() {
-  db.collection(tabs.getSelectedTab()).onSnapshot(snapshop => {
+  db.collection(tabs.getSelectedTab()).orderBy('actualizado_en').onSnapshot(snapshop => {
     let template = '';
     snapshop.forEach(doc => {
       let data = doc.data();
@@ -45,20 +41,19 @@ function updateCards() {
               </div>
               <div class="card-content">
               <span class="card-title">${doc.id}</span>
-                <p>${data.generos}</p>
               </div>
               <div class="card-action grey darken-4 right-align">
-                  <button class="btn-floating waves-effect waves-dark white" onclick="loadAnime('${doc.id}')"><i class="material-icons md-dark">edit</i></button>
-                <button class="btn-floating waves-effect waves-dark white" onclick="deleteAnime('${doc.id}')"><i class="material-icons md-dark">delete</i></button>
+                  <button class="btn-floating waves-effect waves-dark white" onclick="controller.loadAnime('${doc.id}')"><i class="material-icons md-dark">edit</i></button>
+                <button class="btn-floating waves-effect waves-dark white" onclick="controller.deleteAnime('${doc.id}')"><i class="material-icons md-dark">delete</i></button>
                 <button class="btn-floating waves-effect waves-dark white dropdown-trigger" data-target="dropdown-${doc.id.toLowerCase().replace(' ', '-')}"><i class="material-icons md-dark">more_vert</i></button>
               </div>
             </div>
             <ul id="dropdown-${doc.id.toLowerCase().replace(' ', '-')}" class="dropdown-content" style="width: 100px">
-            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'viendo')">Mover a viendo</a></li>
-            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'vistos')">Mover a vistos</a></li>
-            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'favoritos')">Mover a favoritos</a></li>
-            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'odiados')">Mover a odiados</a></li>
-            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.generos}', '${data.salida}', '${data.imagen}' , 'pendientes')">Mover a pendientes</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'viendo')">Mover a viendo</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'vistos')">Mover a vistos</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'favoritos')">Mover a favoritos</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'odiados')">Mover a odiados</a></li>
+            <li><a role="button" onclick="controller.moveTo('${doc.id}', '${data.nombre_en}' , '${data.imagen}' , 'pendientes')">Mover a pendientes</a></li>
             </ul>
               `
     })
@@ -69,5 +64,6 @@ function updateCards() {
 module.exports = {
   deleteAnime,
   updateCards,
-  moveTo
+  moveTo,
+  loadAnime
 }

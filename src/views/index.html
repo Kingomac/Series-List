@@ -15,11 +15,6 @@
 
     <script src="../resources/js/main.js"></script>
     <script src="../resources/js/materialize.min.js"></script>
-    <!--
-    <script src="../resources/js/tabs.js"></script>
-    <script src="../resources/js/animeController.js"></script>
-    <script src="../resources/js/ui.js"></script>
-    -->
 
 </head>
 
@@ -50,7 +45,7 @@
         </nav>
     </div>
     <div class="row">
-        <div class="col grey darken-4 menu-active" id="animeMenu">
+        <div class="col s4 m3 l2 grey darken-4 menu-active" id="animeMenu">
             <h5 class="white-text" id="menu-title">Añadir anime</h5>
             <form id="add-anime-form">
                 <div class="input-field">
@@ -62,21 +57,13 @@
                     <label for="nombre" class="labelfor">Nombre en inglés</label>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="generos">
-                    <label for="generos" class="labelfor">Géneros</label>
-                </div>
-                <div class="input-field">
-                    <input type="number" id="salida">
-                    <label for="salida" class="labelfor">Año</label>
-                </div>
-                <div class="input-field">
                     <input type="text" id="imagen">
                     <label for="imagen" class="labelfor">Link de una imágen</label>
                 </div>
                 <button type="submit" id="menu-submit" class="btn waves-effect waves-light addAnime grey darken-4">Añadir</button>
             </form>
         </div>
-        <div class="col m8 l9">
+        <div class="col s8 m9 l10" id="content">
             <div id="viendo" class="section">Viendo</div>
             <div id="vistos" class="section">Vistos</div>
             <div id="favoritos" class="section">Favoritos</div>

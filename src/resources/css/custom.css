@@ -80,4 +80,20 @@ body {
 .card {
     height: 350px !important;
     width: 250px !important;
+    margin: 0px 0px 210px 0px !important;
+}
+
+.card-action {
+    padding: 10px !important;
+}
+
+.card-download {
+    border: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.card-download .btn {
+    width: 100%;
+    font-size: 12px;
 }

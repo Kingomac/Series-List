@@ -19,12 +19,11 @@ firebase.auth().signInWithEmailAndPassword('kingomacyt@gmail.com', "javascript")
 const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
 document.addEventListener('DOMContentLoaded', () => {
+  //Create anime
   document.querySelector('#add-anime-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const data = {
       nombre_en: document.querySelector('#nombre').value,
-      generos: document.querySelector('#generos').value,
-      salida: document.querySelector('#salida').value,
       imagen: document.querySelector('#imagen').value,
       actualizado_en: timestamp
     }
@@ -52,16 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.querySelector('#toggleMenu').addEventListener('click', (e) => {
     let menu = document.querySelector('#animeMenu');
+    let content = document.querySelector('#content');
     if (menu.getAttribute('class').includes('menu-active')) {
       menu.setAttribute('class', 'col m3 l2 grey darken-4 menu');
       setTimeout(() => {
         console.log('set display none');
         menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-closed');
+        content.setAttribute('class', 'col s12 m12 l12');
       }, 500);
     } else {
       menu.setAttribute('class', 'col m3 l2 grey darken-4 menu');
       setTimeout(() => {
-        menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-active')
+        menu.setAttribute('class', 'col m3 l2 grey darken-4 menu-active');
+        content.setAttribute('class', 'col s8 m9 l10');
       }, 300);
     }
   });
