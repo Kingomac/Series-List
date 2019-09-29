@@ -23,8 +23,38 @@ function mostrarBusqueda() {
     document.getElementById(tabs.getSelectedTab()).style.visibility = 'hidden';
   }
 }
+
+var filters = [{ name: 'Fecha de actualización', value: 'actualizado_en' }, { name: 'Nombre japonés', value: 'nombre_jp' }, { name: 'Nombre inglés', value: 'nombre_en' }];
+
+function initFilterSelect() {
+  let template = '';
+  ui.filters.forEach((item) => {
+    template += //html
+      `
+    <option value="${item.value}">${item.name}</option>
+    `
+  })
+  document.getElementById('filterSelect').innerHTML = template;
+  refreshFilters();
+}
+
+function refreshFilters() {
+  M.FormSelect.init(document.querySelectorAll('select'), {
+    dropdown: {
+      constrainWidth: true
+    }
+  });
+}
+
+function getSelectedFilter() {
+  refreshFilters();
+  return document.querySelector('select').M_FormSelect.getSelectedValues();
+}
 module.exports = {
   resizeColumns,
   initDropdowns,
-  mostrarBusqueda
+  mostrarBusqueda,
+  initFilterSelect,
+  filters,
+  getSelectedFilter
 }

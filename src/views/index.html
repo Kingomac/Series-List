@@ -40,19 +40,12 @@
                     <li class="tab"><a id="favoritos-a" class="waves-effect waves-light">Favoritos</a></li>
                     <li class="tab"><a id="odiados-a" class="waves-effect waves-light">Odiados</a></li>
                     <li class="tab"><a id="pendientes-a" class="waves-effect waves-light">Pendientes</a></li>
-                    <li class="btn-floating btn-flat waves-effect waves-light grey darken-4 white-text" id="toggleFilter"><i class="material-icons">filter_list</i></li>
                 </ul>
             </div>
         </nav>
     </div>
     <!--Body-->
     <div class="row">
-        <div class="col s12 grey darken-4 active" id="filterBar">
-            <div class="input-field">
-                <input type="text" id="searchBox">
-                <label for="searchBox" class="labelfor">Buscar</label>
-            </div>
-        </div>
         <!--Add anime-->
         <div class="col s4 m3 l2 grey darken-4 menu-active" id="animeMenu">
             <h5 class="white-text" id="menu-title">Añadir anime</h5>
@@ -71,6 +64,30 @@
                 </div>
                 <button type="submit" id="menu-submit" class="btn waves-effect waves-light addAnime grey darken-4">Añadir</button>
             </form>
+            <h5 class="white-text">Buscar</h5>
+            <div id="filterBar">
+                <div class="input-field" style="display: inline-block">
+                    <input type="text" id="searchBox">
+                    <label for="searchBox" class="labelfor">Buscar</label>
+                </div>
+                <div class="input-field" style="display: inline-block">
+                    <select id="filterSelect">
+                        <option value="" disabled>Selecciona un filtro</option>
+                    </select>
+                    <label>Ordenar por:</label>
+                </div>
+                <h5 class="white-text">Idioma del título</h5>
+                <div class="input-field">
+                    <div class="switch">
+                        <label>
+                        Japonés
+                        <input type="checkbox" id="langSwitch">
+                        <span class="lever"></span>
+                        Inglés
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col s8 m9 l10" id="content">
             <div id="busqueda" style="display: none">Busqueda</div>

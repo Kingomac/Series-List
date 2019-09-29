@@ -7,7 +7,7 @@ nav li {
 }
 
 .menu {
-    max-width: 0px;
+    max-width: 0px !important;
     padding: 0px !important;
     max-height: 0px !important;
     transition: max-width .5s;
@@ -45,16 +45,29 @@ nav li {
 }
 
 .row {
-    min-height: 100vh !important;
-    overflow: hidden;
+    margin-top: 40px;
 }
 
 .col {
-    height: 400px;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     padding-bottom: 50px;
-    margin-left: 0px !important;
+    max-width: 100%;
+}
+
+.col::-webkit-scrollbar {
+    width: 10px;
+    background-color: #e0e0e0;
+}
+
+.col::-webkit-scrollbar-thumb {
+    background-color: #616161;
+    outline: 2px solid red;
+}
+
+.col::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 body {
@@ -77,29 +90,4 @@ body {
 
 .card-action {
     padding: 10px !important;
-}
-
-.card-download {
-    border: none;
-    margin-top: 20px;
-    text-align: center;
-}
-
-.card-download .btn {
-    width: 100%;
-    font-size: 12px;
-}
-
-#filterBar {
-    max-height: 8vh;
-    margin-top: 50px !important;
-    overflow: hidden;
-    padding: 1px 5px 15px 5px !important;
-    transition-duration: .5s;
-}
-
-#filterBar.active {
-    transition-duration: .5s;
-    max-height: 0px;
-    padding: 0px !important;
 }
