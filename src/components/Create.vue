@@ -1,12 +1,10 @@
 <template>
-  <v-container>
-    <v-form>
-      <v-text-field v-model="nombre_jp" placeholder="Nombre japonés"/>
-      <v-text-field v-model="nombre_en" placeholder="Nombre inglés"/>
-      <v-text-field v-model="imagen" placeholder="Link de la imagen"/>
-      <v-btn block @click="add">Añadir</v-btn>
-    </v-form>
-  </v-container>
+  <v-form>
+    <v-text-field clearable v-model="nombre_jp" placeholder="Nombre japonés"/>
+    <v-text-field clearable v-model="nombre_en" placeholder="Nombre inglés"/>
+    <v-text-field clearable v-model="imagen" placeholder="Link de la imagen"/>
+    <v-btn block @click="add">Añadir</v-btn>
+  </v-form>
 </template>
 <script>
 import firebase from 'firebase/app';
@@ -37,17 +35,16 @@ export default {
         capitulo: 1,
         actualizado_en: timestamp
       }
-      await firebase.firestore().collection(col).doc().set(data).then(() => {
-        this.showSnackbar();
+      await firebase.firestore().collection(col).doc().set(data).then(async () => {
+        await this.clean();
       }).catch(()=>{
-        this.error.mostrar = true;
+        
       })
-      await this.clean();
     },
     clean: async function(){
-      this.nombre_jp = null;
-      this.nombre_en = null;
-      this.imagen = null;
+      this.nombre_jp = "";
+      this.nombre_en = "";
+      this.imagen = "";
     }
   }
 }

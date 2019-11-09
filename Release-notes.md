@@ -1,0 +1,20 @@
+- [ ] Sistema de capítulos para los animes en Viendo
+	- [x] Crear información de capítulos al crear un anime.
+	- [ ] Migrar animes ya creados.
+	- [x] Botones de sumar y restar capítulo.
+	- [x] Mostrar el capítulo (solo en la pestaña viendo).
+	- [x] Optimización brutal de pasar de 20% de uso de CPU a 0.4% en un i7-6700.
+- [x] Cambiar title.
+- [x] Solucionar bug: cuando limpias el cuadro de búsqueda no se anula la búsqueda.
+- [x] Bug: Los capítulos no se crean al añadir un anime.
+- [x] Bug: Se eliminan los capítulos al mover los animes.
+- [x] Cambiar mensaje que se muestra cuando Javascript está desactivado.
+- [ ] Mostrar número de animes en las pestañas.
+- [x] Hacer todos los text-field clearable.
+- [x] Limpiar formulario al añadir un anime.
+- [x] Reducir márgenes de Añadir y Editar.
+- [ ] Editar animes:
+	- [x] Pasar información con Vuex.
+	- [x] Guardar los animes y poder cancelar.
+	- [ ] Solucionar error de que cuando editas y cancelas no vuelve a como estaba antes sin recargar la vista.
+	- [x] Añadir await y async en las funciones de consulta y escritura a Firestore.

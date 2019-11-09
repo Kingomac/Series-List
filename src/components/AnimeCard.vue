@@ -93,6 +93,7 @@ export default {
         nombre_jp: this.data.nombre_jp,
         nombre_en: this.data.nombre_en,
         imagen: this.data.imagen,
+        capitulo: this.data.capitulo || 1,
         actualizado_en: timestamp
       });
   

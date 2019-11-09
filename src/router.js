@@ -9,12 +9,18 @@ export default new Router({
   routes: [{
       path: "/",
       name: "viendo",
+      meta: {
+        title: 'What anime am I seeing?'
+      },
       component: () =>
         import ("./views/Viendo.vue")
     },
     {
       path: "/categoria/:collection",
       name: "categoria",
+      meta: {
+        title: 'What anime am I seeing?'
+      },
       component: () =>
         import ("./views/Otros.vue")
     }
