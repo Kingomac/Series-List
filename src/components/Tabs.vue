@@ -10,7 +10,7 @@
 <script>
 export default {
   methods:{
-    changeRoute: function(to){
+    changeRoute: async function(to){
       this.$router.push(to);
       this.$emit('updatecards');
     }

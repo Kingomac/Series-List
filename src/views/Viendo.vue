@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+import store from '../store'
 import AnimeCard from "../components/AnimeCard.vue";
 import firebase from 'firebase/app'
 import 'firebase/firestore'
@@ -33,6 +34,13 @@ export default {
             this.animes.push(data);
           }
         })
+        this.updateNumber();
+      })
+    },
+    updateNumber: async function(){
+      await store.commit('setNumAnimes', {
+        index: 0,
+        value: this.animes.length
       })
     }
   },

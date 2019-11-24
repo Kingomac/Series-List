@@ -27,7 +27,7 @@ export default {
             imagen: doc.data().imagen,
             id: doc.id
           }
-          if(this.$store.state.busqueda !== ''){
+          if(this.$store.state.busqueda !== '' || this.$store.state.busqueda !== null){
             if(data.nombre_jp.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase()) || data.nombre_en.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase())){
               this.animes.push(data);
             }
