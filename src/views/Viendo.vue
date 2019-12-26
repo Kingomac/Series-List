@@ -36,12 +36,6 @@ export default {
         })
         this.updateNumber();
       })
-    },
-    updateNumber: async function(){
-      await store.commit('setNumAnimes', {
-        index: 0,
-        value: this.animes.length
-      })
     }
   },
   created(){

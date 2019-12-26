@@ -46,9 +46,6 @@ export default new Vuex.Store({
     },
     setSentido(state, value){
       state.filtroOrdenSentido = value;
-    },
-    setNumAnimes(state, data){
-      state.numAnimes[data.index] = data.value;
     }
   },
   actions: {
