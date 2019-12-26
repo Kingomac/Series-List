@@ -1,4 +1,4 @@
-# frontend
+# Series List
 
 ## Project setup
 ```

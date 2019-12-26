@@ -1,10 +1,9 @@
 <template>
   <div>
-    <anime-card v-for="(a, key) in animes" v-bind:key="key" :data="a"/>
+    <anime-card v-for="(a, key) in filteredAnimes" v-bind:key="key" :data="a"/>
   </div>
 </template>
 <script>
-import store from '../store'
 import AnimeCard from "../components/AnimeCard.vue";
 import firebase from 'firebase/app'
 import 'firebase/firestore'
@@ -15,7 +14,16 @@ export default {
   data(){
     return {
       collection: 'viendo',
-      animes: [],
+      animes: []
+    }
+  },
+  computed:{
+    filteredAnimes: function(){
+      let result = [];
+      this.animes.forEach((a) => {
+        if(a.visible) result.push(a);
+      })
+      return result;
     }
   },
   methods:{
@@ -25,16 +33,23 @@ export default {
         snapshot.forEach((doc) => {
           let data = doc.data();
           Object.assign(data, { id: doc.id})
-          if(this.$store.state.busqueda !== '' && this.$store.state.busqueda !== null){
-            if(data.nombre_jp.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase()) || data.nombre_en.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase())){
-              this.animes.push(data);
-            }
-          }
-          else{
-            this.animes.push(data);
-          }
+          Object.assign(data, { visible: false })
+          this.animes.push(data);
         })
-        this.updateNumber();
+        this.seleccionarAnimes();
+      })
+    },
+    seleccionarAnimes: async function(){
+      this.animes_visibles = [];
+      this.animes.forEach((a) => {
+        if(this.$store.state.busqueda !== '' && this.$store.state.busqueda !== null){
+          if(a.nombre_jp.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase()) || a.nombre_en.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase())){
+            a.visible = true;
+          }
+        }
+        else{
+          a.visible = true;
+        }
       })
     }
   },
@@ -43,13 +58,13 @@ export default {
   },
   watch: {
     '$store.state.busqueda' () {
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     },
     '$store.state.filtroOrden' (){
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     },
     '$store.state.filtroOrdenSentido' (){
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     }
   }
 }

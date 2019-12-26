@@ -1,6 +1,6 @@
 <template>
   <div>
-    <anime-card v-for="(a, key) in animes" v-bind:key="key" :data="a"/>
+    <anime-card v-for="(a, key) in filteredAnimes" v-bind:key="key" :data="a"/>
   </div>
 </template>
 <script>
@@ -13,7 +13,16 @@ export default {
   },
   data(){
     return {
-      animes: [],
+      animes: []
+    }
+  },
+  computed:{
+    filteredAnimes: function(){
+      let result = [];
+      this.animes.forEach((a) => {
+        if(a.visible) result.push(a);
+      })
+      return result;
     }
   },
   methods:{
@@ -25,36 +34,42 @@ export default {
             nombre_jp: doc.data().nombre_jp,
             nombre_en: doc.data().nombre_en,
             imagen: doc.data().imagen,
-            id: doc.id
+            id: doc.id,
+            visible: false
           }
+          this.animes.push(data);
+        })
+        this.seleccionarAnimes();
+      })
+    },
+    seleccionarAnimes: async function(){
+      this.animes.forEach((a) => {
           if(this.$store.state.busqueda !== '' && this.$store.state.busqueda !== null){
-            if(data.nombre_jp.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase()) || data.nombre_en.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase())){
-              this.animes.push(data);
+            if(a.nombre_jp.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase()) || a.nombre_en.toLowerCase().startsWith(this.$store.state.busqueda.toLowerCase())){
+              a.visible = true;
             }
           }
           else{
-            this.animes.push(data);
+            a.visible = true;
           }
-        })
       })
     }
   },
   mounted(){
     this.setSnapshotAnimes();
-
   },
   watch:{
     '$route' (){
       this.setSnapshotAnimes();
     },
     '$store.state.busqueda' (){
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     },
     '$store.state.filtroOrden' (){
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     },
     '$store.state.filtroOrdenSentido' (){
-      this.setSnapshotAnimes();
+      this.seleccionarAnimes();
     }
   }
 }

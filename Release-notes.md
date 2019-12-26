@@ -1,3 +1,6 @@
+- [ ] Sistema de subida de imágenes.
+- [x] Mejorar la búsqueda reduciendo la cantidad de peticiones a Firestore.
+- [x] Mejorar la seguridad de la base de datos con normas que requieran iniciar sesión para su lectura. Ahora se inicia sesión y se comprueba si la cuenta tiene autorización para leer y escribir.
 - [ ] Sistema de capítulos para los animes en Viendo
 	- [x] Crear información de capítulos al crear un anime.
 	- [ ] Migrar animes ya creados.
@@ -13,8 +16,8 @@
 - [x] Hacer todos los text-field clearable.
 - [x] Limpiar formulario al añadir un anime.
 - [x] Reducir márgenes de Añadir y Editar.
-- [ ] Editar animes:
+- [x] Editar animes:
 	- [x] Pasar información con Vuex.
 	- [x] Guardar los animes y poder cancelar.
-	- [ ] Solucionar error de que cuando editas y cancelas no vuelve a como estaba antes sin recargar la vista.
+	- [x] Solucionar error de que cuando editas y cancelas no vuelve a como estaba antes sin recargar la vista.
 	- [x] Añadir await y async en las funciones de consulta y escritura a Firestore.

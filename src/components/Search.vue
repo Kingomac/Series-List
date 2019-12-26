@@ -1,7 +1,5 @@
 <template>
-  <v-form>
-    <v-text-field clearable v-model="buscar"/>
-  </v-form>
+  <v-text-field clearable v-model="buscar"/>
 </template>
 <script>
 export default {
