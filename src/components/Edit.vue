@@ -18,6 +18,7 @@ export default {
   },
   methods: {
     confirmar: async function(){
+      if(this.anime.nombre_jp == null || this.anime.nombre_jp == '' || this.anime.nombre_en == null || this.anime.nombre_en == '') return null;
       let timestamp = firebase.firestore.FieldValue.serverTimestamp();
       await firebase.firestore().collection(this.anime.col).doc(this.anime.id).set({
         nombre_jp: this.anime.nombre_jp,

@@ -1,4 +1,9 @@
+- [ ] Sistema de Snackbars para mostrar notificaciones de cosas.
+- [x] Comprobación del formulario al añadir y editar.
 - [ ] Sistema de subida de imágenes.
+	- [x] Subir imágenes y obtener el link.
+	- [ ] Hacer que las imágenes se eliminen al editar y eliminar animes.
+	- [ ] Usar Firebase Functions para que convierta las imágenes al formato webp
 - [x] Mejorar la búsqueda reduciendo la cantidad de peticiones a Firestore.
 - [x] Mejorar la seguridad de la base de datos con normas que requieran iniciar sesión para su lectura. Ahora se inicia sesión y se comprueba si la cuenta tiene autorización para leer y escribir.
 - [ ] Sistema de capítulos para los animes en Viendo
