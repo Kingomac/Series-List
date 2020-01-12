@@ -3,7 +3,7 @@
     <v-text-field clearable v-model="nombre_jp" placeholder="Nombre japonés"/>
     <v-text-field clearable v-model="nombre_en" placeholder="Nombre inglés"/>
     <v-text-field clearable v-model="imagen" placeholder="Link de la imagen"/>
-    <v-btn block :loading="fileUploading" @click="uploadImg">Subir imagen</v-btn>
+    <v-btn block :loading="fileUploading" @click="test">Subir imagen</v-btn>
     <v-file-input @change="setFile" :value="file"></v-file-input>
     <v-btn block @click="add">Añadir</v-btn>
   </v-form>
@@ -12,6 +12,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore'
 import 'firebase/storage'
+import 'firebase/functions'
 
 export default {
   data(){
@@ -57,23 +58,33 @@ export default {
       await this.fileChange(this.file)
     },
     fileChange: async function(e){
-      firebase.storage().ref().child(`/anime-covers/${await this.generateUniqueId()}.${e.name.split('.').pop()}`).put(e).then((e) => {
-        e.ref.getDownloadURL().then((e) => {
-          this.imagen = e;
+      let name = firebase.functions().httpsCallable('generateUniqueId')
+      name().then((res) => {
+        firebase.storage().ref().child(`/anime-covers/${res.data}.${e.name.split('.').pop()}`).put(e).then((e) => {
+          e.ref.getDownloadURL().then((e) => {
+            this.imagen = e;
+          }).catch((e) => {
+            this.imagen = e;
+          });
+          this.fileUploading = false;
         }).catch((e) => {
-          this.imagen = e;
-        });
-        this.fileUploading = false;
-      }).catch((e) => {
-        console.log(e);
-        this.fileUploading = false;
-      })
+          console.log(e);
+          this.fileUploading = false;
+        })
+        })
     },
     setFile: async function(e){
       this.file = e;
     },
-    generateUniqueId: async function(){
-      return Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+    test: async function(){
+      let name = firebase.functions().httpsCallable('generateUniqueId');
+      name().then(e => {console.log(e)}).catch(e => console.log(e));
+      let image = firebase.functions().httpsCallable('processImage', { query: this.file });
+      image().then((e) => {
+        console.log(e);
+      }).catch((e) => {
+        console.log(e);
+      })
     }
   }
 }

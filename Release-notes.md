@@ -1,3 +1,5 @@
+- [x] Bug solucionado: al mover un anime a Viendo se pone siempre en el capítulo 1
+- [x] Bug solucionado: los controles de capítulos dejaban de mostrarse si el capítulo era menor que 1
 - [ ] Sistema de Snackbars para mostrar notificaciones de cosas.
 - [x] Comprobación del formulario al añadir y editar.
 - [ ] Sistema de subida de imágenes.

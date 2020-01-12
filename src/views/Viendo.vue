@@ -1,6 +1,6 @@
 <template>
   <div>
-    <anime-card v-for="(a, key) in filteredAnimes" v-bind:key="key" :data="a"/>
+    <anime-card v-for="(a, key) in filteredAnimes" v-bind:key="key" mostrarCapitulo="true" :data="a"/>
   </div>
 </template>
 <script>

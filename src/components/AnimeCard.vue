@@ -7,10 +7,10 @@
     <v-img :src="data.imagen" width="225px"/>
     <v-card-title class="text-center" v-if="titulo.length < 50">{{titulo}}</v-card-title>
     <v-card-title class="text-center" v-else>{{titulo.substring(0,50) + '...'}}</v-card-title>
-    <v-card-text v-if="data.capitulo">Capítulo: {{data.capitulo}}</v-card-text>
+    <v-card-text v-if="mostrarCapitulo">Capítulo: {{data.capitulo}}</v-card-text>
     <v-card-actions>
-      <v-btn class="mr-0" v-if="data.capitulo" @click="capitulo(false)" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
-      <v-btn class="ml-0" v-if="data.capitulo" @click="capitulo(true)" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
+      <v-btn class="mr-0" v-if="data.capitulo > 0 && mostrarCapitulo" @click="capitulo(false)" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
+      <v-btn class="ml-0" v-if="mostrarCapitulo" @click="capitulo(true)" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
       <v-spacer/>
       <v-btn class="mr-0" icon @click="edit"><v-icon>mdi-pencil</v-icon></v-btn>
       <v-btn class="ml-0" icon @click.stop="dialog = true"><v-icon>mdi-delete</v-icon></v-btn>
@@ -76,7 +76,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 export default {
-  props: ['data'],
+  props: ['data', 'mostrarCapitulo'],
   data(){
     return{
       dialog: false
@@ -88,16 +88,18 @@ export default {
       await firebase.firestore().collection(this.col).doc(this.data.id).delete();
     },
     move: async function(where) {
-      let timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      await firebase.firestore().collection(where).doc().set({
-        nombre_jp: this.data.nombre_jp,
-        nombre_en: this.data.nombre_en,
-        imagen: this.data.imagen,
-        capitulo: this.data.capitulo || 1,
-        actualizado_en: timestamp
-      });
-  
-      await firebase.firestore().collection(this.col).doc(this.data.id).delete();
+      firebase.firestore().collection(this.col).doc(this.data.id).get().then((e) => {
+        let timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        firebase.firestore().collection(where).doc().set({
+          nombre_jp: e.data().nombre_jp,
+          nombre_en: e.data().nombre_en,
+          imagen: e.data().imagen,
+          capitulo: e.data().capitulo,
+          actualizado_en: timestamp 
+        }).then(() => {
+          firebase.firestore().collection(this.col).doc(this.data.id).delete()
+        })
+      })    
     },
     capitulo: async function(sumar){
       let new_data = {
