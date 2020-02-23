@@ -1,6 +1,22 @@
 # Series List
 
-## Project setup
+## Config file
+You need to create a config file in the root directory ````app.config.js```` which follows that schema:
+```` javascript
+module.exports = {
+  firebase_config: {
+    apiKey: "api-key",
+    authDomain: "project-id.firebaseapp.com",
+    databaseURL: "https://project-id.firebaseio.com",
+    projectId: "project-id",
+    storageBucket: "project-id.appspot.com",
+    messagingSenderId: "sender-id",
+    appID: "app-id"
+  }
+}
+````
+
+### Project setup
 ```
 npm install
 ```

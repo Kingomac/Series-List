@@ -1,5 +1,6 @@
 <template>
 <div class="d-inline-block">
+  <v-lazy transition="fade-transition">
   <v-card
   max-width="225px"
   class="ma-2"
@@ -28,8 +29,8 @@
         <v-list-item @click="move('favoritos')">
           Mover a favoritos
         </v-list-item>
-        <v-list-item @click="move('odiados')">
-          Mover a odiados
+        <v-list-item @click="move('abandonados')">
+          Mover a abandonados
         </v-list-item>
         <v-list-item @click="move('pendientes')">
           Mover a pendientes
@@ -38,6 +39,7 @@
       </v-menu>
     </v-card-actions>
   </v-card>
+  </v-lazy>
    <v-dialog
       v-model="dialog"
       max-width="290"
@@ -95,6 +97,7 @@ export default {
           nombre_en: e.data().nombre_en,
           imagen: e.data().imagen,
           capitulo: e.data().capitulo,
+          email: e.data().email,
           actualizado_en: timestamp 
         }).then(() => {
           firebase.firestore().collection(this.col).doc(this.data.id).delete()
@@ -105,6 +108,7 @@ export default {
       let new_data = {
         nombre_jp: this.data.nombre_jp,
         nombre_en: this.data.nombre_en,
+        email: this.data.email,
         imagen: this.data.imagen,
         actualizado_en: this.data.actualizado_en
       }
@@ -114,12 +118,10 @@ export default {
       else{
         Object.assign(new_data, {capitulo: this.data.capitulo-1})
       }
-      await firebase.firestore().collection(this.col).doc(this.data.id).set(new_data);
+      await firebase.firestore().collection('viendo').doc(this.data.id).set(new_data);
     },
     edit: async function(){
-      let commit = this.data;
-      Object.assign(commit, {col: this.col});
-      this.$store.commit('iniciarEdicion', commit);
+      this.$store.commit('iniciarEdicion', this.data);
     }
   },
   computed: {
@@ -142,3 +144,11 @@ export default {
   }
 }
 </script>
+<style>
+.v-card{
+  background-color: #2E3345 !important;
+}
+.v-card:hover{
+  background-color: #31364A !important;
+}
+</style>

@@ -13,9 +13,7 @@ export default {
       var provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope('email');
       firebase.auth().signInWithRedirect(provider);
-      firebase.auth().getRedirectResult().then(() => {
-        this.$store.commit('sesionIniciada');
-      })
+      firebase.auth().getRedirectResult();
     }
   }
 }

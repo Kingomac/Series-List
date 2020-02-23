@@ -23,7 +23,9 @@ export default {
       await firebase.firestore().collection(this.anime.col).doc(this.anime.id).set({
         nombre_jp: this.anime.nombre_jp,
         nombre_en: this.anime.nombre_en,
+        capitulo: this.anime.capitulo,
         imagen: this.anime.imagen,
+        email: this.anime.email,
         actualizado_en: timestamp
       }).then(() => {
         this.$store.commit('finalizarEdicion');

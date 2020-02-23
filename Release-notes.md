@@ -1,3 +1,15 @@
+# Cambios y característas en proceso
+- [ ] Establecer nuevos filtros.
+- [ ] Editar animes con un ````<v-dialog></v-dialog>````
+- [x] Actualización de los colores de la interfaz.
+- [x] Mover configuración de Firebase a un archivo externo.
+- [x] Migrar base de datos para que funcione con infinitos usuarios.
+	- [x] Fase 1: agregar el campo email a todos los animes.
+	- [x] Fase 2: crear índices.
+	- Implicó la pérdida de los filtros.
+- [x] Infinite scrolling para los AnimeCards en Otros.vue
+- [x] Bug: Al crear un anime y editar, capitulo = Nan
+- [x] Cambiar line-height para que las tarjetas con multiples líneas no resalten tanto.
 - [x] Bug solucionado: al mover un anime a Viendo se pone siempre en el capítulo 1
 - [x] Bug solucionado: los controles de capítulos dejaban de mostrarse si el capítulo era menor que 1
 - [ ] Sistema de Snackbars para mostrar notificaciones de cosas.
@@ -8,9 +20,9 @@
 	- [ ] Usar Firebase Functions para que convierta las imágenes al formato webp
 - [x] Mejorar la búsqueda reduciendo la cantidad de peticiones a Firestore.
 - [x] Mejorar la seguridad de la base de datos con normas que requieran iniciar sesión para su lectura. Ahora se inicia sesión y se comprueba si la cuenta tiene autorización para leer y escribir.
-- [ ] Sistema de capítulos para los animes en Viendo
+- [x] Sistema de capítulos para los animes en Viendo
 	- [x] Crear información de capítulos al crear un anime.
-	- [ ] Migrar animes ya creados.
+	- [x] Migrar animes ya creados.
 	- [x] Botones de sumar y restar capítulo.
 	- [x] Mostrar el capítulo (solo en la pestaña viendo).
 	- [x] Optimización brutal de pasar de 20% de uso de CPU a 0.4% en un i7-6700.
@@ -19,7 +31,6 @@
 - [x] Bug: Los capítulos no se crean al añadir un anime.
 - [x] Bug: Se eliminan los capítulos al mover los animes.
 - [x] Cambiar mensaje que se muestra cuando Javascript está desactivado.
-- [ ] Mostrar número de animes en las pestañas.
 - [x] Hacer todos los text-field clearable.
 - [x] Limpiar formulario al añadir un anime.
 - [x] Reducir márgenes de Añadir y Editar.

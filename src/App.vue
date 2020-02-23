@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left>
+    <v-app-bar color="appbar" app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
       <v-toolbar-title
         class="headline m-2"
@@ -11,8 +11,8 @@
       <v-spacer></v-spacer>
       <v-img src="https://cdn130.picsart.com/294812797174211.png?r1024x1024" max-width="60px"/>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" v-show="true" app clipped>
-      <v-expansion-panels multiple>
+    <v-navigation-drawer class="navigation" v-model="drawer" v-show="true" app clipped>
+      <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Añadir</v-expansion-panel-header>
           <v-expansion-panel-content><Create/></v-expansion-panel-content>
@@ -41,7 +41,7 @@
     <v-content>
       <Tabs/>
       <v-container>
-      <router-view/>
+      <router-view v-on:updateUser="setSignedIn"/>
       </v-container>
         </v-content>
   </v-app>
@@ -71,61 +71,48 @@ export default {
   },
   data: () => ({
     drawer: null,
-    usuarios: []
+    signedIn: false
   }),
-  mounted(){
-    firebase.initializeApp({
-      apiKey: "AIzaSyBF3Q8IMzrcBjPROUKjPfaVq0ZiQfOnCPo",
-      authDomain: "what-anime-i-see.firebaseapp.com",
-      databaseURL: "https://what-anime-i-see.firebaseio.com",
-      projectId: "what-anime-i-see",
-      storageBucket: "what-anime-i-see.appspot.com",
-      messagingSenderId: "239560464048",
-      appId: "1:239560464048:web:5f6e2c6391780d896e0d75"
-    });
-    this.getUsers();
-  },
   computed:{
-    signedIn: function(){
-      return store.state.signedIn;
-    },
     editar: function(){
       return store.state.editar.activado;
     }
   },
   methods:{
+    setSignedIn: function(){
+      if(firebase.auth().currentUser) this.signedIn = true;
+      else this.signedIn = false;
+    },
     signOut: function(){
-      store.commit('sesionCerrada');
       firebase.auth().signOut();
-    },
-    setUserAuthChange: function(){
-      firebase.auth().onAuthStateChanged((user) => {
-      if(user){
-        if(this.usuarios.includes(user.email)){
-          store.commit('sesionIniciada');
-        }
-        else{
-          firebase.auth().signOut();
-        }
-      }
-      else{
-        store.commit('sesionCerrada');
-      }
-    })
-    },
-    getUsers: function(){
-      firebase.firestore().collection('usuarios').get().then((col) => {
-        col.forEach((doc) => {
-          this.usuarios.push(doc.data().email);
-        })
-        this.setUserAuthChange();
-      })
     }
+    /*migrar: function(){
+      let categorias = ['viendo', 'pendientes', 'vistos', 'favoritos', 'odiados'];
+      categorias.forEach((categoria) => {
+        firebase.firestore().collection(categoria).get().then((all) => {
+          all.forEach((anime) => {
+            let newData = anime.data();
+            Object.assign(newData, {email: 'vcmario3@gmail.com'});
+            firebase.firestore().collection(categoria).doc().set(newData).then(() => {
+              console.log(newData.nombre_jp, "updated");
+              firebase.firestore().collection(categoria).doc(anime.id).delete();
+            })
+          })
+        })
+      })
+    }*/
   }
 };
 </script>
 <style>
 .v-card__text, .v-card__title {
   word-break: normal !important;
+  line-height: 110% !important;
+}
+.navigation, .navigation div, .navigation.v-expansion-panel-header{
+  background-color: #2F333D !important;
+}
+.v-content{
+  background: #22242e !important;
 }
 </style>

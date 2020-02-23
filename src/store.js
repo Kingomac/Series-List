@@ -6,15 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     busqueda: '',
-    signedIn: false,
+    email: '',
     editar:{
       activado: false,
       anime:{
         id: '',
-        col: '',
         nombre_jp: '',
         nombre_en: '',
-        imagen: ''
+        imagen: '',
+        categoria: '',
+        capitulo: 0
       }
     },
     titulo: false,
@@ -24,12 +25,6 @@ export default new Vuex.Store({
   mutations: {
     setBusqueda(state, buscar) {
       state.busqueda = buscar;
-    },
-    sesionIniciada(state) {
-      state.signedIn = true;
-    },
-    sesionCerrada(state) {
-      state.signedIn = false;
     },
     iniciarEdicion(state, anime){
       state.editar.activado = true;
