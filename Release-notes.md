@@ -1,6 +1,9 @@
 # Cambios y característas en proceso
 - [ ] Establecer nuevos filtros.
 - [ ] Editar animes con un ````<v-dialog></v-dialog>````
+- [x] Bugs:
+	- [x] En Otros.vue los animes no desaparecen al moverlos o eliminarlos.
+	- [x] Otros.vue no carga suficientes animes para que funcione el scroll.
 - [x] Actualización de los colores de la interfaz.
 - [x] Mover configuración de Firebase a un archivo externo.
 - [x] Migrar base de datos para que funcione con infinitos usuarios.

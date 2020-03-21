@@ -90,6 +90,7 @@ export default {
       await firebase.firestore().collection(this.col).doc(this.data.id).delete();
     },
     move: async function(where) {
+      this.$emit('hide')
       firebase.firestore().collection(this.col).doc(this.data.id).get().then((e) => {
         let timestamp = firebase.firestore.FieldValue.serverTimestamp();
         firebase.firestore().collection(where).doc().set({
