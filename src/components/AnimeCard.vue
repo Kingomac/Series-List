@@ -88,9 +88,9 @@ export default {
     remove: async function(){
       this.dialog = false;
       await firebase.firestore().collection(this.col).doc(this.data.id).delete();
+      this.$emit('hide')
     },
     move: async function(where) {
-      this.$emit('hide')
       firebase.firestore().collection(this.col).doc(this.data.id).get().then((e) => {
         let timestamp = firebase.firestore.FieldValue.serverTimestamp();
         firebase.firestore().collection(where).doc().set({
@@ -102,6 +102,7 @@ export default {
           actualizado_en: timestamp 
         }).then(() => {
           firebase.firestore().collection(this.col).doc(this.data.id).delete()
+          this.$emit('hide')
         })
       })    
     },

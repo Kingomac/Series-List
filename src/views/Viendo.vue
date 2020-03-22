@@ -21,7 +21,7 @@ export default {
   },
   methods:{
     setSnapshotAnimes: async function(){
-      await firebase.firestore().collection('viendo').where('email', '==', firebase.auth().currentUser.email).orderBy(this.$store.state.filtroOrden, this.$store.state.filtroOrdenSentido).onSnapshot((snapshot) => {
+      await firebase.firestore().collection('viendo').where('email', '==', firebase.auth().currentUser.email).orderBy('actualizado_en','desc').onSnapshot((snapshot) => {
         this.animes = [];
         snapshot.forEach((doc) => {
           let data = doc.data();

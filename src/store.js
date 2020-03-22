@@ -19,8 +19,6 @@ export default new Vuex.Store({
       }
     },
     titulo: false,
-    filtroOrden: 'actualizado_en',
-    filtroOrdenSentido: 'desc',
   },
   mutations: {
     setBusqueda(state, buscar) {
