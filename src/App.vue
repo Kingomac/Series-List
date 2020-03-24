@@ -79,11 +79,12 @@ export default {
     },
     getAnimeId: function(){
       switch(this.$route.params.collection){
+        case 'viendo': return 0;
         case 'vistos': return 1;
         case 'favoritos': return 2;
         case 'abandonados': return 3;
         case 'pendientes': return 4;
-        default: return 0;
+        default: return -1;
       }
     }
   },
@@ -95,21 +96,11 @@ export default {
     signOut: function(){
       firebase.auth().signOut();
     }
-    /*migrar: function(){
-      let categorias = ['viendo', 'pendientes', 'vistos', 'favoritos', 'odiados'];
-      categorias.forEach((categoria) => {
-        firebase.firestore().collection(categoria).get().then((all) => {
-          all.forEach((anime) => {
-            let newData = anime.data();
-            Object.assign(newData, {email: 'vcmario3@gmail.com'});
-            firebase.firestore().collection(categoria).doc().set(newData).then(() => {
-              console.log(newData.nombre_jp, "updated");
-              firebase.firestore().collection(categoria).doc(anime.id).delete();
-            })
-          })
-        })
-      })
-    }*/
+  },
+  mounted(){
+    if(this.getAnimeId == -1){
+      this.$router.push('/viendo')
+    }
   }
 };
 </script>

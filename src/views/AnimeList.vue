@@ -31,6 +31,9 @@ export default {
           let data = doc.data();
           Object.assign(data, {id: doc.id});
           Object.assign(data, {col: this.$route.params.collection})
+          if(this.animeId !== 0){
+            delete data.capitulo;
+          }
           this.animes.push(data);
         })
         store.commit('setAnimes',{
@@ -60,19 +63,8 @@ export default {
     },
     checkUserAndGet: function(){
       if(firebase.auth().currentUser) this.getStartAnimes();
-    }
-  },
-  created(){
-    firebase.auth().onAuthStateChanged((user) => {
-      if(user) this.getStartAnimes()
-      });
-  },
-  mounted(){
-    this.animeId = this.getAnimeId;
-    this.checkScroll();
-  },
-  watch:{
-    '$route': function(){
+    },
+    updateRoute: function(){
       this.animeId = this.getAnimeId;
       if(store.state.animes[this.animeId].length > 0){
         this.animes = store.state.animes[this.animeId]
@@ -80,6 +72,23 @@ export default {
       else{
         this.getStartAnimes();
       }
+    }
+  },
+  mounted(){
+    if(this.getAnimeId == -1){
+        this.$router.push('/viendo')
+      }
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        this.$emit('updateUser');
+        this.updateRoute();
+      }
+    });
+    this.checkScroll();
+  },
+  watch:{
+    '$route': function(){
+      this.updateRoute();
     }
   }
 }

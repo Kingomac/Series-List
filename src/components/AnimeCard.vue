@@ -8,10 +8,10 @@
     <v-img :src="data.imagen" width="225px"/>
     <v-card-title class="text-center" v-if="titulo.length < 50">{{titulo}}</v-card-title>
     <v-card-title class="text-center" v-else>{{titulo.substring(0,50) + '...'}}</v-card-title>
-    <v-card-text v-if="mostrarCapitulo">Capítulo: {{data.capitulo}}</v-card-text>
+    <v-card-text v-if="data.capitulo !== undefined">Capítulo: {{data.capitulo}}</v-card-text>
     <v-card-actions>
-      <v-btn class="mr-0" v-if="data.capitulo > 0 && mostrarCapitulo" @click="capitulo(false)" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
-      <v-btn class="ml-0" v-if="mostrarCapitulo" @click="capitulo(true)" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
+      <v-btn class="mr-0" v-if="data.capitulo > 0" @click="capitulo(false)" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
+      <v-btn class="ml-0" v-if="data.capitulo !== undefined" @click="capitulo(true)" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
       <v-spacer/>
       <v-btn class="mr-0" icon @click="edit"><v-icon>mdi-pencil</v-icon></v-btn>
       <v-btn class="ml-0" icon @click.stop="dialog = true"><v-icon>mdi-delete</v-icon></v-btn>
@@ -78,7 +78,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 export default {
-  props: ['data', 'mostrarCapitulo'],
+  props: ['data'],
   data(){
     return{
       dialog: false
