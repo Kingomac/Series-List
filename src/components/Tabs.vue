@@ -1,10 +1,10 @@
 <template>
   <v-tabs fixed-tabs>
-        <v-tab to="/">Viendo</v-tab>
-        <v-tab to="/categoria/vistos">Vistos</v-tab>
-        <v-tab to="/categoria/favoritos">Favoritos</v-tab>
-        <v-tab to="/categoria/abandonados">Abandonados</v-tab>
-        <v-tab to="/categoria/pendientes">Pendientes</v-tab>
+        <v-tab to="/viendo">Viendo</v-tab>
+        <v-tab to="/vistos">Vistos</v-tab>
+        <v-tab to="/favoritos">Favoritos</v-tab>
+        <v-tab to="/abandonados">Abandonados</v-tab>
+        <v-tab to="/pendientes">Pendientes</v-tab>
       </v-tabs>
 </template>
 <script>
