@@ -49,6 +49,9 @@ export default new Vuex.Store({
     },
     setAnimes(state, values){
       state.animes[values.id] = values.animes;
+    },
+    unshiftAnime(state, values){
+      state.animes[values.id].unshift(values.anime);
     }
   },
   actions: {

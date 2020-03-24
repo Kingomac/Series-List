@@ -13,22 +13,11 @@ export default {
   components:{
     AnimeCard
   },
-  props: ['getCategoriaId'],
+  props: ['getCategoriaId', 'getAnimeId'],
   data(){
     return {
       animes: [],
       animeId: 0
-    }
-  },
-  computed:{
-    getAnimeId: function(){
-      switch(this.$route.params.collection){
-        case 'vistos': return 1;
-        case 'favoritos': return 2;
-        case 'abandonados': return 3;
-        case 'pendientes': return 4;
-        default: return -1;
-      }
     }
   },
   methods:{

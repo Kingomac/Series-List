@@ -24,6 +24,7 @@ export default {
       fileUploading: false
     }
   },
+  props: ['getAnimeId'],
   methods: {
     add: async function(){
       if(this.nombre_jp == '' || this.nombre_jp == null || this.nombre_en == null || this.nombre_en == '') return null;
@@ -43,6 +44,10 @@ export default {
         capitulo: 0,
         actualizado_en: timestamp
       }
+      this.$store.commit('unshiftAnime', {
+        id: this.getAnimeId,
+        anime: data
+      })
       await firebase.firestore().collection(categ).doc().set(data).then(async () => {
         await this.clean();
       }).catch((e)=>{

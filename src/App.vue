@@ -15,7 +15,7 @@
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Añadir</v-expansion-panel-header>
-          <v-expansion-panel-content><Create/></v-expansion-panel-content>
+          <v-expansion-panel-content><Create :getAnimeId="getAnimeId"/></v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
             <v-expansion-panel-header>Buscar</v-expansion-panel-header>
@@ -41,7 +41,7 @@
     <v-content>
       <Tabs/>
       <v-container>
-      <router-view v-on:updateUser="setSignedIn"/>
+      <router-view :getAnimeId="getAnimeId" v-on:updateUser="setSignedIn"/>
       </v-container>
         </v-content>
   </v-app>
@@ -76,6 +76,15 @@ export default {
   computed:{
     editar: function(){
       return store.state.editar.activado;
+    },
+    getAnimeId: function(){
+      switch(this.$route.params.collection){
+        case 'vistos': return 1;
+        case 'favoritos': return 2;
+        case 'abandonados': return 3;
+        case 'pendientes': return 4;
+        default: return 0;
+      }
     }
   },
   methods:{
