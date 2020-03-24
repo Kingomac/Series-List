@@ -8,6 +8,7 @@ import AnimeCard from "../components/AnimeCard.vue";
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import store from '../store'
 export default {
   components:{
     AnimeCard
@@ -15,14 +16,24 @@ export default {
   props: ['getCategoriaId'],
   data(){
     return {
-      animes: []
+      animes: [],
+      animeId: 0
     }
   },
   computed:{
+    getAnimeId: function(){
+      switch(this.$route.params.collection){
+        case 'vistos': return 1;
+        case 'favoritos': return 2;
+        case 'abandonados': return 3;
+        case 'pendientes': return 4;
+        default: console.log('Error: ' + this.$route.params.collection); return 0;
+      }
+    }
   },
   methods:{
     remove: async function(index){
-      this.animes.splice(index,1);
+      store.state.animes[this.animeId].splice(index,1);
     },
     getStartAnimes: async function(){
       await firebase.firestore().collection(this.$route.params.collection).orderBy('actualizado_en', 'desc').where('email', '==', firebase.auth().currentUser.email).limit(12).get().then((snapshot) => {
@@ -33,6 +44,10 @@ export default {
           Object.assign(data, {col: this.$route.params.collection})
           this.animes.push(data);
         })
+        store.commit('setAnimes',{
+          id: this.animeId,
+          animes: this.animes
+        })
       })
     },
     addAnimes: async function(){
@@ -42,6 +57,10 @@ export default {
           Object.assign(data, {id: doc.id});
           Object.assign(data, {col: this.$route.params.collection})
           this.animes.push(data);
+        })
+        store.commit('setAnimes',{
+          id: this.animeId,
+          animes: this.animes
         })
       })
     },
@@ -64,7 +83,13 @@ export default {
   },
   watch:{
     '$route' (){
-      this.checkUserAndGet();
+      this.animeId = this.getAnimeId;
+      if(store.state.animes[this.animeId].length > 0){
+        this.animes = store.state.animes[this.animeId]
+      }
+      else{
+        this.getStartAnimes();
+      }
     }
   }
 }

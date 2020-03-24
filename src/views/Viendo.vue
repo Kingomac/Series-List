@@ -8,6 +8,7 @@ import AnimeCard from "../components/AnimeCard.vue";
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import store from '../store'
 export default {
   components:{
     AnimeCard
@@ -20,8 +21,8 @@ export default {
     }
   },
   methods:{
-    setSnapshotAnimes: async function(){
-      await firebase.firestore().collection('viendo').where('email', '==', firebase.auth().currentUser.email).orderBy('actualizado_en','desc').onSnapshot((snapshot) => {
+    getAnimes: async function(){
+      await firebase.firestore().collection('viendo').where('email', '==', firebase.auth().currentUser.email).orderBy('actualizado_en','desc').get().then((snapshot) => {
         this.animes = [];
         snapshot.forEach((doc) => {
           let data = doc.data();
@@ -30,12 +31,21 @@ export default {
           Object.assign(data, { col: 'viendo' })
           this.animes.push(data);
         })
+        store.commit('setAnimes',{
+          id: 0,
+          animes: this.animes
+        })
       })
     }
   },
   mounted(){
     firebase.auth().onAuthStateChanged(() => {
-      this.setSnapshotAnimes();
+      if(store.state.animes[0].length == 0){
+        this.getAnimes();
+      }
+      else{
+        this.animes = store.state.animes[0]
+      }
       this.$emit('updateUser');
     })
   },

@@ -18,6 +18,13 @@ export default new Vuex.Store({
         capitulo: 0
       }
     },
+    animes:[
+      [], //viendo
+      [], //vistos
+      [], //favoritos
+      [], //abandonados
+      [] //pendientes
+    ],
     titulo: false,
   },
   mutations: {
@@ -39,6 +46,9 @@ export default new Vuex.Store({
     },
     setSentido(state, value){
       state.filtroOrdenSentido = value;
+    },
+    setAnimes(state, values){
+      state.animes[values.id] = values.animes;
     }
   },
   actions: {
