@@ -27,7 +27,7 @@ export default {
         case 'favoritos': return 2;
         case 'abandonados': return 3;
         case 'pendientes': return 4;
-        default: console.log('Error: ' + this.$route.params.collection); return 0;
+        default: return -1;
       }
     }
   },
@@ -79,10 +79,11 @@ export default {
       });
   },
   mounted(){
+    this.animeId = this.getAnimeId;
     this.checkScroll();
   },
   watch:{
-    '$route' (){
+    '$route': function(){
       this.animeId = this.getAnimeId;
       if(store.state.animes[this.animeId].length > 0){
         this.animes = store.state.animes[this.animeId]
