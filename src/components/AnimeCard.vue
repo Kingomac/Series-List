@@ -4,14 +4,15 @@
   <v-card
   max-width="225px"
   class="ma-2"
+  @mouseleave="saveChapter"
   >
     <v-img :src="data.imagen" width="225px"/>
     <v-card-title class="text-center" v-if="titulo.length < 50">{{titulo}}</v-card-title>
     <v-card-title class="text-center" v-else>{{titulo.substring(0,50) + '...'}}</v-card-title>
     <v-card-text v-if="data.capitulo !== undefined">Capítulo: {{data.capitulo}}</v-card-text>
     <v-card-actions>
-      <v-btn class="mr-0" v-if="data.capitulo > 0" @click="capitulo(false)" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
-      <v-btn class="ml-0" v-if="data.capitulo !== undefined" @click="capitulo(true)" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
+      <v-btn class="mr-0" v-if="data.capitulo > 0" @click="data.capitulo--" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
+      <v-btn class="ml-0" v-if="data.capitulo !== undefined" @click="data.capitulo++" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
       <v-spacer/>
       <v-btn class="mr-0" icon @click="edit"><v-icon>mdi-pencil</v-icon></v-btn>
       <v-btn class="ml-0" icon @click.stop="dialog = true"><v-icon>mdi-delete</v-icon></v-btn>
@@ -81,7 +82,8 @@ export default {
   props: ['data'],
   data(){
     return{
-      dialog: false
+      dialog: false,
+      initialChapter: 0
     }
   },
   methods: {
@@ -106,25 +108,17 @@ export default {
         })
       })    
     },
-    capitulo: async function(sumar){
-      let new_data = {
-        nombre_jp: this.data.nombre_jp,
-        nombre_en: this.data.nombre_en,
-        email: this.data.email,
-        imagen: this.data.imagen,
-        actualizado_en: this.data.actualizado_en
+    saveChapter: async function(){
+      if(this.data.capitulo !== this.initialChapter){
+        await firebase.firestore().collection('viendo').doc(this.data.id).set(this.data);
       }
-      if(sumar){
-        Object.assign(new_data, {capitulo: this.data.capitulo+1})
-      }
-      else{
-        Object.assign(new_data, {capitulo: this.data.capitulo-1})
-      }
-      await firebase.firestore().collection('viendo').doc(this.data.id).set(new_data);
     },
     edit: async function(){
       this.$store.commit('iniciarEdicion', this.data);
     }
+  },
+  mounted(){
+    this.initialChapter = this.data.capitulo;
   },
   computed: {
     col: function(){
