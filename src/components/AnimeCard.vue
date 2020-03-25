@@ -109,8 +109,9 @@ export default {
     },
     saveChapter: async function(){
       if(this.data.capitulo !== this.initialChapter){
-        console.log(this.data.capitulo, this.initialChapter)
-        await firebase.firestore().collection('viendo').doc(this.data.id).set(this.data);
+        let newdata = Object.assign({}, this.data);
+        delete newdata.id
+        await firebase.firestore().collection('viendo').doc(this.data.id).set(newdata);
       }
     },
     edit: async function(){
