@@ -4,13 +4,12 @@
   <v-card
   max-width="225px"
   class="ma-2"
-  @mouseleave="saveChapter"
   >
     <v-img :src="data.imagen" width="225px"/>
     <v-card-title class="text-center" v-if="titulo.length < 50">{{titulo}}</v-card-title>
     <v-card-title class="text-center" v-else>{{titulo.substring(0,50) + '...'}}</v-card-title>
     <v-card-text v-if="data.capitulo !== undefined">Capítulo: {{data.capitulo}}</v-card-text>
-    <v-card-actions>
+    <v-card-actions @mouseleave="saveChapter">
       <v-btn class="mr-0" v-if="data.capitulo > 0" @click="data.capitulo--" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
       <v-btn class="ml-0" v-if="data.capitulo !== undefined" @click="data.capitulo++" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
       <v-spacer/>
@@ -83,7 +82,7 @@ export default {
   data(){
     return{
       dialog: false,
-      initialChapter: 0
+      initialChapter: undefined
     }
   },
   methods: {
@@ -110,6 +109,7 @@ export default {
     },
     saveChapter: async function(){
       if(this.data.capitulo !== this.initialChapter){
+        console.log(this.data.capitulo, this.initialChapter)
         await firebase.firestore().collection('viendo').doc(this.data.id).set(this.data);
       }
     },
