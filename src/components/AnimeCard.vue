@@ -8,10 +8,10 @@
     <v-img :src="data.imagen" width="225px"/>
     <v-card-title class="text-center" v-if="titulo.length < 50">{{titulo}}</v-card-title>
     <v-card-title class="text-center" v-else>{{titulo.substring(0,50) + '...'}}</v-card-title>
-    <v-card-text v-if="data.capitulo !== undefined">Capítulo: {{data.capitulo}}</v-card-text>
+    <v-card-text v-if="showChapter">Capítulo: {{data.capitulo}}</v-card-text>
     <v-card-actions @mouseleave="saveChapter">
-      <v-btn class="mr-0" v-if="data.capitulo > 0" @click="data.capitulo--" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
-      <v-btn class="ml-0" v-if="data.capitulo !== undefined" @click="data.capitulo++" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
+      <v-btn class="mr-0" v-if="showChapter && data.capitulo > 0" @click="data.capitulo--" icon><v-icon>mdi-arrow-left-drop-circle</v-icon></v-btn>
+      <v-btn class="ml-0" v-if="showChapter" @click="data.capitulo++" icon><v-icon>mdi-arrow-right-drop-circle</v-icon></v-btn>
       <v-spacer/>
       <v-btn class="mr-0" icon @click="edit"><v-icon>mdi-pencil</v-icon></v-btn>
       <v-btn class="ml-0" icon @click.stop="dialog = true"><v-icon>mdi-delete</v-icon></v-btn>
@@ -78,7 +78,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 export default {
-  props: ['data'],
+  props: ['data', 'showChapter'],
   data(){
     return{
       dialog: false,
@@ -92,30 +92,36 @@ export default {
       this.$emit('hide')
     },
     move: async function(where) {
-      firebase.firestore().collection(this.col).doc(this.data.id).get().then((e) => {
-        let timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        firebase.firestore().collection(where).doc().set({
-          nombre_jp: e.data().nombre_jp,
-          nombre_en: e.data().nombre_en,
-          imagen: e.data().imagen,
-          capitulo: e.data().capitulo,
-          email: e.data().email,
-          actualizado_en: timestamp 
-        }).then(() => {
-          firebase.firestore().collection(this.col).doc(this.data.id).delete()
-          this.$emit('hide')
+      let timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        let newdata = Object.assign({}, this.data, {actualizado_en: timestamp});
+        this.$store.commit('unshiftAnime',{
+          id: this.getWhere(where),
+          anime: Object.assign(newdata, {id: this.data.id, actualizado_en: new Date()})
         })
-      })    
+        firebase.firestore().collection(where).doc().set(newdata).then(() => {
+          firebase.firestore().collection(this.col).doc(this.data.id).delete().then(() => this.$emit('hide'));
+        })   
     },
     saveChapter: async function(){
-      if(this.data.capitulo !== this.initialChapter){
+      if(this.showChapter && this.data.capitulo !== this.initialChapter && this.$route.params.collection == 'viendo'){
         let newdata = Object.assign({}, this.data);
         delete newdata.id
         await firebase.firestore().collection('viendo').doc(this.data.id).set(newdata);
+        this.initialChapter = this.data.capitulo;
       }
     },
     edit: async function(){
       this.$store.commit('iniciarEdicion', this.data);
+    },
+    getWhere: function(where){
+      switch(where){
+        case 'viendo': return 0;
+        case 'vistos': return 1;
+        case 'favoritos': return 2;
+        case 'abandonados': return 3;
+        case 'pendientes': return 4;
+        default: return -1;
+      }
     }
   },
   mounted(){

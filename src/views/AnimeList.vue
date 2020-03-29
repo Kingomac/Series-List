@@ -1,6 +1,6 @@
 <template>
   <div>
-    <anime-card v-on:hide="remove(key)" v-for="(a, key) in animes" v-bind:key="key" :data="a"/>
+    <anime-card v-on:hide="remove(key)" v-for="(a, key) in animes" v-bind:key="key" :showChapter="showChapter" :data="a"/>
   </div>
 </template>
 <script>
@@ -20,6 +20,12 @@ export default {
       animeId: 0
     }
   },
+  computed: {
+    showChapter: function(){
+      if(this.getAnimeId == 0) return true;
+      else return false;
+    }
+  },
   methods:{
     remove: async function(index){
       store.state.animes[this.animeId].splice(index,1);
@@ -33,7 +39,6 @@ export default {
     processData: async function(snapshot){
       await snapshot.forEach((doc) => { 
           let data = doc.data();
-          if(this.animeId !== 0) delete data.capitulo;
           data['id'] = doc.id;
           this.animes.push(data);
         })
@@ -59,6 +64,9 @@ export default {
       this.animeId = this.getAnimeId;
       if(store.state.animes[this.animeId].length > 0){
         this.animes = store.state.animes[this.animeId]
+        if(this.animes.length < 12){
+          this.addAnimes();
+        }
       }
       else{
         this.getStartAnimes();
