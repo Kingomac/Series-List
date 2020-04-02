@@ -1,11 +1,37 @@
 <template>
   <v-form>
-    <v-text-field clearable v-model="nombre_jp" placeholder="Nombre japonés"/>
-    <v-text-field clearable v-model="nombre_en" placeholder="Nombre inglés"/>
-    <v-text-field clearable v-model="imagen" placeholder="Link de la imagen"/>
-    <v-btn block :loading="fileUploading" @click="uploadImg">Subir imagen</v-btn>
-    <v-file-input @change="setFile" :value="file"></v-file-input>
-    <v-btn block @click="add">Añadir</v-btn>
+    <v-text-field
+      clearable
+      v-model="nombre_jp"
+      placeholder="Nombre japonés"
+    />
+    <v-text-field
+      clearable
+      v-model="nombre_en"
+      placeholder="Nombre inglés"
+    />
+    <v-text-field
+      clearable
+      v-model="imagen"
+      placeholder="Link de la imagen"
+    />
+    <v-btn
+      block
+      :loading="fileUploading"
+      @click="uploadImg"
+    >
+      Subir imagen
+    </v-btn>
+    <v-file-input
+      @change="setFile"
+      :value="file"
+    />
+    <v-btn
+      block
+      @click="add"
+    >
+      Añadir
+    </v-btn>
   </v-form>
 </template>
 <script>
@@ -24,7 +50,12 @@ export default {
       fileUploading: false
     }
   },
-  props: ['getAnimeId'],
+  props: {
+    getAnimeId:{
+      type: Function,
+      default: null
+    }
+  },
   methods: {
     add: async function(){
       if(this.nombre_jp == '' || this.nombre_jp == null || this.nombre_en == null || this.nombre_en == '') return null;

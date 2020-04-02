@@ -1,6 +1,12 @@
 <template>
   <div>
-    <anime-card v-on:hide="remove(key)" v-for="(a, key) in animes" v-bind:key="key" :showChapter="showChapter" :data="a"/>
+    <anime-card
+      @hide="remove(key)"
+      v-for="(a, key) in animes"
+      :key="key"
+      :show-chapter="showChapter"
+      :data="a"
+    />
   </div>
 </template>
 <script>
@@ -13,7 +19,16 @@ export default {
   components:{
     AnimeCard
   },
-  props: ['getCategoriaId', 'getAnimeId'],
+  props: { 
+    getCategoriaId:{
+      type: Function,
+      default: null
+    },
+    getAnimeId:{
+      type: Function,
+      default: null
+    }
+  },
   data(){
     return {
       animes: [],

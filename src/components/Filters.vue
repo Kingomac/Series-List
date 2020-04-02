@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-switch color="#89DDFF" v-model="titulo" label="Inglés-Japonés"></v-switch>
+    <v-switch
+      color="#89DDFF"
+      v-model="titulo"
+      label="Inglés-Japonés"
+    />
   </div>
 </template>
 <script>

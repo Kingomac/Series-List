@@ -1,7 +1,15 @@
 <template>
-<div>
-    <v-btn block @click="google">Iniciar sesión <v-img src="https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png" max-width="16px"/></v-btn>
-</div>
+  <div>
+    <v-btn
+      block
+      @click="google"
+    >
+      Iniciar sesión <v-img
+        src="https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png"
+        max-width="16px"
+      />
+    </v-btn>
+  </div>
 </template>
 <script>
 import firebase from 'firebase/app'

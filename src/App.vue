@@ -1,53 +1,79 @@
 <template>
   <v-app>
-    <v-app-bar color="appbar" app clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
+    <v-app-bar
+      color="appbar"
+      app
+      clipped-left
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title
         class="headline m-2"
         :color="'deep-purple accent-4'"
       >
         <span>Series List</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-img src="https://cdn130.picsart.com/294812797174211.png?r1024x1024" max-width="60px"/>
+      <v-spacer />
+      <v-img
+        src="https://cdn130.picsart.com/294812797174211.png?r1024x1024"
+        max-width="60px"
+      />
     </v-app-bar>
-    <v-navigation-drawer class="navigation" v-model="drawer" v-show="true" app clipped>
+    <v-navigation-drawer
+      class="navigation"
+      v-model="drawer"
+      v-show="true"
+      app
+      clipped
+    >
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Añadir</v-expansion-panel-header>
-          <v-expansion-panel-content><Create :getAnimeId="getAnimeId"/></v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Buscar</v-expansion-panel-header>
-            <v-expansion-panel-content><Search/></v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel value="1" v-if="editar">
-            <v-expansion-panel-header>Editar</v-expansion-panel-header>
-            <v-expansion-panel-content><Edit/></v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Filtros</v-expansion-panel-header>
-            <v-expansion-panel-content><Filters/></v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel v-if="!signedIn">
-            <v-expansion-panel-header>Iniciar sesión</v-expansion-panel-header>
-            <v-expansion-panel-content><Iniciar/></v-expansion-panel-content>
-          </v-expansion-panel>
+          <v-expansion-panel-content><Create :get-anime-id="getAnimeId" /></v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Buscar</v-expansion-panel-header>
+          <v-expansion-panel-content><Search /></v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel
+          value="1"
+          v-if="editar"
+        >
+          <v-expansion-panel-header>Editar</v-expansion-panel-header>
+          <v-expansion-panel-content><Edit /></v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Filtros</v-expansion-panel-header>
+          <v-expansion-panel-content><Filters /></v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel v-if="!signedIn">
+          <v-expansion-panel-header>Iniciar sesión</v-expansion-panel-header>
+          <v-expansion-panel-content><Iniciar /></v-expansion-panel-content>
+        </v-expansion-panel>
       </v-expansion-panels>
-      <v-list-item @click="signOut" v-if="signedIn">
-            Cerrar sesión
+      <v-list-item
+        @click="signOut"
+        v-if="signedIn"
+      >
+        Cerrar sesión
       </v-list-item>
-  </v-navigation-drawer>
+    </v-navigation-drawer>
     <v-content>
-      <Tabs/>
+      <Tabs />
       <v-container>
-      <router-view :getAnimeId="getAnimeId" v-on:updateUser="setSignedIn"/>
+        <router-view
+          :get-anime-id="getAnimeId"
+          @updateUser="setSignedIn"
+        />
       </v-container>
-      <v-bottom-navigation v-if="$store.state.loadingAnimes" height="5" color="appbar" fixed>
+      <v-bottom-navigation
+        v-if="$store.state.loadingAnimes"
+        height="5"
+        color="appbar"
+        fixed
+      >
         <v-progress-linear indeterminate />
       </v-bottom-navigation>
-        </v-content>
-        
+    </v-content>
   </v-app>
 </template>
 
