@@ -43,7 +43,11 @@
       <v-container>
       <router-view :getAnimeId="getAnimeId" v-on:updateUser="setSignedIn"/>
       </v-container>
+      <v-bottom-navigation v-if="$store.state.loadingAnimes" height="5" color="appbar" fixed>
+        <v-progress-linear indeterminate />
+      </v-bottom-navigation>
         </v-content>
+        
   </v-app>
 </template>
 

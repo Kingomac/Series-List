@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    loadingAnimes: false,
     busqueda: '',
     email: '',
     editar:{
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     titulo: false,
   },
   mutations: {
+    setLoadingAnimes(state,value){
+      state.loadingAnimes = value;
+    },
     setBusqueda(state, buscar) {
       state.busqueda = buscar;
     },

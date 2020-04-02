@@ -17,7 +17,7 @@ export default {
   data(){
     return {
       animes: [],
-      animeId: 0
+      animeId: 0,
     }
   },
   computed: {
@@ -31,10 +31,11 @@ export default {
       store.state.animes[this.animeId].splice(index,1);
     },
     getStartAnimes: async function(){
+      store.commit('setLoadingAnimes', true)
       await firebase.firestore().collection(this.$route.params.collection).orderBy('actualizado_en', 'desc').where('email', '==', firebase.auth().currentUser.email).limit(12).get().then((snapshot) => {
         this.animes = [];
         this.processData(snapshot);
-      })
+      }).then(() => store.commit('setLoadingAnimes', false))
     },
     processData: async function(snapshot){
       await snapshot.forEach((doc) => { 
@@ -48,13 +49,14 @@ export default {
         })
     },
     addAnimes: async function(){
+      store.commit('setLoadingAnimes', true)
       await firebase.firestore().collection(this.$route.params.collection).orderBy('actualizado_en','desc').where('email', '==', firebase.auth().currentUser.email).startAfter(this.animes[this.animes.length-1].actualizado_en).limit(6).get().then((snapshot) => {
         this.processData(snapshot)
-      })
+      }).then(() => store.commit('setLoadingAnimes', false))
     },
     checkScroll: function(){
       window.addEventListener('scroll', () => {
-        if(window.innerHeight + window.scrollY >= document.body.offsetHeight) this.addAnimes();
+        if(window.innerHeight + window.scrollY >= document.body.offsetHeight && !store.state.loadingAnimes) this.addAnimes();
       })
     },
     checkUserAndGet: function(){
