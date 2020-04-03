@@ -1,11 +1,37 @@
 <template>
   <v-form>
-    <v-text-field clearable v-model="nombre_jp" placeholder="Nombre japonés"/>
-    <v-text-field clearable v-model="nombre_en" placeholder="Nombre inglés"/>
-    <v-text-field clearable v-model="imagen" placeholder="Link de la imagen"/>
-    <v-btn block :loading="fileUploading" @click="uploadImg">Subir imagen</v-btn>
-    <v-file-input @change="setFile" :value="file"></v-file-input>
-    <v-btn block @click="add">Añadir</v-btn>
+    <v-text-field
+      clearable
+      v-model="nombre_jp"
+      placeholder="Nombre japonés"
+    />
+    <v-text-field
+      clearable
+      v-model="nombre_en"
+      placeholder="Nombre inglés"
+    />
+    <v-text-field
+      clearable
+      v-model="imagen"
+      placeholder="Link de la imagen"
+    />
+    <v-btn
+      block
+      :loading="fileUploading"
+      @click="uploadImg"
+    >
+      Subir imagen
+    </v-btn>
+    <v-file-input
+      @change="setFile"
+      :value="file"
+    />
+    <v-btn
+      block
+      @click="add"
+    >
+      Añadir
+    </v-btn>
   </v-form>
 </template>
 <script>
@@ -22,6 +48,12 @@ export default {
       imagen: '',
       file: [],
       fileUploading: false
+    }
+  },
+  props: {
+    getAnimeId:{
+      type: Function,
+      default: null
     }
   },
   methods: {
@@ -43,6 +75,10 @@ export default {
         capitulo: 0,
         actualizado_en: timestamp
       }
+      this.$store.commit('unshiftAnime', {
+        id: this.getAnimeId,
+        anime: data
+      })
       await firebase.firestore().collection(categ).doc().set(data).then(async () => {
         await this.clean();
       }).catch((e)=>{

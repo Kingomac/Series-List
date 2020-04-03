@@ -6,17 +6,12 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [{
-      path: "/",
-      name: "viendo",
-      component: () =>
-        import ("./views/Viendo.vue")
-    },
+  routes: [
     {
-      path: "/categoria/:collection",
+      path: "/:collection",
       name: "categoria",
       component: () =>
-        import ("./views/Otros.vue")
+        import ("./views/AnimeList.vue")
     }
   ]
 })

@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    loadingAnimes: false,
     busqueda: '',
     email: '',
     editar:{
@@ -18,9 +19,19 @@ export default new Vuex.Store({
         capitulo: 0
       }
     },
+    animes:[
+      [], //viendo
+      [], //vistos
+      [], //favoritos
+      [], //abandonados
+      [] //pendientes
+    ],
     titulo: false,
   },
   mutations: {
+    setLoadingAnimes(state,value){
+      state.loadingAnimes = value;
+    },
     setBusqueda(state, buscar) {
       state.busqueda = buscar;
     },
@@ -39,6 +50,12 @@ export default new Vuex.Store({
     },
     setSentido(state, value){
       state.filtroOrdenSentido = value;
+    },
+    setAnimes(state, values){
+      state.animes[values.id] = values.animes;
+    },
+    unshiftAnime(state, values){
+      state.animes[values.id].unshift(values.anime);
     }
   },
   actions: {

@@ -1,10 +1,33 @@
 <template>
   <v-form>
-    <v-text-field clearable v-model="anime.nombre_jp" placeholder="Nombre japonés"/>
-    <v-text-field clearable v-model="anime.nombre_en" placeholder="Nombre inglés"/>
-    <v-text-field clearable v-model="anime.imagen" placeholder="Link de la imagen"/>
-    <v-btn block class="mb-1" @click="confirmar">Editar</v-btn>
-    <v-btn block @click="cancelar">Cancelar</v-btn>
+    <v-text-field
+      clearable
+      v-model="anime.nombre_jp"
+      placeholder="Nombre japonés"
+    />
+    <v-text-field
+      clearable
+      v-model="anime.nombre_en"
+      placeholder="Nombre inglés"
+    />
+    <v-text-field
+      clearable
+      v-model="anime.imagen"
+      placeholder="Link de la imagen"
+    />
+    <v-btn
+      block
+      class="mb-1"
+      @click="confirmar"
+    >
+      Editar
+    </v-btn>
+    <v-btn
+      block
+      @click="cancelar"
+    >
+      Cancelar
+    </v-btn>
   </v-form>
 </template>
 <script>
