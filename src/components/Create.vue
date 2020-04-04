@@ -52,7 +52,7 @@ export default {
   },
   props: {
     getAnimeId:{
-      type: Function,
+      type: Number,
       default: null
     }
   },

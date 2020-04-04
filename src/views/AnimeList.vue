@@ -25,7 +25,7 @@ export default {
       default: null
     },
     getAnimeId:{
-      type: Function,
+      type: Number,
       default: null
     }
   },

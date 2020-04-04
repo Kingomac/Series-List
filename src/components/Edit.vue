@@ -43,16 +43,10 @@ export default {
     confirmar: async function(){
       if(this.anime.nombre_jp == null || this.anime.nombre_jp == '' || this.anime.nombre_en == null || this.anime.nombre_en == '') return null;
       let timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      await firebase.firestore().collection(this.anime.col).doc(this.anime.id).set({
-        nombre_jp: this.anime.nombre_jp,
-        nombre_en: this.anime.nombre_en,
-        capitulo: this.anime.capitulo,
-        imagen: this.anime.imagen,
-        email: this.anime.email,
-        actualizado_en: timestamp
-      }).then(() => {
-        this.$store.commit('finalizarEdicion');
-      })
+      let newdata = Object.assign({}, this.anime);
+      delete newdata.id;
+      newdata.actualizado_en = timestamp
+      await firebase.firestore().collection(this.$route.params.collection).doc(this.anime.id).set(newdata).then(() => this.$store.commit('finalizarEdicion'));
     },
     cancelar: function(){
       this.$store.commit('finalizarEdicion');
