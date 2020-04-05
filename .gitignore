@@ -22,4 +22,3 @@ firebase-debug.log
 *.sln
 *.sw?
 app.config.js
-firebase.json
