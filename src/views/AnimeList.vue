@@ -115,19 +115,12 @@
           .get()
           .then((snapshot) => {
             this.processData(snapshot);
-            let cStyle =
-              document.body.currentStyle ||
-              window.getComputedStyle(document.body, "");
 
-            let hasVScroll =
-              cStyle.overflow == "visible" ||
-              cStyle.overflowY == "visible" ||
-              (hasVScroll && cStyle.overflow == "auto") ||
-              (hasVScroll && cStyle.overflowY == "auto");
-            console.log(hasVScroll);
-            if (!hasVScroll && this.loadedMore < 10) {
+            if (
+              document.body.scrollHeight <= document.body.clientHeight &&
+              this.loadedMore < 5
+            ) {
               this.loadedMore += 1;
-              console.log(this.loadedMore);
               this.addAnimes();
             } else {
               store.commit("setLoadingAnimes", false);
