@@ -1,6 +1,11 @@
 <template>
-  <div class="d-inline-block">
-    <v-lazy transition="fade-transition">
+  <div
+    class="d-inline-block"
+  >
+    <v-lazy
+      transition="
+    fade-transition"
+    >
       <v-card
         max-width="225px"
         class="ma-2"
@@ -24,7 +29,9 @@
         <v-card-text v-if="showChapter">
           Capítulo: {{ data.capitulo }}
         </v-card-text>
-        <v-card-actions @mouseleave="saveChapter">
+        <v-card-actions
+          @mouseleave="saveChapter"
+        >
           <v-btn
             class="mr-0"
             v-if="showChapter && data.capitulo > 0"

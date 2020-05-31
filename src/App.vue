@@ -125,6 +125,7 @@ export default {
     },
     signOut: function(){
       firebase.auth().signOut();
+      this.signedIn = false;
     }
   },
   mounted(){

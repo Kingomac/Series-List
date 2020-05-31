@@ -75,15 +75,17 @@ export default {
         capitulo: 0,
         actualizado_en: timestamp
       }
-      this.$store.commit('unshiftAnime', {
-        id: this.getAnimeId,
-        anime: data
-      })
-      await firebase.firestore().collection(categ).doc().set(data).then(async () => {
-        await this.clean();
-      }).catch((e)=>{
-        console.log(e);
-      })
+      this.clean();
+      const req = await firebase.firestore().collection(categ).add(data);
+      try{
+        await this.$store.commit('unshiftAnime', {
+          id: this.getAnimeId,
+          anime: Object.assign(data, { id: req.id })
+        })
+      } catch(err) {
+        console.error(err);
+      }
+      
     },
     clean: async function(){
       this.nombre_jp = "";
