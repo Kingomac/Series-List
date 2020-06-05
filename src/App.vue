@@ -137,7 +137,6 @@ export default {
 </script>
 <style>
 .v-card__text, .v-card__title {
-  word-break: normal !important;
   line-height: 110% !important;
 }
 .navigation, .navigation div, .navigation.v-expansion-panel-header{
