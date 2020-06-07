@@ -9,13 +9,13 @@
 </template>
 <script>
 export default {
-  computed:{
-    titulo:{
-      set(value){
-        this.$store.commit('setTitulo', value);
+  computed: {
+    titulo: {
+      set (value) {
+        this.$store.commit('setTitulo', value)
       },
-      get(){
-        return this.$store.state.titulo;
+      get () {
+        return this.$store.state.titulo
       }
     }
   }

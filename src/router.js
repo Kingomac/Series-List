@@ -8,10 +8,10 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/:collection",
-      name: "categoria",
+      path: '/:collection',
+      name: 'categoria',
       component: () =>
-        import ("./views/AnimeList.vue")
+        import('./views/AnimeList.vue')
     }
   ]
 })
