@@ -61,7 +61,7 @@
             store.state.animes[this.getAnimeId].push(newanime);
           }
         } catch (err) {
-          console.error(err);
+          console.log('There is no more anime');
         }
         await store.commit("setLoadingAnimes", false);
       },
