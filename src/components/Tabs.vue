@@ -19,16 +19,16 @@
 </template>
 <script>
 export default {
-  methods:{
-    changeRoute: async function(to){
-      this.$router.push(to);
-      this.$emit('updatecards');
+  methods: {
+    changeRoute: async function (to) {
+      this.$router.push(to)
+      this.$emit('updatecards')
     }
   }
 }
 </script>
 <style>
-.v-tabs-bar{
-  background-color: #2F333D !important;
-}
+  .v-tabs-bar {
+    background-color: #2f333d !important;
+  }
 </style>
