@@ -6,6 +6,6 @@ module.exports = {
     projectId: 'what-anime-i-see',
     messagingSenderId: '239560464048',
     storageBucket: 'what-anime-i-see.appspot.com',
-  }
     appId: '1:239560464048:web:5f6e2c6391780d896e0d75'
+  }
 }
