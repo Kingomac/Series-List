@@ -8,9 +8,9 @@ export default new Vuex.Store({
     loadingAnimes: false,
     busqueda: '',
     email: '',
-    editar:{
+    editar: {
       activado: false,
-      anime:{
+      anime: {
         id: '',
         nombre_jp: '',
         nombre_en: '',
@@ -19,43 +19,43 @@ export default new Vuex.Store({
         capitulo: 0
       }
     },
-    animes:[
-      [], //viendo
-      [], //vistos
-      [], //favoritos
-      [], //abandonados
-      [] //pendientes
+    animes: [
+      [], // viendo
+      [], // vistos
+      [], // favoritos
+      [], // abandonados
+      [] // pendientes
     ],
-    titulo: false,
+    titulo: false
   },
   mutations: {
-    setLoadingAnimes(state,value){
-      state.loadingAnimes = value;
+    setLoadingAnimes (state, value) {
+      state.loadingAnimes = value
     },
-    setBusqueda(state, buscar) {
-      state.busqueda = buscar;
+    setBusqueda (state, buscar) {
+      state.busqueda = buscar
     },
-    iniciarEdicion(state, anime){
-      state.editar.activado = true;
-      state.editar.anime = anime;
+    iniciarEdicion (state, anime) {
+      state.editar.activado = true
+      state.editar.anime = anime
     },
-    finalizarEdicion(state){
-      state.editar.activado = false;
+    finalizarEdicion (state) {
+      state.editar.activado = false
     },
-    setTitulo(state, value){
-      state.titulo = value;
+    setTitulo (state, value) {
+      state.titulo = value
     },
-    setOrden(state,value){
-      state.filtroOrden = value;
+    setOrden (state, value) {
+      state.filtroOrden = value
     },
-    setSentido(state, value){
-      state.filtroOrdenSentido = value;
+    setSentido (state, value) {
+      state.filtroOrdenSentido = value
     },
-    setAnimes(state, values){
-      state.animes[values.id] = values.animes;
+    setAnimes (state, values) {
+      state.animes[values.id] = values.animes
     },
-    unshiftAnime(state, values){
-      state.animes[values.id].unshift(values.anime);
+    unshiftAnime (state, values) {
+      state.animes[values.id].unshift(values.anime)
     }
   },
   actions: {

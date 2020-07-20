@@ -35,14 +35,14 @@
   </v-form>
 </template>
 <script>
-import firebase from 'firebase/app';
+import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/storage'
 import 'firebase/auth'
 
 export default {
-  data(){
-    return{
+  data () {
+    return {
       nombre_jp: '',
       nombre_en: '',
       imagen: '',
@@ -51,23 +51,22 @@ export default {
     }
   },
   props: {
-    getAnimeId:{
+    getAnimeId: {
       type: Number,
       default: null
     }
   },
   methods: {
-    add: async function(){
-      if(this.nombre_jp == '' || this.nombre_jp == null || this.nombre_en == null || this.nombre_en == '') return null;
-      let categ;
-      if(this.$route.params.collection){
-        categ = this.$route.params.collection;
+    add: async function () {
+      if (this.nombre_jp === '' || this.nombre_jp == null || this.nombre_en == null || this.nombre_en === '') return null
+      let categ
+      if (this.$route.params.collection) {
+        categ = this.$route.params.collection
+      } else {
+        categ = 'viendo'
       }
-      else{
-        categ = 'viendo';
-      }
-      let timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      let data = {
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+      const data = {
         nombre_jp: this.nombre_jp,
         nombre_en: this.nombre_en,
         imagen: this.imagen,
@@ -75,45 +74,44 @@ export default {
         capitulo: 0,
         actualizado_en: timestamp
       }
-      this.clean();
-      const req = await firebase.firestore().collection(categ).add(data);
-      try{
+      this.clean()
+      const req = await firebase.firestore().collection(categ).add(data)
+      try {
         await this.$store.commit('unshiftAnime', {
           id: this.getAnimeId,
           anime: Object.assign(data, { id: req.id })
         })
-      } catch(err) {
-        console.error(err);
+      } catch (err) {
+        console.error(err)
       }
-      
     },
-    clean: async function(){
-      this.nombre_jp = "";
-      this.nombre_en = "";
-      this.imagen = "";
+    clean: async function () {
+      this.nombre_jp = ''
+      this.nombre_en = ''
+      this.imagen = ''
     },
-    uploadImg: async function(){
-      this.fileUploading = true;
+    uploadImg: async function () {
+      this.fileUploading = true
       await this.fileChange(this.file)
     },
-    fileChange: async function(e){
-      let name = firebase.functions().httpsCallable('generateUniqueId')
+    fileChange: async function (e) {
+      const name = firebase.functions().httpsCallable('generateUniqueId')
       name().then((res) => {
         firebase.storage().ref().child(`/anime-covers/${res.data}.${e.name.split('.').pop()}`).put(e).then((e) => {
           e.ref.getDownloadURL().then((e) => {
-            this.imagen = e;
+            this.imagen = e
           }).catch((e) => {
-            this.imagen = e;
-          });
-          this.fileUploading = false;
+            this.imagen = e
+          })
+          this.fileUploading = false
         }).catch((e) => {
-          console.log(e);
-          this.fileUploading = false;
+          console.log(e)
+          this.fileUploading = false
         })
-        })
+      })
     },
-    setFile: async function(e){
-      this.file = e;
+    setFile: async function (e) {
+      this.file = e
     }
   }
 }

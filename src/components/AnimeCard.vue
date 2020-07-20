@@ -20,7 +20,7 @@
           class="text-center"
           v-else
         >
-          {{ titulo.substring(0,50) + '...' }}
+          {{ titulo.substring(0, 50) + "..." }}
         </v-card-title>
         <v-card-text
           class="card-chapter"
@@ -64,7 +64,7 @@
             <v-icon>mdi-delete</v-icon>
           </v-btn>
           <v-menu offset-y>
-            <template v-slot:activator="{on}">
+            <template v-slot:activator="{ on }">
               <v-btn
                 icon
                 v-on="on"
@@ -141,36 +141,33 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       dialog: false,
       initialChapter: undefined
     };
   },
   methods: {
-    remove: async function() {
-      this.dialog = false;
+    remove: async function () {
+      this.dialog = false
       await firebase
         .firestore()
         .collection(this.col)
         .doc(this.data.id)
-        .delete();
-      this.$emit("hide");
+        .delete()
+      this.$emit('hide')
     },
-    move: async function(where) {
-      let timestamp = firebase.firestore.FieldValue.serverTimestamp();
-      let newdata = Object.assign({}, this.data, { actualizado_en: timestamp });
-      this.$store.commit("unshiftAnime", {
-        id: this.getWhere(where),
-        anime: Object.assign(newdata, {
-          id: this.data.id,
-          actualizado_en: new Date()
-        })
-      });
+    move: function (where) {
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+      console.log('data:', this.data)
+      const newdata = Object.assign({}, this.data)
+      delete newdata.id
+      newdata.actualizado_en = timestamp
+      console.log('newdata', newdata)
       firebase
         .firestore()
         .collection(where)
-        .doc()
+        .doc(this.data.id)
         .set(newdata)
         .then(() => {
           firebase
@@ -178,61 +175,74 @@ export default {
             .collection(this.col)
             .doc(this.data.id)
             .delete()
-            .then(() => this.$emit("hide"));
-        });
+            .then(() => this.$emit('hide'))
+          firebase
+            .firestore()
+            .collection(where)
+            .doc(this.data.id)
+            .get()
+            .then(doc => {
+              this.$store.commit('unshiftAnime', {
+                id: this.getWhere(where),
+                anime: Object.assign({}, this.data, {
+                  actualizado_en: doc.data().actualizado_en
+                })
+              })
+            })
+        })
     },
-    saveChapter: async function() {
+    saveChapter: async function () {
       if (
         this.showChapter &&
         this.data.capitulo !== this.initialChapter &&
-        this.$route.params.collection == "viendo"
+        this.$route.params.collection === 'viendo'
       ) {
-        let newdata = Object.assign({}, this.data);
-        delete newdata.id;
+        const newdata = Object.assign({}, this.data)
+        delete newdata.id
         await firebase
           .firestore()
-          .collection("viendo")
+          .collection('viendo')
           .doc(this.data.id)
-          .set(newdata);
-        this.initialChapter = this.data.capitulo;
+          .set(newdata)
+        this.initialChapter = this.data.capitulo
       }
     },
-    edit: async function() {
-      this.$store.commit("iniciarEdicion", this.data);
+    edit: async function () {
+      this.$store.commit('iniciarEdicion', this.data)
     },
-    getWhere: function(where) {
+    getWhere: function (where) {
       switch (where) {
-        case "viendo":
-          return 0;
-        case "vistos":
-          return 1;
-        case "favoritos":
-          return 2;
-        case "abandonados":
-          return 3;
-        case "pendientes":
-          return 4;
+        case 'viendo':
+          return 0
+        case 'vistos':
+          return 1
+        case 'favoritos':
+          return 2
+        case 'abandonados':
+          return 3
+        case 'pendientes':
+          return 4
         default:
-          return -1;
+          return -1
       }
     }
   },
-  mounted() {
-    this.initialChapter = this.data.capitulo;
+  mounted () {
+    this.initialChapter = this.data.capitulo
   },
   computed: {
-    col: function() {
+    col: function () {
       if (this.$route.params.collection) {
-        return this.$route.params.collection;
+        return this.$route.params.collection
       } else {
-        return "viendo";
+        return 'viendo'
       }
     },
-    titulo: function() {
+    titulo: function () {
       if (this.$store.state.titulo) {
-        return this.data.nombre_en;
+        return this.data.nombre_en
       } else {
-        return this.data.nombre_jp;
+        return this.data.nombre_jp
       }
     }
   }
