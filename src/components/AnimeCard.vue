@@ -2,13 +2,15 @@
   <div class="d-flex elevation-5 ma-2">
     <v-lazy transition="fade-transition">
       <v-card
-        max-width="225px"
+        width="225px"
         height="100%"
         class="card-outter"
       >
         <v-img
           :src="data.imagen"
           width="225px"
+          height="375px"
+          alt="Imagen de mierda"
         />
         <v-card-title
           class="text-center"
@@ -128,8 +130,8 @@
   </div>
 </template>
 <script>
-import firebase from "firebase/app";
-import "firebase/firestore";
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 export default {
   props: {
     data: {
@@ -145,7 +147,7 @@ export default {
     return {
       dialog: false,
       initialChapter: undefined
-    };
+    }
   },
   methods: {
     remove: async function () {
@@ -246,7 +248,7 @@ export default {
       }
     }
   }
-};
+}
 </script>
 <style>
 .v-card {
