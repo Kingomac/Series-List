@@ -1,16 +1,16 @@
 <template>
-  <div class="d-inline-block">
-    <v-lazy
-      transition="
-    fade-transition"
-    >
+  <div class="d-flex elevation-5 ma-2">
+    <v-lazy transition="fade-transition">
       <v-card
-        max-width="225px"
-        class="ma-2"
+        width="225px"
+        height="100%"
+        class="card-outter"
       >
         <v-img
           :src="data.imagen"
           width="225px"
+          height="375px"
+          alt="Imagen de mierda"
         />
         <v-card-title
           class="text-center"
@@ -24,10 +24,16 @@
         >
           {{ titulo.substring(0, 50) + "..." }}
         </v-card-title>
-        <v-card-text v-if="showChapter">
+        <v-card-text
+          class="card-chapter"
+          v-if="showChapter"
+        >
           Capítulo: {{ data.capitulo }}
         </v-card-text>
-        <v-card-actions @mouseleave="saveChapter">
+        <v-card-actions
+          @mouseleave="saveChapter"
+          class="card-actions"
+        >
           <v-btn
             class="mr-0"
             v-if="showChapter && data.capitulo > 0"
@@ -98,10 +104,7 @@
           ¿Quieres borrar este anime?
         </v-card-title>
 
-        <v-card-text>
-          Cuando borres {{ titulo }} no vas a poder recuperar ninguna de su
-          información.
-        </v-card-text>
+        <v-card-text>Cuando borres {{ titulo }} no vas a poder recuperar ninguna de su información.</v-card-text>
 
         <v-card-actions>
           <v-spacer />
@@ -253,5 +256,17 @@ export default {
 }
 .v-card:hover {
   background-color: #31364a !important;
+}
+.card-outter {
+  position: relative;
+  padding-bottom: 70px;
+}
+.card-actions {
+  position: absolute;
+  bottom: 0;
+}
+.card-chapter {
+  position: absolute;
+  bottom: 40px;
 }
 </style>

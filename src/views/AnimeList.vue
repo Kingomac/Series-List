@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-row align="stretch">
     <anime-card
       @hide="remove(key)"
       v-for="(a, key) in animes"
@@ -7,7 +7,7 @@
       :show-chapter="showChapter"
       :data="a"
     />
-  </div>
+  </v-row>
 </template>
 <script>
 import AnimeCard from '../components/AnimeCard.vue'
