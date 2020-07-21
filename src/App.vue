@@ -49,7 +49,7 @@
         Cerrar sesión
       </v-list-item>
     </v-navigation-drawer>
-    <v-content>
+    <v-main>
       <Tabs />
       <v-container>
         <router-view :get-anime-id="getAnimeId" @updateUser="setSignedIn" />
@@ -62,7 +62,7 @@
       >
         <v-progress-linear indeterminate />
       </v-bottom-navigation>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 

@@ -33,7 +33,6 @@ export default new Vuex.Store({
   mutations: {
     loadCardsSize (state) {
       const size = JSON.parse(window.localStorage.getItem('cardsSize'))
-      console.log(size)
       if (size !== null) {
         state.cardsWidth = size.width
         state.cardsHeight = size.height
