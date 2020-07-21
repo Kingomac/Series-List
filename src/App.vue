@@ -6,6 +6,9 @@
         <span>Series List</span>
       </v-toolbar-title>
       <v-spacer />
+      <v-btn @click="changeCardsSize(false)" icon><v-icon>mdi-minus-circle-outline</v-icon></v-btn>
+      <v-btn @click="changeCardsSize(true)" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+
       <v-img
         src="https://cdn130.picsart.com/294812797174211.png?r1024x1024"
         max-width="60px"
@@ -111,6 +114,14 @@ export default {
     }
   },
   methods: {
+    changeCardsSize: function (sum) {
+      if (sum) {
+        this.$store.commit('addCardsSize')
+      } else {
+        this.$store.commit('lessCardsSize')
+      }
+      window.localStorage.setItem('cardsSize', JSON.stringify({ width: this.$store.state.cardsWidth, height: this.$store.state.cardsHeight }))
+    },
     setSignedIn: function () {
       if (firebase.auth().currentUser) this.signedIn = true
       else this.signedIn = false
@@ -124,6 +135,7 @@ export default {
     if (this.getAnimeId === -1) {
       this.$router.push('/viendo')
     }
+    this.$store.commit('loadCardsSize')
   }
 }
 </script>

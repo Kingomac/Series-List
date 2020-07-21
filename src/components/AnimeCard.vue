@@ -1,15 +1,15 @@
 <template>
-  <div class="d-flex elevation-5 ma-2">
+  <div class="d-flex elevation-5 my-2 ml-2">
     <v-lazy transition="fade-transition">
       <v-card
-        width="225px"
+        :width="`${$store.state.cardsWidth}px`"
         height="100%"
         class="card-outter"
       >
         <v-img
           :src="data.imagen"
-          width="225px"
-          height="375px"
+          width="100%"
+          :height="`${$store.state.cardsHeight}px`"
           alt="Imagen de mierda"
         />
         <v-card-title
