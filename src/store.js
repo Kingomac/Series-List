@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    cardsWidth: 250,
+    cardsHeight: 350,
     loadingAnimes: false,
     busqueda: '',
     email: '',
@@ -29,6 +31,26 @@ export default new Vuex.Store({
     titulo: false
   },
   mutations: {
+    loadCardsSize (state) {
+      const size = JSON.parse(window.localStorage.getItem('cardsSize'))
+      console.log(size)
+      if (size !== null) {
+        state.cardsWidth = size.width
+        state.cardsHeight = size.height
+      }
+    },
+    addCardsSize (state) {
+      if (state.cardsWidth < 500) {
+        state.cardsWidth *= 1.1
+        state.cardsHeight *= 1.1
+      }
+    },
+    lessCardsSize (state) {
+      if (state.cardsWidth > 150) {
+        state.cardsWidth *= 0.9
+        state.cardsHeight *= 0.9
+      }
+    },
     setLoadingAnimes (state, value) {
       state.loadingAnimes = value
     },
