@@ -1,4 +1,6 @@
 <template>
+<v-flex>
+  <search-window />
   <v-row align="stretch">
     <anime-card
       @hide="remove(key)"
@@ -8,8 +10,10 @@
       :data="a"
     />
   </v-row>
+</v-flex>
 </template>
 <script>
+import SearchWindow from '../components/SearchWindow.vue'
 import AnimeCard from '../components/AnimeCard.vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
@@ -17,7 +21,8 @@ import 'firebase/auth'
 import store from '../store'
 export default {
   components: {
-    AnimeCard
+    AnimeCard,
+    SearchWindow
   },
   props: {
     getCategoriaId: {
