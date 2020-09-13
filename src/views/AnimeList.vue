@@ -25,10 +25,6 @@ export default {
     SearchWindow
   },
   props: {
-    getCategoriaId: {
-      type: Function,
-      default: null
-    },
     getAnimeId: {
       type: Number,
       default: null

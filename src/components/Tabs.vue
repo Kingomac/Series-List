@@ -17,16 +17,6 @@
     </v-tab>
   </v-tabs>
 </template>
-<script>
-export default {
-  methods: {
-    changeRoute: async function (to) {
-      this.$router.push(to)
-      this.$emit('updatecards')
-    }
-  }
-}
-</script>
 <style>
   .v-tabs-bar {
     background-color: #2f333d !important;

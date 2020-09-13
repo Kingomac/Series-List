@@ -32,7 +32,7 @@
           <v-expansion-panel-header>Buscar</v-expansion-panel-header>
           <v-expansion-panel-content><Search /></v-expansion-panel-content>
         </v-expansion-panel>
-        <v-expansion-panel value="1" v-if="editar">
+        <v-expansion-panel value="1" v-if="$store.state.editar.activado">
           <v-expansion-panel-header>Editar</v-expansion-panel-header>
           <v-expansion-panel-content><Edit /></v-expansion-panel-content>
         </v-expansion-panel>
@@ -52,7 +52,7 @@
     <v-main>
       <Tabs />
       <v-container>
-        <router-view :get-anime-id="getAnimeId" @updateUser="setSignedIn" />
+        <router-view :get-anime-id="getAnimeId" />
       </v-container>
       <v-bottom-navigation
         v-if="$store.state.loadingAnimes"
@@ -76,7 +76,6 @@ import Filters from './components/Filters'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import store from './store'
 
 export default {
   name: 'App',
@@ -89,13 +88,9 @@ export default {
     Filters
   },
   data: () => ({
-    drawer: null,
-    signedIn: false
+    drawer: null
   }),
   computed: {
-    editar: function () {
-      return store.state.editar.activado
-    },
     getAnimeId: function () {
       switch (this.$route.params.collection) {
         case 'viendo':
@@ -111,6 +106,10 @@ export default {
         default:
           return -1
       }
+    },
+    signedIn: function () {
+      if (firebase.auth().currentUser) return true
+      else return false
     }
   },
   methods: {
@@ -121,10 +120,6 @@ export default {
         this.$store.commit('lessCardsSize')
       }
       window.localStorage.setItem('cardsSize', JSON.stringify({ width: this.$store.state.cardsWidth, height: this.$store.state.cardsHeight }))
-    },
-    setSignedIn: function () {
-      if (firebase.auth().currentUser) this.signedIn = true
-      else this.signedIn = false
     },
     signOut: function () {
       firebase.auth().signOut()
