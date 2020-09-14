@@ -4,10 +4,7 @@
       block
       @click="google"
     >
-      Iniciar sesión <v-img
-        src="https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png"
-        max-width="16px"
-      />
+      Iniciar sesión
     </v-btn>
   </div>
 </template>

@@ -9,7 +9,6 @@ export default new Vuex.Store({
     cardsHeight: 350,
     loadingAnimes: false,
     busqueda: '',
-    email: '',
     editar: {
       activado: false,
       anime: {
