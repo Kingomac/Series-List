@@ -6,60 +6,56 @@
         <span>Series List</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn @click="changeCardsSize(false)" icon><v-icon>mdi-minus-circle-outline</v-icon></v-btn>
-      <v-btn @click="changeCardsSize(true)" icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
+      <v-btn @click="changeCardsSize(false)" icon>
+        <v-icon>mdi-minus-circle-outline</v-icon>
+      </v-btn>
+      <v-btn @click="changeCardsSize(true)" icon>
+        <v-icon>mdi-plus-circle-outline</v-icon>
+      </v-btn>
 
-      <v-img
-        src="https://cdn130.picsart.com/294812797174211.png?r1024x1024"
-        max-width="60px"
-      />
+      <v-img src="https://cdn130.picsart.com/294812797174211.png?r1024x1024" max-width="60px" />
     </v-app-bar>
-    <v-navigation-drawer
-      class="navigation"
-      v-model="drawer"
-      v-show="true"
-      app
-      clipped
-    >
+    <v-navigation-drawer class="navigation" v-model="drawer" v-show="true" app clipped>
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Añadir</v-expansion-panel-header>
-          <v-expansion-panel-content
-            ><Create :get-anime-id="getAnimeId"
-          /></v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <Create :get-anime-id="getAnimeId" />
+          </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
           <v-expansion-panel-header>Buscar</v-expansion-panel-header>
-          <v-expansion-panel-content><Search /></v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <Search />
+          </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel value="1" v-if="$store.state.editar.activado">
           <v-expansion-panel-header>Editar</v-expansion-panel-header>
-          <v-expansion-panel-content><Edit /></v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <Edit />
+          </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
           <v-expansion-panel-header>Filtros</v-expansion-panel-header>
-          <v-expansion-panel-content><Filters /></v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <Filters />
+          </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel v-if="!signedIn">
           <v-expansion-panel-header>Iniciar sesión</v-expansion-panel-header>
-          <v-expansion-panel-content><Iniciar /></v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <Iniciar />
+          </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
-      <v-list-item @click="signOut" v-if="signedIn">
-        Cerrar sesión
-      </v-list-item>
+      <v-list-item @click="signOut" v-if="signedIn">Cerrar sesión</v-list-item>
     </v-navigation-drawer>
     <v-main>
       <Tabs />
       <v-container>
         <router-view :get-anime-id="getAnimeId" />
       </v-container>
-      <v-bottom-navigation
-        v-if="$store.state.loadingAnimes"
-        height="5"
-        color="appbar"
-        fixed
-      >
+      <v-bottom-navigation v-if="$store.state.loadingAnimes" height="5" color="appbar" fixed>
         <v-progress-linear indeterminate />
       </v-bottom-navigation>
     </v-main>
@@ -88,7 +84,8 @@ export default {
     Filters
   },
   data: () => ({
-    drawer: null
+    drawer: null,
+    signedIn: false
   }),
   computed: {
     getAnimeId: function () {
@@ -106,10 +103,6 @@ export default {
         default:
           return -1
       }
-    },
-    signedIn: function () {
-      if (firebase.auth().currentUser) return true
-      else return false
     }
   },
   methods: {
@@ -119,7 +112,13 @@ export default {
       } else {
         this.$store.commit('lessCardsSize')
       }
-      window.localStorage.setItem('cardsSize', JSON.stringify({ width: this.$store.state.cardsWidth, height: this.$store.state.cardsHeight }))
+      window.localStorage.setItem(
+        'cardsSize',
+        JSON.stringify({
+          width: this.$store.state.cardsWidth,
+          height: this.$store.state.cardsHeight
+        })
+      )
     },
     signOut: function () {
       firebase.auth().signOut()
@@ -131,21 +130,25 @@ export default {
       this.$router.push('/viendo')
     }
     this.$store.commit('loadCardsSize')
+    firebase.auth().onAuthStateChanged((e) => {
+      if (e) this.signedIn = true
+      else this.signedIn = false
+    })
   }
 }
 </script>
 <style>
-  .v-card__text,
-  .v-card__title {
-    word-break: normal !important;
-    line-height: 110% !important;
-  }
-  .navigation,
-  .navigation div,
-  .navigation.v-expansion-panel-header {
-    background-color: #2f333d !important;
-  }
-  .v-content {
-    background: #22242e !important;
-  }
+.v-card__text,
+.v-card__title {
+  word-break: normal !important;
+  line-height: 110% !important;
+}
+.navigation,
+.navigation div,
+.navigation.v-expansion-panel-header {
+  background-color: #2f333d !important;
+}
+.v-content {
+  background: #22242e !important;
+}
 </style>
