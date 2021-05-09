@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      - run: touch app.config.js
+      - run: echo "${{ secrets.FIREBASE_TOKEN }}" > app.config.js
       - run: npm install
       - run: npm run build
       - uses: w9jds/firebase-action@master
