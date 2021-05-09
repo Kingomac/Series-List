@@ -6,7 +6,7 @@ import store from './store'
 import firebase from 'firebase/app'
 import { firebaseConfig } from '../app.config'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = true
 
 firebase.initializeApp(firebaseConfig)
 
