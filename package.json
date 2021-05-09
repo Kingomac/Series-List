@@ -1,30 +1,32 @@
 {
   "name": "series-list-next",
   "version": "1.0.0",
-  "private": true,
-  "description": "Series-List-Next",
-  "keywords": [
-    "gatsby"
-  ],
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "dev": "npx parcel ./src/index.html",
+    "build": "npx parcel build ./src/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@firebase/firestore-types": "^2.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "firebase-admin": "^9.7.0",
+    "firebase-tools": "^9.10.2",
+    "parcel-bundler": "^1.12.5",
+    "sass": "^1.32.12",
+    "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
-    "gatsby": "^3.3.1",
-    "gatsby-plugin-image": "^1.3.1",
-    "gatsby-plugin-sharp": "^3.3.1",
-    "gatsby-source-filesystem": "^3.3.0",
-    "gatsby-transformer-sharp": "^3.3.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
-  },
-  "devDependencies": {
-    "@types/material-ui": "^0.21.8"
+    "firebase": "^8.5.0"
   }
 }

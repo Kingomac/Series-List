@@ -1,0 +1,25 @@
+@import "./vars.scss";
+
+sl-topbar {
+  position: absolute;
+  margin: 0;
+  font-family: $font;
+  font-weight: bold;
+  font-size: 28px;
+  color: $accent;
+  background-color: $primary;
+  width: 100vw;
+  padding: 15px 0 15px 0;
+  span {
+    padding: 15px;
+  }
+}
+
+.sl-topbar-shadow {
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  height: 10vh;
+}
