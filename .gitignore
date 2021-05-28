@@ -9,6 +9,7 @@ firebase-debug.*.log*
 
 # Cache
 .cache
+.parcel-cache
 
 # Firebase cache
 .firebase/

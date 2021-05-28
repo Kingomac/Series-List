@@ -5,7 +5,7 @@ export default class TopBar extends Component {
   private static attrTitle: string = "title";
   private titleSpan: HTMLSpanElement;
 
-  observedAttributes() {
+  static get observedAttributes() {
     return ["title"];
   }
 

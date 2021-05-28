@@ -1,3 +1,5 @@
+import { FakeClient } from "../../test/FakeClient";
+import { SerieCard } from "../components/SerieCard";
 import TopBar from "../components/TopBar";
 import Component from "../interfaces/Component";
 import "../styles/main.scss";
@@ -10,9 +12,19 @@ export default class Main extends Component {
     this.topBar = new TopBar();
   }
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
     this.topBar.setAttribute("title", "Series List Next");
-    this.append(this.topBar);
+    const seriesDiv = document.createElement("div");
+    seriesDiv.classList.add("series", "container");
+    const driver = new FakeClient();
+    let series = await driver.getAllSeries();
+    let cards = series.map(
+      async (serie) => new SerieCard(serie, await driver.getRandomCategory())
+    );
+    this.append(this.topBar, seriesDiv);
+    cards.forEach(async (i) => {
+      seriesDiv.append(await i);
+    });
   }
 }
 

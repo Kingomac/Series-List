@@ -1,17 +1,18 @@
 @import "./vars.scss";
 
 sl-topbar {
-  position: absolute;
-  margin: 0;
+  position: relative;
+  display: flex;
+  top: 0;
   font-family: $font;
   font-weight: bold;
   font-size: 28px;
-  color: $accent;
-  background-color: $primary;
+  color: $topbar-color;
+  background-color: $topbar-bg;
   width: 100vw;
   padding: 15px 0 15px 0;
   span {
-    padding: 15px;
+    padding-left: 15px;
   }
 }
 
