@@ -8,6 +8,7 @@ import {
   FirebaseFirestore,
   setDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { DbClient } from "../interfaces/DbClient";
 import { Category, DbDoc, Serie } from "../interfaces/Models";
@@ -17,6 +18,17 @@ export default class FirebaseDriver implements DbClient {
   constructor() {
     this.app = initializeApp(FirebaseKeys);
     this.db = getFirestore(this.app);
+  }
+  updateSerie(
+    oldSerie: Serie,
+    oldCateg: Category,
+    newSerie: Serie,
+    newCateg: Category
+  ): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  updateCategory(oldCateg: Category, newCateg: Category): Promise<void> {
+    throw new Error("Method not implemented.");
   }
   async getAllSeries(): Promise<Serie[]> {
     const categories = await this.getAllCategories();
@@ -52,16 +64,13 @@ export default class FirebaseDriver implements DbClient {
   async addSerie(serie: Serie, categ: Category): Promise<void> {
     await setDoc(doc(this.db, categ._id), serie);
   }
-  sumChapter(serie: Serie, categ: Category, num: number): Promise<void> {
-    throw new Error("Method not implemented.");
+  async addCategory(categ: Category): Promise<void> {
+    await setDoc(doc(this.db, "categories"), categ);
   }
-  addCategory(categ: Category): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteCategory(categ: Category): Promise<void> {
+    await deleteDoc(doc(this.db, "categories", categ._id));
   }
-  deleteCategory(categ: Category): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  deleteSerie(serie: Serie, categ: Category): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteSerie(serie: Serie, categ: Category): Promise<void> {
+    await deleteDoc(doc(this.db, categ._id, serie._id));
   }
 }
