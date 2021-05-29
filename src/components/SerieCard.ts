@@ -1,5 +1,6 @@
 import Component from "../interfaces/Component";
 import { Category, Serie } from "../interfaces/Models";
+import "../styles/SerieCard.scss";
 
 export class SerieCard extends Component {
   constructor(private serie: Serie, private categ: Category) {

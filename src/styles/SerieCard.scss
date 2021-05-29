@@ -1,0 +1,48 @@
+sl-serie-card {
+  border: solid black;
+  width: 220px;
+  height: 425px;
+  margin: 5px 3px 5px 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: stretch;
+  text-align: center;
+  border-radius: 5px;
+  img {
+    width: 220px;
+    min-height: 300px;
+    margin-bottom: 2px;
+  }
+  i {
+    margin-top: 5px;
+    font-size: smaller;
+  }
+  span {
+    margin: 2px;
+    text-overflow: ellipsis;
+  }
+  .card.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 100%;
+    align-items: flex-end;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+  button {
+    border-radius: 17.5px;
+    border: none;
+    width: 35px;
+    height: 35px;
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    i {
+      text-align: center;
+    }
+  }
+}

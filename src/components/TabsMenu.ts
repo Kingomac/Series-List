@@ -1,36 +1,45 @@
 import Component from "../interfaces/Component";
-
-export interface ITab {
-  title: string;
-  url: string;
-}
+import { Category } from "../interfaces/Models";
+import { ITab, Tab } from "./Tab";
 
 export class TabsMenu extends Component {
-  private tabs: ITab[];
-
-  private tabsEls: HTMLDivElement[];
+  tabs: Tab[];
 
   constructor() {
     super();
     this.tabs = [];
-    this.tabsEls = [];
   }
 
   connectedCallback() {}
 
-  addTab(...tabs: ITab[]): void {
-    this.tabs.concat(tabs);
-    const newTabsEls = tabs.map((tab) => {
-      const el = document.createElement("div");
-      el.classList.add("sl", "tab", "menu");
-      el.innerText = tab.title;
-      this.append(el);
-      return el;
-    });
-    this.tabsEls.concat(newTabsEls);
+  async addTab(tab: ITab): Promise<void> {
+    this.tabs.push(new Tab(tab));
+    this.append(this.tabs[this.tabs.length - 1]);
   }
 
-  clearTabs() {
-    this.tabs = [];
+  async addAllTab(tabs: ITab[]): Promise<void> {
+    const n = this.tabs.length;
+    this.tabs = this.tabs.concat(
+      tabs.map((t) => {
+        return new Tab(t);
+      })
+    );
+    for (let i = n; i < this.tabs.length; i++) {
+      this.append(this.tabs[i]);
+    }
+  }
+
+  async deleteTab(tab: ITab): Promise<void> {
+    let i = 0;
+    while (i < this.tabs.length || this.tabs[i].getData() != tab) {
+      i++;
+    }
+    if (this.tabs[i].getData() != tab) {
+      throw new Error("Tab is not in the tabs menu");
+    }
+    this.removeChild(this.tabs[i]);
+    this.tabs.splice(i, 1);
   }
 }
+
+window.customElements.define("sl-tabs-menu", TabsMenu);

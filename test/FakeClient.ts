@@ -2,6 +2,17 @@ import { DbClient } from "../src/interfaces/DbClient";
 import { Serie, Category } from "../src/interfaces/Models";
 
 export class FakeClient implements DbClient {
+  updateSerie(
+    oldSerie: Serie,
+    oldCateg: Category,
+    newSerie: Serie,
+    newCateg: Category
+  ): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  updateCategory(oldCateg: Category, newCateg: Category): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   async getAllSeries(): Promise<Serie[]> {
     let toret = [];
     for (let i = 0; i < 20; i++) {
@@ -50,7 +61,7 @@ export class FakeClient implements DbClient {
   async getRandomCategory(): Promise<Category> {
     return {
       _id: await this.getRandomText(),
-      name: await this.getRandomText(),
+      name: await this.getRandomText(10),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -60,7 +71,6 @@ export class FakeClient implements DbClient {
     const imgs: string[] = [
       "https://i.pinimg.com/originals/aa/51/1e/aa511e80be8d6ef44320eea30a2cabcd.jpg",
       "https://images-na.ssl-images-amazon.com/images/I/51px6kztymL.jpg",
-      "https://lh3.googleusercontent.com/proxy/UF4Cr4FBRQKXVujMRUiRDTotXGpbsjvXoCTYFmrkExd9KJz483oNDim_Hll52K88-LLh-wqLhYtzzP6JscZU_sNFCdQphsjnk9KzKw",
       "https://i.redd.it/lxky74puiz451.jpg",
       "https://i.pinimg.com/originals/cd/2d/77/cd2d77c2a3b6590d2b769b5a5a6cea80.jpg",
       "https://i.pinimg.com/originals/79/fb/31/79fb31c4f7ec9ffe3cce8818c9697f68.jpg",
