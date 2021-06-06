@@ -34,7 +34,10 @@ export default class FirebaseDriver implements DbClient {
     const categories = await this.getAllCategories();
     let toret: Serie[] = [];
     categories.forEach(async (categ) => {
-      (await this.getSeriesByCategory(categ)).forEach((ser) => {
+      if (categ._id == undefined) {
+        throw new Error("Category is undefined");
+      }
+      (await this.getSeriesByCategoryId(categ._id)).forEach((ser) => {
         toret.push(ser);
       });
     });
@@ -51,26 +54,30 @@ export default class FirebaseDriver implements DbClient {
 
     return toret;
   }
-  async getSeriesByCategory(categ: Category): Promise<Serie[]> {
+  async getSeriesByCategoryId(categId: string): Promise<Serie[]> {
     let toret: Serie[] = [];
 
-    const q = query(collection(this.db, categ._id));
+    if (categId == undefined) {
+      throw new Error("Category id is undefined");
+    }
+
+    const q = query(collection(this.db, categId));
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       toret.push(Object.assign({ _id: doc.id }, doc.data()) as Serie);
     });
     return toret;
   }
-  async addSerie(serie: Serie, categ: Category): Promise<void> {
-    await setDoc(doc(this.db, categ._id), serie);
+  async addSerie(serie: Serie, categId: string): Promise<void> {
+    await setDoc(doc(this.db, categId), serie);
   }
   async addCategory(categ: Category): Promise<void> {
     await setDoc(doc(this.db, "categories"), categ);
   }
-  async deleteCategory(categ: Category): Promise<void> {
-    await deleteDoc(doc(this.db, "categories", categ._id));
+  async deleteCategoryById(categId: string): Promise<void> {
+    await deleteDoc(doc(this.db, "categories", categId));
   }
-  async deleteSerie(serie: Serie, categ: Category): Promise<void> {
-    await deleteDoc(doc(this.db, categ._id, serie._id));
+  async deleteSerieById(serieId: string, categId: string): Promise<void> {
+    await deleteDoc(doc(this.db, categId, serieId));
   }
 }

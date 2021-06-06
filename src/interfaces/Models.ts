@@ -1,7 +1,7 @@
 export interface DbDoc {
-  _id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  _id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Serie extends DbDoc {

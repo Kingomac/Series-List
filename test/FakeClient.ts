@@ -27,14 +27,14 @@ export class FakeClient implements DbClient {
     }
     return toret;
   }
-  async getSeriesByCategory(categ: Category): Promise<Serie[]> {
+  async getSeriesByCategoryId(categ: string): Promise<Serie[]> {
     return await this.getAllSeries();
   }
-  async addSerie(serie: Serie, categ: Category): Promise<void> {}
+  async addSerie(serie: Serie, categ: string): Promise<void> {}
   async sumChapter(serie: Serie, categ: Category, num: number): Promise<void> {}
   async addCategory(categ: Category): Promise<void> {}
-  async deleteCategory(categ: Category): Promise<void> {}
-  async deleteSerie(serie: Serie, categ: Category): Promise<void> {}
+  async deleteCategoryById(categ: string): Promise<void> {}
+  async deleteSerieById(serie: string, categ: string): Promise<void> {}
 
   async getRandomText(length: number = 32): Promise<string> {
     const letters = "abcdefghijklnmopqrstuvwxyz ";

@@ -5,6 +5,8 @@ import { ITab, Tab } from "./Tab";
 export class TabsMenu extends Component {
   tabs: Tab[];
 
+  onTabsClick?(tab: ITab): void;
+
   constructor() {
     super();
     this.tabs = [];
@@ -21,7 +23,11 @@ export class TabsMenu extends Component {
     const n = this.tabs.length;
     this.tabs = this.tabs.concat(
       tabs.map((t) => {
-        return new Tab(t);
+        const elT = new Tab(t);
+        elT.onActive = (tab: ITab = t) => {
+          if (this.onTabsClick != undefined) this.onTabsClick(tab);
+        };
+        return elT;
       })
     );
     for (let i = n; i < this.tabs.length; i++) {
