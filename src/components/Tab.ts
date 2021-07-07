@@ -1,21 +1,21 @@
-import Component from "../interfaces/Component";
+import IComponent from "../interfaces/Component";
 import { Category } from "../interfaces/Models";
 
 export interface ITab extends Category {
   url: string;
 }
-export class Tab extends Component {
+export class Tab extends IComponent {
   public onActive?: () => void;
 
-  constructor(private tab: ITab) {
+  constructor(public tab: ITab) {
     super();
-  }
-  connectedCallback() {
-    this.innerText = this.tab.name;
-    this.onclick = (event: MouseEvent) => {
+    this.onclick = () => {
       history.pushState(null, "", this.tab.url);
       if (this.onActive != undefined) this.onActive();
     };
+  }
+  connectedCallback() {
+    this.innerText = this.tab.name;
   }
 
   getData(): ITab {

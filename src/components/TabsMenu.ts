@@ -1,18 +1,45 @@
-import Component from "../interfaces/Component";
+import { Timestamp } from "firebase/firestore";
+import WSAuthController from "../controllers/auth/WSAuthController";
+import IComponent from "../interfaces/Component";
+import { IAuthController } from "../interfaces/IAuthController";
 import { Category } from "../interfaces/Models";
+import { AddCategoryModal } from "./AddCategoryModal";
 import { ITab, Tab } from "./Tab";
 
-export class TabsMenu extends Component {
-  tabs: Tab[];
+export class TabsMenu extends IComponent {
+  private tabs: Tab[];
 
   onTabsClick?(tab: ITab): void;
 
-  constructor() {
+  static addTabId: string = "addtab";
+
+  private addCategTab: Tab = new Tab({
+    name: "Añadir",
+    url: "",
+  });
+
+  constructor(
+    private addTabModal: AddCategoryModal,
+    private authController: IAuthController
+  ) {
     super();
     this.tabs = [];
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    this.addCategTab.id = "addtab";
+    this.addCategTab.onclick = () => {
+      this.addTabModal.setAttribute("visibility", "visible");
+    };
+    this.tabs.push(this.addCategTab);
+    this.append(this.addCategTab);
+    this.addCategTab.style.display = "none";
+    console.log(this);
+  }
+
+  showAddCategTab(visible: boolean = true) {
+    this.addCategTab.style.display = visible ? "" : "none";
+  }
 
   async addTab(tab: ITab): Promise<void> {
     this.tabs.push(new Tab(tab));
@@ -25,7 +52,7 @@ export class TabsMenu extends Component {
       tabs.map((t) => {
         const elT = new Tab(t);
         elT.onActive = (tab: ITab = t) => {
-          if (this.onTabsClick != undefined) this.onTabsClick(tab);
+          this.onTabsClick!(tab);
         };
         return elT;
       })
@@ -45,6 +72,10 @@ export class TabsMenu extends Component {
     }
     this.removeChild(this.tabs[i]);
     this.tabs.splice(i, 1);
+  }
+  async clearTabs(): Promise<void> {
+    this.textContent = "";
+    this.connectedCallback();
   }
 }
 

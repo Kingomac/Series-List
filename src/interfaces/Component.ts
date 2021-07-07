@@ -1,4 +1,4 @@
-export default abstract class Component extends HTMLElement {
+export default abstract class IComponent extends HTMLElement {
   /**
    * @description Attributes that fire the attributeChangedCallback()
    * @example static get observedAttributes() { return ["enabled", "foo"] }

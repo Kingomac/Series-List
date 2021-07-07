@@ -1,7 +1,35 @@
-import { DbClient } from "../src/interfaces/DbClient";
+import { IDbClient } from "../src/interfaces/DbClient";
 import { Serie, Category } from "../src/interfaces/Models";
 
-export class FakeClient implements DbClient {
+type SerieCategRef = {
+  serie: Serie;
+  categ: Category;
+};
+
+export class FakeClient implements IDbClient {
+  private series: SerieCategRef[];
+  private categs: Category[];
+
+  onInitialize?(): void;
+
+  constructor() {
+    this.series = [];
+    this.categs = [];
+    this.initialize();
+  }
+
+  private async initialize() {
+    for (let i = 0; i < 6; i++) {
+      const c = await this.getRandomCategory();
+      this.categs.push(c);
+      for (let j = 0; j < 20; j++) {
+        const s = await this.getRandomSerie();
+        this.series.push({ serie: s, categ: c });
+      }
+    }
+    if (this.onInitialize !== undefined) this.onInitialize();
+  }
+
   updateSerie(
     oldSerie: Serie,
     oldCateg: Category,
@@ -14,25 +42,45 @@ export class FakeClient implements DbClient {
     throw new Error("Method not implemented.");
   }
   async getAllSeries(): Promise<Serie[]> {
-    let toret = [];
-    for (let i = 0; i < 20; i++) {
-      toret.push(await this.getRandomSerie());
-    }
-    return toret;
+    return this.series.map((i) => {
+      return i.serie;
+    });
   }
   async getAllCategories(): Promise<Category[]> {
-    let toret = [];
-    for (let i = 0; i < 10; i++) {
-      toret.push(await this.getRandomCategory());
-    }
-    return toret;
+    return this.categs;
   }
   async getSeriesByCategoryId(categ: string): Promise<Serie[]> {
-    return await this.getAllSeries();
+    let toret: Serie[] = [];
+    this.series.forEach((i) => {
+      if (i.categ._id == categ) {
+        toret.push(i.serie);
+      }
+    });
+    return toret;
   }
-  async addSerie(serie: Serie, categ: string): Promise<void> {}
+
+  async getLastCategory(): Promise<Category> {
+    return this.categs[this.categs.length - 1];
+  }
+
+  private async getCategById(id: string): Promise<Category | null> {
+    this.categs.forEach((i) => {
+      if (i._id == id) {
+        return i;
+      }
+    });
+    return null;
+  }
+
+  async addSerie(serie: Serie, categ: string): Promise<void> {
+    const category = await this.getCategById(categ);
+    if (category == null) throw new Error("Not a category id");
+    this.series.push({ categ: category, serie });
+  }
   async sumChapter(serie: Serie, categ: Category, num: number): Promise<void> {}
-  async addCategory(categ: Category): Promise<void> {}
+  async addCategory(categ: Category): Promise<void> {
+    this.categs.push(categ);
+  }
   async deleteCategoryById(categ: string): Promise<void> {}
   async deleteSerieById(serie: string, categ: string): Promise<void> {}
 

@@ -1,6 +1,8 @@
 import { Category, Serie } from "./Models";
 
-export interface DbClient {
+export interface IDbClient {
+  onInitialize?(): void;
+
   //GET
   /**
    * Think about using it with limits
@@ -11,6 +13,8 @@ export interface DbClient {
    * @returns Promise all categories
    */
   getAllCategories(): Promise<Category[]>;
+
+  getLastCategory(): Promise<Category>;
 
   /**
    *

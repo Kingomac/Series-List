@@ -1,8 +1,8 @@
-import Component from "../interfaces/Component";
-import { DbClient } from "../interfaces/DbClient";
-import "../styles/AddSerieModal.scss";
+import IComponent from "../interfaces/Component";
+import { IDbClient } from "../interfaces/DbClient";
+import "../styles/Modal.scss";
 
-export class AddSerieModal extends Component {
+export class AddSerieModal extends IComponent {
   /**
    * Element attributes
    * * visibility
@@ -12,11 +12,9 @@ export class AddSerieModal extends Component {
     return ["visibility"];
   }
 
-  constructor(private client: DbClient) {
+  constructor(private client: IDbClient) {
     super();
     this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
-  }
-  connectedCallback() {
     const winDiv = document.createElement("div");
 
     const nameInput = document.createElement("input");
@@ -69,6 +67,7 @@ export class AddSerieModal extends Component {
       );
     };
   }
+  connectedCallback() {}
 
   attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
     if (name == AddSerieModal.observedAttributes[0]) {

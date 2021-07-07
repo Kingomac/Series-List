@@ -1,4 +1,4 @@
-import { FirebaseKeys } from "../../app.config";
+import { FirebaseKeys } from "../../../app.config";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -9,14 +9,14 @@ import {
   setDoc,
   doc,
   deleteDoc,
+  addDoc,
 } from "firebase/firestore";
-import { DbClient } from "../interfaces/DbClient";
-import { Category, DbDoc, Serie } from "../interfaces/Models";
-export default class FirebaseDriver implements DbClient {
-  readonly app: FirebaseApp;
-  readonly db: FirebaseFirestore;
-  constructor() {
-    this.app = initializeApp(FirebaseKeys);
+import { IDbClient } from "../../interfaces/DbClient";
+import { Category, DbDoc, Serie } from "../../interfaces/Models";
+export default class FirebaseClient implements IDbClient {
+  private readonly db: FirebaseFirestore;
+  onInitialize?(): void;
+  constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
   }
   updateSerie(
@@ -46,11 +46,17 @@ export default class FirebaseDriver implements DbClient {
   async getAllCategories(): Promise<Category[]> {
     let toret: Category[] = [];
 
+    console.log("Fetching all categories...");
+    console.time("Fetching categories:");
+
     const q = query(collection(this.db, "categories"));
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       toret.push(Object.assign({ _id: doc.id }, doc.data()) as Category);
     });
+
+    console.timeEnd("Fetching categories:");
+    console.log("Categories fetched:", toret);
 
     return toret;
   }
@@ -68,11 +74,17 @@ export default class FirebaseDriver implements DbClient {
     });
     return toret;
   }
+
+  async getLastCategory(): Promise<Category> {
+    throw new Error("not implemented");
+  }
   async addSerie(serie: Serie, categId: string): Promise<void> {
     await setDoc(doc(this.db, categId), serie);
   }
   async addCategory(categ: Category): Promise<void> {
-    await setDoc(doc(this.db, "categories"), categ);
+    console.time("Creating category:");
+    await addDoc(collection(this.db, "categories"), categ);
+    console.timeEnd("Creating category:");
   }
   async deleteCategoryById(categId: string): Promise<void> {
     await deleteDoc(doc(this.db, "categories", categId));
