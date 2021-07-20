@@ -17,7 +17,8 @@ export default class FirebaseAuthController implements IAuthController {
     this.auth = getAuth(this.app);
     onAuthStateChanged(this.auth, (user) => {
       this.logged = user != null;
-      this.onAuthChange!();
+      console.log("Firebase logged:", user);
+      if (this.onAuthChange) this.onAuthChange();
     });
   }
   isSudo(): boolean {

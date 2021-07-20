@@ -1,5 +1,6 @@
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
+import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
 
 export class AddSerieModal extends IComponent {
@@ -11,6 +12,8 @@ export class AddSerieModal extends IComponent {
   static get observedAttributes(): string[] {
     return ["visibility"];
   }
+
+  onSerieAdded?(serie: Serie): void;
 
   constructor(private client: IDbClient) {
     super();
@@ -55,16 +58,13 @@ export class AddSerieModal extends IComponent {
       this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
     submitBtn.innerText = "Añadir";
     submitBtn.onclick = async () => {
-      this.client.addSerie(
-        {
-          name: nameInput.value,
-          nameAlt: altNameInput.value,
-          chapter: 0,
-          image: imgInput.value,
-          url: urlInput.value,
-        },
-        ""
-      );
+      this.onSerieAdded!({
+        name: nameInput.value,
+        nameAlt: altNameInput.value,
+        chapter: 0,
+        image: imgInput.value,
+        url: urlInput.value,
+      });
     };
   }
   connectedCallback() {}

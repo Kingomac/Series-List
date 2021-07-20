@@ -14,8 +14,6 @@ export interface IDbClient {
    */
   getAllCategories(): Promise<Category[]>;
 
-  getLastCategory(): Promise<Category>;
-
   /**
    *
    * @param categId
@@ -23,9 +21,14 @@ export interface IDbClient {
   getSeriesByCategoryId(categId: string): Promise<Serie[]>;
   // POST
 
-  addSerie(serie: Serie, categId: string): Promise<void>;
+  addSerie(serie: Serie, categId: string): Promise<string>;
 
-  addCategory(categ: Category): Promise<void>;
+  /**
+   * Adds a new category
+   * @param categ category data
+   * @returns id of the category
+   */
+  addCategory(categ: Category): Promise<string>;
   // UPDATE
 
   updateSerie(

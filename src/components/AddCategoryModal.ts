@@ -13,7 +13,7 @@ export class AddCategoryModal extends IComponent {
     return ["visibility"];
   }
 
-  onCategoryAdded?(tab: ITab): void;
+  onCategoryAdded?(categ: Category): void;
 
   constructor(private client: IDbClient) {
     super();
@@ -42,10 +42,10 @@ export class AddCategoryModal extends IComponent {
     submitBtn.onclick = async () => {
       this.setAttribute(AddCategoryModal.observedAttributes[0], "hidden");
       console.log("Create category with name", nameInput.value);
-      await this.client.addCategory({ name: nameInput.value });
-      //nameInput.value = "";
-      //const categ = await this.client.getLastCategory();
-      //this.onCategoryAdded!(Object.assign(categ, { url: "/" + categ.name }));
+      const id = await this.client.addCategory({ name: nameInput.value });
+      this.onCategoryAdded!(
+        Object.assign({ name: nameInput.value }, { _id: id })
+      );
     };
   }
 

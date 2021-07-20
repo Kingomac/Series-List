@@ -24,26 +24,26 @@ export class TabsMenu extends IComponent {
   ) {
     super();
     this.tabs = [];
-  }
-
-  connectedCallback() {
+    this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
     this.addCategTab.onclick = () => {
       this.addTabModal.setAttribute("visibility", "visible");
     };
     this.tabs.push(this.addCategTab);
+  }
+
+  connectedCallback() {
     this.append(this.addCategTab);
-    this.addCategTab.style.display = "none";
-    console.log(this);
   }
 
   showAddCategTab(visible: boolean = true) {
-    this.addCategTab.style.display = visible ? "" : "none";
+    this.addCategTab.style.display = visible ? "block" : "none";
+    console.log("showAddCategTab:", this.addCategTab.style.display);
   }
 
   async addTab(tab: ITab): Promise<void> {
-    this.tabs.push(new Tab(tab));
-    this.append(this.tabs[this.tabs.length - 1]);
+    this.tabs.unshift(new Tab(tab));
+    this.insertBefore(this.tabs[0], this.children.item(0));
   }
 
   async addAllTab(tabs: ITab[]): Promise<void> {
@@ -74,8 +74,12 @@ export class TabsMenu extends IComponent {
     this.tabs.splice(i, 1);
   }
   async clearTabs(): Promise<void> {
-    this.textContent = "";
-    this.connectedCallback();
+    //this.textContent = "";
+    this.tabs.forEach((i) => {
+      i.remove();
+    });
+
+    this.tabs = [];
   }
 }
 

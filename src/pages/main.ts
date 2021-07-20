@@ -27,7 +27,6 @@ export default class Main extends IComponent {
 
   // Categories
   private actualCategory: Category;
-  private categories: Category[];
 
   //Components
   private floatBotMenu: FloatBottomMenu;
@@ -42,7 +41,32 @@ export default class Main extends IComponent {
     super();
     this.app = initializeApp(FirebaseKeys);
     this.auth = new FirebaseAuthController(this.app);
+
     //this.auth = new FakeAuth();
+
+    this.auth.onAuthChange = async () => {
+      console.log("Auth changed!");
+      if (this.auth.isSudo()) {
+        console.log("Logged");
+        this.tabsMenu.showAddCategTab();
+        this.authModule.setAttribute(
+          AuthModuleAttributes.logged.name,
+          AuthModuleAttributes.logged.yes
+        );
+        this.append(this.floatBotMenu, this.addSerieModal, this.addTabModal);
+      } else {
+        console.log("Not logged");
+        this.authModule.setAttribute(
+          AuthModuleAttributes.logged.name,
+          AuthModuleAttributes.logged.no
+        );
+        this.tabsMenu.showAddCategTab(false);
+        this.floatBotMenu.remove();
+        this.addSerieModal.remove();
+        this.addTabModal.remove();
+      }
+    };
+
     this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
     //this.authModule = new FakeAuthModule(this.auth);
     this.topBar = new TopBar(this.auth, this.authModule);
@@ -63,7 +87,6 @@ export default class Main extends IComponent {
 
     this.seriesDiv = document.createElement("div");
 
-    this.categories = [];
     this.addSerieModal = new AddSerieModal(this.client);
     this.floatBotMenu = new FloatBottomMenu(this.addSerieModal);
   }
@@ -72,65 +95,57 @@ export default class Main extends IComponent {
     this.topBar.setAttribute("title", "Series List Next");
     this.seriesDiv.classList.add("series", "container");
 
-    this.client.onInitialize = async () => {
-      this.categories = await this.client.getAllCategories();
-      if (this.categories.length > 0) {
-        this.actualCategory = this.categories[0];
-        await this.updateTabs();
-      }
-
-      this.addTabModal.onCategoryAdded = async (tab: ITab) => {
-        console.log("category added:", tab);
-        await this.tabsMenu.addTab(tab);
-      };
+    this.addTabModal.onCategoryAdded = async (categ) => {
+      this.tabsMenu.addTab((await this.createTabs(categ))[0]);
     };
 
-    this.auth.onAuthChange = async () => {
-      console.log("Auth changed!");
-      if (this.auth.isSudo()) {
-        console.log("Logged");
-        this.tabsMenu.showAddCategTab();
-        this.authModule.setAttribute(
-          AuthModuleAttributes.logged.name,
-          AuthModuleAttributes.logged.yes
-        );
-        await this.updateSeries();
-        this.append(this.floatBotMenu, this.addSerieModal, this.addTabModal);
-      } else {
-        console.log("Not logged");
-        this.authModule.setAttribute(
-          AuthModuleAttributes.logged.name,
-          AuthModuleAttributes.logged.no
-        );
-        this.tabsMenu.showAddCategTab(false);
-        this.floatBotMenu.remove();
-        this.addSerieModal.remove();
-        this.addTabModal.remove();
+    this.addSerieModal.onSerieAdded = async (serie) => {
+      if (this.actualCategory._id === undefined) {
+        throw new Error("Category id is not defined");
       }
+      const id = await this.client.addSerie(serie, this.actualCategory._id);
+      this.seriesDiv.insertBefore(
+        (await this.createCards(Object.assign(serie, { _id: id })))[0],
+        this.seriesDiv.children.item(0)
+      );
     };
+
+    const categories = await this.client.getAllCategories();
+    if (categories.length > 0) {
+      this.actualCategory = categories[0];
+      await this.updateTabs(categories);
+      await this.updateSeries();
+    }
 
     this.append(this.topBar, this.tabsMenu, this.seriesDiv);
   }
 
-  async createCards(series: Serie[]): Promise<SerieCard[]> {
+  /**
+   * Creates cards from SeriesCard
+   * @param series
+   * @returns
+   */
+  async createCards(...series: Serie[]): Promise<SerieCard[]> {
     return series.map(
       (s: Serie) => new SerieCard(s, this.actualCategory._id || "", this.auth)
     );
   }
 
-  async createTabs(categs: Category[]): Promise<ITab[]> {
+  async createTabs(...categs: Category[]): Promise<ITab[]> {
     return categs.map((c) => Object.assign(c, { url: "/" + c.name }));
   }
 
-  async updateTabs() {
+  async updateTabs(categories: Category[]) {
     await this.tabsMenu.clearTabs();
-    await this.tabsMenu.addAllTab(await this.createTabs(this.categories));
+    await this.tabsMenu.addAllTab(
+      await this.createTabs.apply(this, categories)
+    );
   }
 
   async updateSeries() {
+    console.log("Updating series with category:", this.actualCategory);
     if (this.actualCategory._id === undefined) {
-      console.log("No categories exist");
-      return;
+      throw new Error("Error with category " + this.actualCategory);
     }
 
     const series = await this.client.getSeriesByCategoryId(
@@ -138,7 +153,9 @@ export default class Main extends IComponent {
     );
 
     this.seriesDiv.textContent = "";
-    (await this.createCards(series)).forEach((s) => this.seriesDiv.append(s));
+    (await this.createCards.apply(this, series)).forEach((s) =>
+      this.seriesDiv.append(s)
+    );
   }
 }
 

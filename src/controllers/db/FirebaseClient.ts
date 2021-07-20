@@ -10,6 +10,8 @@ import {
   doc,
   deleteDoc,
   addDoc,
+  orderBy,
+  Timestamp,
 } from "firebase/firestore";
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, DbDoc, Serie } from "../../interfaces/Models";
@@ -47,7 +49,7 @@ export default class FirebaseClient implements IDbClient {
     let toret: Category[] = [];
 
     console.log("Fetching all categories...");
-    console.time("Fetching categories:");
+    console.time("Fetching categories");
 
     const q = query(collection(this.db, "categories"));
     const snapshot = await getDocs(q);
@@ -55,7 +57,7 @@ export default class FirebaseClient implements IDbClient {
       toret.push(Object.assign({ _id: doc.id }, doc.data()) as Category);
     });
 
-    console.timeEnd("Fetching categories:");
+    console.timeEnd("Fetching categories");
     console.log("Categories fetched:", toret);
 
     return toret;
@@ -67,24 +69,35 @@ export default class FirebaseClient implements IDbClient {
       throw new Error("Category id is undefined");
     }
 
+    console.time("Fetching series");
+
     const q = query(collection(this.db, categId));
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       toret.push(Object.assign({ _id: doc.id }, doc.data()) as Serie);
     });
+
+    console.timeEnd("Fetching series");
+    console.log("Series:", toret);
+
     return toret;
   }
 
-  async getLastCategory(): Promise<Category> {
-    throw new Error("not implemented");
+  async addSerie(serie: Serie, categId: string): Promise<string> {
+    const res = await addDoc(
+      collection(this.db, categId),
+      Object.assign(serie, { timestamp: Timestamp.fromDate(new Date()) })
+    );
+    return res.id;
   }
-  async addSerie(serie: Serie, categId: string): Promise<void> {
-    await setDoc(doc(this.db, categId), serie);
-  }
-  async addCategory(categ: Category): Promise<void> {
+  async addCategory(categ: Category): Promise<string> {
     console.time("Creating category:");
-    await addDoc(collection(this.db, "categories"), categ);
+    const doc = await addDoc(
+      collection(this.db, "categories"),
+      Object.assign(categ, { timestamp: new Date() })
+    );
     console.timeEnd("Creating category:");
+    return doc.id;
   }
   async deleteCategoryById(categId: string): Promise<void> {
     await deleteDoc(doc(this.db, "categories", categId));
