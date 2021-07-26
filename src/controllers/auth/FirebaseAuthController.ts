@@ -4,21 +4,29 @@ import {
   getAuth,
   signInWithRedirect,
   onAuthStateChanged,
+  useAuthEmulator,
 } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
+
+export type AuthChangeEvent = {
+  isSudo: boolean;
+};
 
 export default class FirebaseAuthController implements IAuthController {
   private readonly auth;
   private logged = false;
 
-  onAuthChange?(): void;
+  onAuthChange?(x: AuthChangeEvent): void;
 
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
+    useAuthEmulator(this.auth, "http://localhost:9099", {
+      disableWarnings: true,
+    });
     onAuthStateChanged(this.auth, (user) => {
       this.logged = user != null;
       console.log("Firebase logged:", user);
-      if (this.onAuthChange) this.onAuthChange();
+      if (this.onAuthChange) this.onAuthChange({ isSudo: user != null });
     });
   }
   isSudo(): boolean {

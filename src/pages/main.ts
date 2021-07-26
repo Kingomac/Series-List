@@ -12,7 +12,9 @@ import { SerieCard } from "../components/SerieCard";
 import { ITab } from "../components/Tab";
 import { TabsMenu } from "../components/TabsMenu";
 import TopBar from "../components/TopBar";
-import FirebaseAuthController from "../controllers/auth/FirebaseAuthController";
+import FirebaseAuthController, {
+  AuthChangeEvent,
+} from "../controllers/auth/FirebaseAuthController";
 import FirebaseClient from "../controllers/db/FirebaseClient";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
@@ -44,29 +46,6 @@ export default class Main extends IComponent {
 
     //this.auth = new FakeAuth();
 
-    this.auth.onAuthChange = async () => {
-      console.log("Auth changed!");
-      if (this.auth.isSudo()) {
-        console.log("Logged");
-        this.tabsMenu.showAddCategTab();
-        this.authModule.setAttribute(
-          AuthModuleAttributes.logged.name,
-          AuthModuleAttributes.logged.yes
-        );
-        this.append(this.floatBotMenu, this.addSerieModal, this.addTabModal);
-      } else {
-        console.log("Not logged");
-        this.authModule.setAttribute(
-          AuthModuleAttributes.logged.name,
-          AuthModuleAttributes.logged.no
-        );
-        this.tabsMenu.showAddCategTab(false);
-        this.floatBotMenu.remove();
-        this.addSerieModal.remove();
-        this.addTabModal.remove();
-      }
-    };
-
     this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
     //this.authModule = new FakeAuthModule(this.auth);
     this.topBar = new TopBar(this.auth, this.authModule);
@@ -76,8 +55,15 @@ export default class Main extends IComponent {
 
     this.addTabModal = new AddCategoryModal(this.client);
     this.tabsMenu = new TabsMenu(this.addTabModal, this.auth);
+
+    this.seriesDiv = document.createElement("div");
+
+    this.addSerieModal = new AddSerieModal(this.client);
+    this.floatBotMenu = new FloatBottomMenu(this.addSerieModal);
+
     this.tabsMenu.onTabsClick = async (tab: ITab) => {
       this.actualCategory = tab as Category;
+      console.log("actualCategory:", this.actualCategory);
       if (this.actualCategory._id == undefined)
         throw new Error(
           "Category " + this.actualCategory.name + " id is undefined"
@@ -85,11 +71,37 @@ export default class Main extends IComponent {
       await this.updateSeries();
     };
 
-    this.seriesDiv = document.createElement("div");
-
-    this.addSerieModal = new AddSerieModal(this.client);
-    this.floatBotMenu = new FloatBottomMenu(this.addSerieModal);
+    this.auth.onAuthChange = this.authChangeEvent;
   }
+
+  authChangeEvent = async (x: AuthChangeEvent) => {
+    console.log("Auth changed!");
+    if (x.isSudo) {
+      console.log("Logged");
+      this.tabsMenu.showAddCategTab();
+      this.authModule.setAttribute(
+        AuthModuleAttributes.logged.name,
+        AuthModuleAttributes.logged.yes
+      );
+      const categories = await this.client.getAllCategories();
+      if (categories.length > 0) {
+        this.actualCategory = categories[0];
+        await this.updateTabs(categories);
+        await this.updateSeries();
+      }
+      this.append(this.floatBotMenu, this.addSerieModal, this.addTabModal);
+    } else {
+      console.log("Not logged");
+      this.authModule.setAttribute(
+        AuthModuleAttributes.logged.name,
+        AuthModuleAttributes.logged.no
+      );
+      this.tabsMenu.showAddCategTab(false);
+      if (this.floatBotMenu.isConnected) this.floatBotMenu.remove();
+      if (this.addSerieModal.isConnected) this.addSerieModal.remove();
+      if (this.addTabModal.isConnected) this.addTabModal.remove();
+    }
+  };
 
   async connectedCallback(): Promise<void> {
     this.topBar.setAttribute("title", "Series List Next");
@@ -109,13 +121,12 @@ export default class Main extends IComponent {
         this.seriesDiv.children.item(0)
       );
     };
-
-    const categories = await this.client.getAllCategories();
+    /*const categories = await this.client.getAllCategories();
     if (categories.length > 0) {
       this.actualCategory = categories[0];
       await this.updateTabs(categories);
       await this.updateSeries();
-    }
+    }*/
 
     this.append(this.topBar, this.tabsMenu, this.seriesDiv);
   }
@@ -127,7 +138,8 @@ export default class Main extends IComponent {
    */
   async createCards(...series: Serie[]): Promise<SerieCard[]> {
     return series.map(
-      (s: Serie) => new SerieCard(s, this.actualCategory._id || "", this.auth)
+      (s: Serie) =>
+        new SerieCard(s, this.actualCategory._id || "", this.client, this.auth)
     );
   }
 

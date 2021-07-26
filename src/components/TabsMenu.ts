@@ -8,15 +8,11 @@ import { ITab, Tab } from "./Tab";
 
 export class TabsMenu extends IComponent {
   private tabs: Tab[];
+  private addCategTab: Tab;
 
   onTabsClick?(tab: ITab): void;
 
   static addTabId: string = "addtab";
-
-  private addCategTab: Tab = new Tab({
-    name: "Añadir",
-    url: "",
-  });
 
   constructor(
     private addTabModal: AddCategoryModal,
@@ -24,12 +20,15 @@ export class TabsMenu extends IComponent {
   ) {
     super();
     this.tabs = [];
+    this.addCategTab = new Tab({
+      name: "Añadir",
+      url: "",
+    });
     this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
     this.addCategTab.onclick = () => {
       this.addTabModal.setAttribute("visibility", "visible");
     };
-    this.tabs.push(this.addCategTab);
   }
 
   connectedCallback() {
@@ -42,8 +41,10 @@ export class TabsMenu extends IComponent {
   }
 
   async addTab(tab: ITab): Promise<void> {
-    this.tabs.unshift(new Tab(tab));
-    this.insertBefore(this.tabs[0], this.children.item(0));
+    const newTab = new Tab(tab);
+    newTab.onActive = (_tab: ITab = tab) => this.onTabsClick!(tab);
+    this.tabs.unshift(newTab);
+    this.insertBefore(this.tabs[0], this.addCategTab);
   }
 
   async addAllTab(tabs: ITab[]): Promise<void> {
@@ -51,14 +52,12 @@ export class TabsMenu extends IComponent {
     this.tabs = this.tabs.concat(
       tabs.map((t) => {
         const elT = new Tab(t);
-        elT.onActive = (tab: ITab = t) => {
-          this.onTabsClick!(tab);
-        };
+        elT.onActive = (tab: ITab = t) => this.onTabsClick!(tab);
         return elT;
       })
     );
     for (let i = n; i < this.tabs.length; i++) {
-      this.append(this.tabs[i]);
+      this.insertBefore(this.tabs[i], this.addCategTab);
     }
   }
 
@@ -75,10 +74,7 @@ export class TabsMenu extends IComponent {
   }
   async clearTabs(): Promise<void> {
     //this.textContent = "";
-    this.tabs.forEach((i) => {
-      i.remove();
-    });
-
+    this.tabs.forEach((i) => i.remove());
     this.tabs = [];
   }
 }

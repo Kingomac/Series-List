@@ -12,25 +12,60 @@ import {
   addDoc,
   orderBy,
   Timestamp,
+  updateDoc,
+  useFirestoreEmulator,
 } from "firebase/firestore";
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, DbDoc, Serie } from "../../interfaces/Models";
+
 export default class FirebaseClient implements IDbClient {
   private readonly db: FirebaseFirestore;
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
+    useFirestoreEmulator(this.db, "localhost", 8080);
   }
-  updateSerie(
-    oldSerie: Serie,
-    oldCateg: Category,
-    newSerie: Serie,
-    newCateg: Category
-  ): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async moveSerie(
+    oldCategId: string,
+    newCategId: string,
+    serie: Serie
+  ): Promise<string> {
+    if (serie._id === undefined) throw new Error("Serie id must be defined");
+    const oldSerieId = serie._id;
+    delete serie._id;
+    serie.timestamp = new Date();
+    const newSerie = await addDoc(collection(this.db, newCategId), serie);
+    await deleteDoc(doc(this.db, oldCategId, oldSerieId));
+    return newSerie.id;
   }
-  updateCategory(oldCateg: Category, newCateg: Category): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async updateSerieInfo(categId: string, serie: Serie): Promise<void> {
+    if (serie._id === undefined) throw new Error("Serie id must be defined");
+    const serieId = serie._id;
+    delete serie._id;
+    serie.timestamp = new Date();
+    await updateDoc(doc(this.db, categId, serieId), serie);
+  }
+
+  async updateSerieChapter(serieId: string, categId: string, chapter: number) {
+    const ref = doc(this.db, categId, serieId);
+    await updateDoc(ref, {
+      chapter,
+    });
+  }
+  async updateCategory(oldCategId: string, newCateg: Category): Promise<void> {
+    delete newCateg._id;
+    newCateg.timestamp = new Date();
+    const newDoc = await addDoc(collection(this.db, "categories"), newCateg);
+    const newId = newDoc.id;
+
+    const q = query(collection(this.db, oldCategId));
+    const snapshot = await getDocs(q);
+    const newCollection = collection(this.db, newId);
+    snapshot.forEach((i) => {
+      addDoc(newCollection, i.data());
+    });
   }
   async getAllSeries(): Promise<Serie[]> {
     const categories = await this.getAllCategories();

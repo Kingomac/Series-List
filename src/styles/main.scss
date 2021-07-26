@@ -9,15 +9,17 @@ sl-main {
   overflow-x: hidden;
 }
 .series.container {
+  margin: 10px;
   scroll-behavior: smooth;
   width: 100vw;
   height: 88vh;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: start;
   overflow-y: scroll;
   overflow-x: hidden;
+  transition: flex-grow 1000ms linear;
 }
 
 sl-float-bottom-menu {

@@ -3,53 +3,24 @@ import { Category, Serie } from "./Models";
 export interface IDbClient {
   onInitialize?(): void;
 
-  //GET
-  /**
-   * Think about using it with limits
-   * @returns Promise all documents of series
-   */
-  getAllSeries(): Promise<Serie[]>;
-  /**
-   * @returns Promise all categories
-   */
-  getAllCategories(): Promise<Category[]>;
+  moveSerie(
+    oldCategId: string,
+    newCategId: string,
+    serie: Serie
+  ): Promise<string>;
 
-  /**
-   *
-   * @param categId
-   */
-  getSeriesByCategoryId(categId: string): Promise<Serie[]>;
-  // POST
-
-  addSerie(serie: Serie, categId: string): Promise<string>;
-
-  /**
-   * Adds a new category
-   * @param categ category data
-   * @returns id of the category
-   */
-  addCategory(categ: Category): Promise<string>;
-  // UPDATE
-
-  updateSerie(
-    oldSerie: Serie,
-    oldCateg: Category,
-    newSerie: Serie,
-    newCateg: Category
+  updateSerieInfo(categId: string, serie: Serie): Promise<void>;
+  updateSerieChapter(
+    serieId: string,
+    categId: string,
+    chapter: number
   ): Promise<void>;
-
-  updateCategory(oldCateg: Category, newCateg: Category): Promise<void>;
-  //DELETE
-  /**
-   *
-   * @param categId
-   */
+  updateCategory(oldCategId: string, newCateg: Category): Promise<void>;
+  getAllSeries(): Promise<Serie[]>;
+  getAllCategories(): Promise<Category[]>;
+  getSeriesByCategoryId(categId: string): Promise<Serie[]>;
+  addSerie(serie: Serie, categId: string): Promise<string>;
+  addCategory(categ: Category): Promise<string>;
   deleteCategoryById(categId: string): Promise<void>;
-
-  /**
-   *
-   * @param serieId
-   * @param categId
-   */
   deleteSerieById(serieId: string, categId: string): Promise<void>;
 }
