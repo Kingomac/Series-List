@@ -58,7 +58,7 @@ export default class Main extends IComponent {
 
     this.seriesDiv = document.createElement("div");
 
-    this.addSerieModal = new AddSerieModal(this.client);
+    this.addSerieModal = new AddSerieModal();
     this.floatBotMenu = new FloatBottomMenu(this.addSerieModal);
 
     this.tabsMenu.onTabsClick = async (tab: ITab) => {

@@ -7,6 +7,7 @@ import {
   useAuthEmulator,
 } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
+import { AppMode, AppModes } from "../../../app.config";
 
 export type AuthChangeEvent = {
   isSudo: boolean;
@@ -20,9 +21,11 @@ export default class FirebaseAuthController implements IAuthController {
 
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
-    useAuthEmulator(this.auth, "http://localhost:9099", {
-      disableWarnings: true,
-    });
+    if (AppMode == AppModes.DEBUG) {
+      useAuthEmulator(this.auth, "http://localhost:9099", {
+        disableWarnings: true,
+      });
+    }
     onAuthStateChanged(this.auth, (user) => {
       this.logged = user != null;
       console.log("Firebase logged:", user);

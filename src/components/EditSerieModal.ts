@@ -1,22 +1,12 @@
 import { AppMode, AppModes } from "../../app.config";
-import { FakeClient } from "../../test/FakeClient";
 import Placeholders from "../../test/Placeholders";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { Serie } from "../interfaces/Models";
-import "../styles/Modal.scss";
+import { AddSerieModal } from "./AddSerieModal";
 
-export class AddSerieModal extends IComponent {
-  /**
-   * Element attributes
-   * * visibility
-   * @version 1.0
-   */
-  static get observedAttributes(): string[] {
-    return ["visibility"];
-  }
-
-  onSerieAdded?(serie: Serie): void;
+export default class EditSerieModal extends IComponent {
+  onSerieSaved?(serie: Serie): void;
 
   private winDiv = document.createElement("div");
 
@@ -24,6 +14,7 @@ export class AddSerieModal extends IComponent {
   private altNameInput = document.createElement("input");
   private imgInput = document.createElement("input");
   private urlInput = document.createElement("input");
+  private chapterInput = document.createElement("input");
 
   private titleDiv = document.createElement("div");
   private titleSpan = document.createElement("span");
@@ -31,9 +22,9 @@ export class AddSerieModal extends IComponent {
 
   private submitBtn = document.createElement("button");
 
-  constructor() {
+  constructor(private serie: Serie) {
     super();
-    this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
+    console.log("Editing serie:", serie);
   }
   connectedCallback() {
     this.append(this.winDiv);
@@ -43,6 +34,7 @@ export class AddSerieModal extends IComponent {
       this.altNameInput,
       this.imgInput,
       this.urlInput,
+      this.chapterInput,
       this.submitBtn
     );
     this.titleDiv.append(this.titleSpan, this.modalClose);
@@ -51,53 +43,37 @@ export class AddSerieModal extends IComponent {
     this.altNameInput.type = "text";
     this.imgInput.type = "text";
     this.urlInput.type = "text";
+    this.chapterInput.type = "number";
 
     this.nameInput.placeholder = "Nombre JP";
     this.altNameInput.placeholder = "Nombre EN";
     this.imgInput.placeholder = "Link imagen";
     this.urlInput.placeholder = "Url";
+    this.chapterInput.placeholder = "Capítulo";
 
     this.titleSpan.innerText = "Añadir serie";
     this.modalClose.innerText = "❌";
-    this.modalClose.onclick = () =>
-      this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
+    this.modalClose.onclick = () => this.remove();
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
-      this.onSerieAdded!({
+      this.onSerieSaved!({
+        _id: this.serie._id,
         name: this.nameInput.value,
         nameAlt: this.altNameInput.value,
-        chapter: 0,
+        chapter: this.chapterInput.valueAsNumber,
         image: this.imgInput.value,
         url: this.urlInput.value,
+        timestamp: new Date(),
       });
-      await this.clearInputs();
-      await this.generateData();
+      this.remove();
     };
-    this.generateData();
-  }
 
-  async clearInputs() {
-    this.nameInput.value = "";
-    this.altNameInput.value = "";
-    this.imgInput.value = "";
-    this.urlInput.value = "";
-  }
-
-  async generateData() {
-    if (AppMode == AppModes.DEBUG) {
-      const serie = await Placeholders.getRandomSerie();
-      this.nameInput.value = serie.name;
-      this.altNameInput.value = serie.nameAlt;
-      this.imgInput.value = serie.image;
-      this.urlInput.value = serie.url;
-    }
-  }
-
-  attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
-    if (name == AddSerieModal.observedAttributes[0]) {
-      this.style.visibility = newValue;
-    }
+    this.nameInput.value = this.serie.name;
+    this.altNameInput.value = this.serie.nameAlt;
+    this.imgInput.value = this.serie.image;
+    this.urlInput.value = this.serie.url;
+    this.chapterInput.value = this.serie.chapter.toString();
   }
 }
 
-window.customElements.define("sl-add-serie-modal", AddSerieModal);
+window.customElements.define("sl-edit-serie-modal", EditSerieModal);

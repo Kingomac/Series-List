@@ -4,6 +4,7 @@ import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
 import "../styles/SerieCard.scss";
+import EditSerieModal from "./EditSerieModal";
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
@@ -64,6 +65,20 @@ export class SerieCard extends IComponent {
         this.serie.chapter--;
         chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
       };
+      editBtn.onclick = () => {
+        const editModal = new EditSerieModal(this.serie);
+        editModal.onSerieSaved = async (serie) => {
+          console.log("Serie edited:", serie);
+          this.serie = serie;
+          await this.client.updateSerieInfo(this.categId, serie);
+          img.src = this.serie.image;
+          title.innerText = this.serie.name;
+          chapter.innerText = "Capítulo: ".concat(
+            this.serie.chapter.toString()
+          );
+        };
+        this.append(editModal);
+      };
       actions.onmouseleave = this.saveChapter;
       deleteBtn.onclick = this.deleteSerie;
     } else {
@@ -73,11 +88,13 @@ export class SerieCard extends IComponent {
 
   saveChapter = async () => {
     if (this.initialChapter !== this.serie.chapter) {
+      console.log("Saving chapter for serie:", this.serie);
       await this.client.updateSerieChapter(
         this.serie._id!!,
         this.categId,
         this.serie.chapter
       );
+      this.initialChapter = this.serie.chapter;
     }
   };
 

@@ -1,5 +1,5 @@
-import { FirebaseKeys } from "../../../app.config";
-import { FirebaseApp, initializeApp } from "firebase/app";
+import { AppMode, AppModes } from "../../../app.config";
+import { FirebaseApp } from "firebase/app";
 import {
   getFirestore,
   collection,
@@ -23,7 +23,9 @@ export default class FirebaseClient implements IDbClient {
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
-    useFirestoreEmulator(this.db, "localhost", 8080);
+    if (AppMode == AppModes.DEBUG) {
+      useFirestoreEmulator(this.db, "localhost", 8080);
+    }
   }
 
   async moveSerie(
@@ -37,6 +39,7 @@ export default class FirebaseClient implements IDbClient {
     serie.timestamp = new Date();
     const newSerie = await addDoc(collection(this.db, newCategId), serie);
     await deleteDoc(doc(this.db, oldCategId, oldSerieId));
+    serie._id = newSerie.id;
     return newSerie.id;
   }
 
@@ -46,6 +49,7 @@ export default class FirebaseClient implements IDbClient {
     delete serie._id;
     serie.timestamp = new Date();
     await updateDoc(doc(this.db, categId, serieId), serie);
+    serie._id = serieId;
   }
 
   async updateSerieChapter(serieId: string, categId: string, chapter: number) {
