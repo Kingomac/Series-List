@@ -82,6 +82,10 @@ export default class Main extends IComponent {
       await this.findAndDeleteCard(oldId!);
     };
 
+    this.tabsMenu.onRequestDelete = async (categId) => {
+      await this.client.deleteCategoryById(categId);
+    };
+
     this.auth.onAuthChange = this.authChangeEvent;
   }
 

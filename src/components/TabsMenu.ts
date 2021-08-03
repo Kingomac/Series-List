@@ -12,6 +12,7 @@ export class TabsMenu extends IComponent {
 
   onTabsClick?(tab: ITab): void;
   onSerieDrop?(x: { serie: Serie; categoryId: string }): void;
+  onRequestDelete?(categId: string): Promise<void>;
 
   static addTabId: string = "addtab";
 

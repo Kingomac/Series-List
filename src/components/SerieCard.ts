@@ -61,6 +61,7 @@ export class SerieCard extends IComponent {
       };
       editBtn.onclick = () => {
         const editModal = new EditSerieModal(this.serie);
+        this.setAttribute("draggable", "false");
         editModal.onSerieSaved = async (serie) => {
           console.log("Serie edited:", serie);
           this.serie = serie;
@@ -71,6 +72,8 @@ export class SerieCard extends IComponent {
             this.serie.chapter.toString()
           );
         };
+        editModal.disconnectedCallback = () =>
+          this.setAttribute("draggable", "true");
         this.append(editModal);
       };
       actions.onmouseleave = this.saveChapter;

@@ -53,7 +53,10 @@ export default class EditSerieModal extends IComponent {
 
     this.titleSpan.innerText = "Añadir serie";
     this.modalClose.innerText = "❌";
-    this.modalClose.onclick = () => this.remove();
+    this.modalClose.onclick = () => {
+      this.disconnectedCallback!();
+      this.remove();
+    };
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
       this.onSerieSaved!({
@@ -65,6 +68,7 @@ export default class EditSerieModal extends IComponent {
         url: this.urlInput.value,
         timestamp: new Date(),
       });
+      this.disconnectedCallback!();
       this.remove();
     };
 
