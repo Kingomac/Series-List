@@ -20,7 +20,10 @@ export class SerieCard extends IComponent {
     console.log(this.serie);
   }
   connectedCallback(): void {
+    this.id = this.serie._id!;
+    this.setAttribute("draggable", "true");
     const img = document.createElement("img");
+    img.setAttribute("draggable", "false");
     const title = document.createElement("span");
     const chapter = document.createElement("i");
 
@@ -40,22 +43,13 @@ export class SerieCard extends IComponent {
       const lessChapterBtn = document.createElement("button");
       const editBtn = document.createElement("button");
       const deleteBtn = document.createElement("button");
-      const moveBtn = document.createElement("button");
 
       addChapterBtn.innerText = "▶";
       lessChapterBtn.innerText = "◀";
       editBtn.innerText = "✏";
       deleteBtn.innerText = "🗑";
 
-      moveBtn.innerText = "M";
-
-      actions.append(
-        lessChapterBtn,
-        addChapterBtn,
-        editBtn,
-        deleteBtn,
-        moveBtn
-      );
+      actions.append(lessChapterBtn, addChapterBtn, editBtn, deleteBtn);
 
       addChapterBtn.onclick = async () => {
         this.serie.chapter++;
@@ -85,6 +79,10 @@ export class SerieCard extends IComponent {
       this.style.height = "425px";
     }
   }
+
+  ondragstart = (ev: DragEvent) => {
+    ev.dataTransfer?.setData("serie", JSON.stringify(this.serie));
+  };
 
   saveChapter = async () => {
     if (this.initialChapter !== this.serie.chapter) {

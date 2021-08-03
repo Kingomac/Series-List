@@ -54,7 +54,7 @@ export default class Main extends IComponent {
     this.actualCategory = { name: "" };
 
     this.addTabModal = new AddCategoryModal(this.client);
-    this.tabsMenu = new TabsMenu(this.addTabModal, this.auth);
+    this.tabsMenu = new TabsMenu(this.addTabModal);
 
     this.seriesDiv = document.createElement("div");
 
@@ -69,6 +69,17 @@ export default class Main extends IComponent {
           "Category " + this.actualCategory.name + " id is undefined"
         );
       await this.updateSeries();
+    };
+
+    this.tabsMenu.onSerieDrop = async (x) => {
+      console.log("Serie dropped:", x);
+      const oldId = x.serie._id;
+      await this.client.moveSerie(
+        this.actualCategory._id!,
+        x.categoryId,
+        x.serie
+      );
+      await this.findAndDeleteCard(oldId!);
     };
 
     this.auth.onAuthChange = this.authChangeEvent;
@@ -168,6 +179,18 @@ export default class Main extends IComponent {
     (await this.createCards.apply(this, series)).forEach((s) =>
       this.seriesDiv.append(s)
     );
+  }
+
+  async findAndDeleteCard(id: string) {
+    const card = this.seriesDiv.querySelector("#" + id) as IComponent;
+    if (card === null)
+      throw new Error("Card to delete with id " + id + " is null");
+    card.style.transition = "visibility 0.3s linear,opacity 0.3s linear";
+    card.style.opacity = "0";
+    card.style.visibility = "hidden";
+    setTimeout(() => {
+      card.remove();
+    }, 1000);
   }
 }
 

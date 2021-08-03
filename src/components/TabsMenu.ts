@@ -2,7 +2,7 @@ import { Timestamp } from "firebase/firestore";
 import WSAuthController from "../controllers/auth/WSAuthController";
 import IComponent from "../interfaces/Component";
 import { IAuthController } from "../interfaces/IAuthController";
-import { Category } from "../interfaces/Models";
+import { Category, Serie } from "../interfaces/Models";
 import { AddCategoryModal } from "./AddCategoryModal";
 import { ITab, Tab } from "./Tab";
 
@@ -11,19 +11,20 @@ export class TabsMenu extends IComponent {
   private addCategTab: Tab;
 
   onTabsClick?(tab: ITab): void;
+  onSerieDrop?(x: { serie: Serie; categoryId: string }): void;
 
   static addTabId: string = "addtab";
 
-  constructor(
-    private addTabModal: AddCategoryModal,
-    private authController: IAuthController
-  ) {
+  constructor(private addTabModal: AddCategoryModal) {
     super();
     this.tabs = [];
     this.addCategTab = new Tab({
       name: "Añadir",
       url: "",
     });
+    this.addCategTab.onDropSerie = () => {
+      alert("Eu non fago iso");
+    };
     this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
     this.addCategTab.onclick = () => {
@@ -43,6 +44,9 @@ export class TabsMenu extends IComponent {
   async addTab(tab: ITab): Promise<void> {
     const newTab = new Tab(tab);
     newTab.onActive = (_tab: ITab = tab) => this.onTabsClick!(tab);
+    newTab.onDropSerie = (serie) => {
+      this.onSerieDrop!({ serie, categoryId: tab._id! });
+    };
     this.tabs.unshift(newTab);
     this.insertBefore(this.tabs[0], this.addCategTab);
   }
@@ -52,6 +56,9 @@ export class TabsMenu extends IComponent {
     this.tabs = this.tabs.concat(
       tabs.map((t) => {
         const elT = new Tab(t);
+        elT.onDropSerie = (serie) => {
+          this.onSerieDrop!({ serie, categoryId: t._id! });
+        };
         elT.onActive = (tab: ITab = t) => this.onTabsClick!(tab);
         return elT;
       })
