@@ -1,4 +1,4 @@
-import { AppMode, AppModes } from "../../app.config";
+import { APP_MODE, AppModes } from "../../app.config";
 import { FakeClient } from "../../test/FakeClient";
 import Placeholders from "../../test/Placeholders";
 import IComponent from "../interfaces/Component";
@@ -84,7 +84,7 @@ export class AddSerieModal extends IComponent {
   }
 
   async generateData() {
-    if (AppMode == AppModes.DEBUG) {
+    if (APP_MODE == AppModes.DEBUG) {
       const serie = await Placeholders.getRandomSerie();
       this.nameInput.value = serie.name;
       this.altNameInput.value = serie.nameAlt;

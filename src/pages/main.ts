@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { FirebaseKeys } from "../../app.config";
+import { APP_NAME, FirebaseKeys } from "../../app.config";
 import FakeAuth from "../../test/FakeAuth";
 import { FakeClient } from "../../test/FakeClient";
 import { AddCategoryModal } from "../components/AddCategoryModal";
@@ -100,7 +100,18 @@ export default class Main extends IComponent {
       );
       const categories = await this.client.getAllCategories();
       if (categories.length > 0) {
-        this.actualCategory = categories[0];
+        if (window.location.pathname === "/") {
+          window.history.pushState(null, "", categories[0]._id!);
+        } else {
+          let i = 0;
+          while (
+            i < categories.length &&
+            categories[i]._id !== window.location.pathname.replace("/", "")
+          ) {
+            i++;
+          }
+          this.actualCategory = categories[i];
+        }
         await this.updateTabs(categories);
         await this.updateSeries();
       }
@@ -119,7 +130,7 @@ export default class Main extends IComponent {
   };
 
   async connectedCallback(): Promise<void> {
-    this.topBar.setAttribute("title", "Series List Next");
+    this.topBar.setAttribute("title", APP_NAME);
     this.seriesDiv.classList.add("series", "container");
 
     this.addTabModal.onCategoryAdded = async (categ) => {
@@ -167,6 +178,7 @@ export default class Main extends IComponent {
     await this.tabsMenu.addAllTab(
       await this.createTabs.apply(this, categories)
     );
+    await this.tabsMenu.setActiveTabByPathname();
   }
 
   async updateSeries() {

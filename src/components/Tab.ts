@@ -9,11 +9,15 @@ export class Tab extends IComponent {
   public onDropSerie?: (serie: Serie) => void;
   public onDelete?: (categId: string) => Promise<void>;
 
+  static get observedAttributes() {
+    return ["active"];
+  }
+
   constructor(public tab: ITab) {
     super();
     this.onclick = () => {
-      history.pushState(null, "", this.tab.url);
-      if (this.onActive != undefined) this.onActive();
+      history.pushState(null, "", this.tab._id!);
+      this.onActive!();
     };
   }
   connectedCallback() {
@@ -52,6 +56,15 @@ export class Tab extends IComponent {
 
   getData(): ITab {
     return this.tab;
+  }
+  attributeChangedCallback(name: string, lastValue: any, newValue: any) {
+    if (name == Tab.observedAttributes[0]) {
+      if (newValue === "true") {
+        this.style.borderBottomColor = "red";
+      } else {
+        this.style.borderBottomColor = "black";
+      }
+    }
   }
 }
 

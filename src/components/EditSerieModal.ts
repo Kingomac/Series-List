@@ -1,4 +1,4 @@
-import { AppMode, AppModes } from "../../app.config";
+import { APP_MODE, AppModes } from "../../app.config";
 import Placeholders from "../../test/Placeholders";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";

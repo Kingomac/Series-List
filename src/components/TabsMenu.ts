@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { APP_NAME } from "../../app.config";
 import WSAuthController from "../controllers/auth/WSAuthController";
 import IComponent from "../interfaces/Component";
 import { IAuthController } from "../interfaces/IAuthController";
@@ -44,7 +45,10 @@ export class TabsMenu extends IComponent {
 
   async addTab(tab: ITab): Promise<void> {
     const newTab = new Tab(tab);
-    newTab.onActive = (_tab: ITab = tab) => this.onTabsClick!(tab);
+    newTab.onActive = async (_tab: ITab = tab) => {
+      await this.setActiveTab(newTab);
+      this.onTabsClick!(tab);
+    };
     newTab.onDropSerie = (serie) => {
       this.onSerieDrop!({ serie, categoryId: tab._id! });
     };
@@ -60,13 +64,35 @@ export class TabsMenu extends IComponent {
         elT.onDropSerie = (serie) => {
           this.onSerieDrop!({ serie, categoryId: t._id! });
         };
-        elT.onActive = (tab: ITab = t) => this.onTabsClick!(tab);
+        elT.onActive = async (tab: ITab = t) => {
+          await this.setActiveTab(elT);
+          this.onTabsClick!(tab);
+        };
         return elT;
       })
     );
     for (let i = n; i < this.tabs.length; i++) {
       this.insertBefore(this.tabs[i], this.addCategTab);
     }
+  }
+
+  async setActiveTab(newTab: Tab) {
+    this.tabs.forEach((i) => {
+      i.setAttribute(Tab.observedAttributes[0], "false");
+    });
+    newTab.setAttribute(Tab.observedAttributes[0], "true"); // Attribute 'active'
+    document.title = APP_NAME + " - " + newTab.tab.name;
+  }
+
+  async setActiveTabByPathname() {
+    let i = 0;
+    while (
+      i < this.tabs.length &&
+      this.tabs[i].tab._id !== window.location.pathname.replace("/", "")
+    ) {
+      i++;
+    }
+    await this.setActiveTab(this.tabs[i]);
   }
 
   async deleteTab(tab: ITab): Promise<void> {

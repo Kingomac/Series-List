@@ -1,4 +1,4 @@
-import { AppMode, AppModes } from "../../app.config";
+import { APP_MODE, AppModes } from "../../app.config";
 import FakeAuth from "../../test/FakeAuth";
 import { FakeClient } from "../../test/FakeClient";
 import Placeholders from "../../test/Placeholders";
@@ -67,7 +67,7 @@ export class AddCategoryModal extends IComponent {
   }
 
   async setRandomName() {
-    if (AppMode == AppModes.DEBUG) {
+    if (APP_MODE == AppModes.DEBUG) {
       const categ = await Placeholders.getRandomCategory();
       this.nameInput.value = categ.name;
     }

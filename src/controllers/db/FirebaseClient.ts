@@ -1,4 +1,4 @@
-import { AppMode, AppModes } from "../../../app.config";
+import { APP_MODE, AppModes } from "../../../app.config";
 import { FirebaseApp } from "firebase/app";
 import {
   getFirestore,
@@ -23,7 +23,7 @@ export default class FirebaseClient implements IDbClient {
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
-    if (AppMode == AppModes.DEBUG) {
+    if (APP_MODE == AppModes.DEBUG) {
       useFirestoreEmulator(this.db, "localhost", 8080);
     }
   }
