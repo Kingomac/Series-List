@@ -62,7 +62,7 @@ export class SerieCard extends IComponent {
       editBtn.onclick = () => {
         const editModal = new EditSerieModal(this.serie);
         this.setAttribute("draggable", "false");
-        editModal.onSerieSaved = async (serie) => {
+        editModal.onSubmit = async (serie) => {
           console.log("Serie edited:", serie);
           this.serie = serie;
           await this.client.updateSerieInfo(this.categId, serie);

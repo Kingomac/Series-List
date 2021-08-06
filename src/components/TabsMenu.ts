@@ -14,10 +14,11 @@ export class TabsMenu extends IComponent {
   onTabsClick?(tab: ITab): void;
   onSerieDrop?(x: { serie: Serie; categoryId: string }): void;
   onRequestDelete?(categId: string): Promise<void>;
+  onRequestNewCateg?(): Promise<void>;
 
   static addTabId: string = "addtab";
 
-  constructor(private addTabModal: AddCategoryModal) {
+  constructor() {
     super();
     this.tabs = [];
     this.addCategTab = new Tab({
@@ -29,9 +30,7 @@ export class TabsMenu extends IComponent {
     };
     this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
-    this.addCategTab.onclick = () => {
-      this.addTabModal.setAttribute("visibility", "visible");
-    };
+    this.addCategTab.onclick = async () => await this.onRequestNewCateg!();
   }
 
   connectedCallback() {

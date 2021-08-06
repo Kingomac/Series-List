@@ -4,11 +4,11 @@ import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { Serie } from "../interfaces/Models";
 import { AddSerieModal } from "./AddSerieModal";
+import "../styles/Modal.scss";
+import ModalView from "../interfaces/ModalView";
 
-export default class EditSerieModal extends IComponent {
-  onSerieSaved?(serie: Serie): void;
-
-  private winDiv = document.createElement("div");
+export default class EditSerieModal extends ModalView {
+  onSubmit?(serie: Serie): void;
 
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
@@ -27,8 +27,7 @@ export default class EditSerieModal extends IComponent {
     console.log("Editing serie:", serie);
   }
   connectedCallback() {
-    this.append(this.winDiv);
-    this.winDiv.append(
+    this.window.append(
       this.titleDiv,
       this.nameInput,
       this.altNameInput,
@@ -59,7 +58,7 @@ export default class EditSerieModal extends IComponent {
     };
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
-      this.onSerieSaved!({
+      this.onSubmit!({
         _id: this.serie._id,
         name: this.nameInput.value,
         nameAlt: this.altNameInput.value,

@@ -90,6 +90,48 @@ const SERIES: PlaceholderInfo[] = [
     image:
       "https://static.wixstatic.com/media/2b52e5_f60454d8f14b4a02a0fddef7e9cd842e~mv2.jpg/v1/fill/w_628,h_1000,al_c,q_90/2b52e5_f60454d8f14b4a02a0fddef7e9cd842e~mv2.jpg",
   },
+  {
+    name: "Munou na Nana",
+    image: "https://pbs.twimg.com/media/Db-tOHHXcAAZAR5.jpg",
+  },
+  {
+    name: "Mahouka Koukou no Rettousei: Raihousha-hen",
+    image:
+      "https://www.playerone.vg/wp-content/uploads/2020/10/MV5BYmNmMDIzZjktOTcwMS00N2Q1LWE3NTAtNTUwZGJjOWQ3N2NlXkEyXkFqcGdeQXVyMzgxODM4NjM@._V1_-scaled.jpg",
+  },
+  {
+    name: "Mahouka Koukou no Rettousei",
+    image:
+      "https://img1.ak.crunchyroll.com/i/spire3/f2ccbd8ea20320fda0f49b23bb43d2d21396649462_full.jpg",
+  },
+  {
+    name: "Love Live Sunshine Over the Rainbow",
+    image:
+      "https://i.pinimg.com/originals/ac/02/98/ac02980ea4846300f953b7eca0c95084.jpg",
+  },
+  {
+    name: "Nisekoi",
+    image: "https://i.kym-cdn.com/photos/images/original/001/082/371/c57",
+  },
+  {
+    name: "Fullmetal Alchemist: Brotherhood",
+    image:
+      "https://img1.ak.crunchyroll.com/i/spire4/fabddf1040abbd18948b9aacc18011b31475523493_main.jpg",
+  },
+  {
+    name: "Carole & Tuesday",
+    image:
+      "https://www.animefagos.com/wp-content/uploads/2018/11/caroletuesday01.jpg",
+  },
+  {
+    name: "Noragami",
+    image: "https://animerelleno.com/storage/animes/poster/noragami.jpg",
+  },
+  {
+    name: "Re:Zero kara Hajimeru Isekai Seikatsu",
+    image:
+      "https://img1.ak.crunchyroll.com/i/spire2/95445cd55c37ce2ff04ef1adde79f50c1529088362_main.jpg",
+  },
 ];
 
 const CATEGS = [

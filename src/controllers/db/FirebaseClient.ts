@@ -6,17 +6,15 @@ import {
   query,
   getDocs,
   FirebaseFirestore,
-  setDoc,
   doc,
   deleteDoc,
   addDoc,
-  orderBy,
   Timestamp,
   updateDoc,
   useFirestoreEmulator,
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { IDbClient } from "../../interfaces/DbClient";
-import { Category, DbDoc, Serie } from "../../interfaces/Models";
+import { Category, Serie } from "../../interfaces/Models";
 
 export default class FirebaseClient implements IDbClient {
   private readonly db: FirebaseFirestore;

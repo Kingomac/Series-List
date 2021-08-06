@@ -3,22 +3,12 @@ import { FakeClient } from "../../test/FakeClient";
 import Placeholders from "../../test/Placeholders";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
+import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
 
-export class AddSerieModal extends IComponent {
-  /**
-   * Element attributes
-   * * visibility
-   * @version 1.0
-   */
-  static get observedAttributes(): string[] {
-    return ["visibility"];
-  }
-
-  onSerieAdded?(serie: Serie): void;
-
-  private winDiv = document.createElement("div");
+export class AddSerieModal extends ModalView {
+  onSubmit?(serie: Serie): void;
 
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
@@ -33,11 +23,10 @@ export class AddSerieModal extends IComponent {
 
   constructor() {
     super();
-    this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
   }
-  connectedCallback() {
-    this.append(this.winDiv);
-    this.winDiv.append(
+
+  async connectedCallback() {
+    this.window.append(
       this.titleDiv,
       this.nameInput,
       this.altNameInput,
@@ -59,11 +48,10 @@ export class AddSerieModal extends IComponent {
 
     this.titleSpan.innerText = "Añadir serie";
     this.modalClose.innerText = "❌";
-    this.modalClose.onclick = () =>
-      this.setAttribute(AddSerieModal.observedAttributes[0], "hidden");
+    this.modalClose.onclick = () => this.remove();
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
-      this.onSerieAdded!({
+      this.onSubmit!({
         name: this.nameInput.value,
         nameAlt: this.altNameInput.value,
         chapter: 0,
@@ -75,7 +63,6 @@ export class AddSerieModal extends IComponent {
     };
     this.generateData();
   }
-
   async clearInputs() {
     this.nameInput.value = "";
     this.altNameInput.value = "";
@@ -90,12 +77,6 @@ export class AddSerieModal extends IComponent {
       this.altNameInput.value = serie.nameAlt;
       this.imgInput.value = serie.image;
       this.urlInput.value = serie.url;
-    }
-  }
-
-  attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
-    if (name == AddSerieModal.observedAttributes[0]) {
-      this.style.visibility = newValue;
     }
   }
 }

@@ -33,11 +33,9 @@ export default class Main extends IComponent {
   //Components
   private floatBotMenu: FloatBottomMenu;
   private tabsMenu: TabsMenu;
-  private addTabModal: AddCategoryModal;
   private seriesDiv: HTMLDivElement;
   private topBar: TopBar;
   private authModule: IComponent;
-  private addSerieModal: AddSerieModal;
 
   constructor() {
     super();
@@ -53,13 +51,11 @@ export default class Main extends IComponent {
     //this.client = new FakeClient();
     this.actualCategory = { name: "" };
 
-    this.addTabModal = new AddCategoryModal(this.client);
-    this.tabsMenu = new TabsMenu(this.addTabModal);
+    this.tabsMenu = new TabsMenu();
 
     this.seriesDiv = document.createElement("div");
 
-    this.addSerieModal = new AddSerieModal();
-    this.floatBotMenu = new FloatBottomMenu(this.addSerieModal);
+    this.floatBotMenu = new FloatBottomMenu();
 
     this.tabsMenu.onTabsClick = async (tab: ITab) => {
       this.actualCategory = tab as Category;
@@ -102,6 +98,7 @@ export default class Main extends IComponent {
       if (categories.length > 0) {
         if (window.location.pathname === "/") {
           window.history.pushState(null, "", categories[0]._id!);
+          this.actualCategory = categories[0];
         } else {
           let i = 0;
           while (
@@ -111,11 +108,12 @@ export default class Main extends IComponent {
             i++;
           }
           this.actualCategory = categories[i];
+          console.log("actualCategory:", this.actualCategory);
         }
         await this.updateTabs(categories);
         await this.updateSeries();
       }
-      this.append(this.floatBotMenu, this.addSerieModal, this.addTabModal);
+      this.append(this.floatBotMenu);
     } else {
       console.log("Not logged");
       this.authModule.setAttribute(
@@ -124,8 +122,6 @@ export default class Main extends IComponent {
       );
       this.tabsMenu.showAddCategTab(false);
       if (this.floatBotMenu.isConnected) this.floatBotMenu.remove();
-      if (this.addSerieModal.isConnected) this.addSerieModal.remove();
-      if (this.addTabModal.isConnected) this.addTabModal.remove();
     }
   };
 
@@ -133,26 +129,30 @@ export default class Main extends IComponent {
     this.topBar.setAttribute("title", APP_NAME);
     this.seriesDiv.classList.add("series", "container");
 
-    this.addTabModal.onCategoryAdded = async (categ) => {
-      this.tabsMenu.addTab((await this.createTabs(categ))[0]);
+    this.floatBotMenu.onNewSerie = async () => {
+      console.log("AddSerieModal showwwwwwww");
+      const modal = new AddSerieModal();
+      this.append(modal);
+      modal.onSubmit = async (serie) => {
+        if (this.actualCategory._id === undefined)
+          throw new Error("Category id is undefined");
+        const id = await this.client.addSerie(serie, this.actualCategory._id);
+        this.seriesDiv.insertBefore(
+          (await this.createCards(Object.assign({ _id: id }, serie)))[0],
+          this.seriesDiv.children[0]
+        );
+      };
     };
 
-    this.addSerieModal.onSerieAdded = async (serie) => {
-      if (this.actualCategory._id === undefined) {
-        throw new Error("Category id is not defined");
-      }
-      const id = await this.client.addSerie(serie, this.actualCategory._id);
-      this.seriesDiv.insertBefore(
-        (await this.createCards(Object.assign(serie, { _id: id })))[0],
-        this.seriesDiv.children.item(0)
-      );
+    this.tabsMenu.onRequestNewCateg = async () => {
+      const modal = new AddCategoryModal();
+      this.append(modal);
+      modal.onSubmit = async (categ) => {
+        const id = await this.client.addCategory(categ);
+        categ._id = id;
+        this.tabsMenu.addTab((await this.createTabs(categ))[0]);
+      };
     };
-    /*const categories = await this.client.getAllCategories();
-    if (categories.length > 0) {
-      this.actualCategory = categories[0];
-      await this.updateTabs(categories);
-      await this.updateSeries();
-    }*/
 
     this.append(this.topBar, this.tabsMenu, this.seriesDiv);
   }
@@ -184,7 +184,7 @@ export default class Main extends IComponent {
   async updateSeries() {
     console.log("Updating series with category:", this.actualCategory);
     if (this.actualCategory._id === undefined) {
-      throw new Error("Error with category " + this.actualCategory);
+      throw new Error("Error with category " + this.actualCategory._id);
     }
 
     const series = await this.client.getSeriesByCategoryId(

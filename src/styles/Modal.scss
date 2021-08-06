@@ -1,6 +1,4 @@
-sl-add-serie-modal,
-sl-add-category-modal,
-sl-edit-serie-modal {
+/*.modal {
   position: absolute;
   padding: 10px;
   z-index: 3;
@@ -13,6 +11,7 @@ sl-edit-serie-modal {
   justify-content: center;
   overflow-y: scroll;
   div {
+    border-radius: 5px;
     color: white;
     margin-top: 15vh;
     margin-left: 15vw;
@@ -67,3 +66,4 @@ sl-edit-serie-modal {
     }
   }
 }
+*/
