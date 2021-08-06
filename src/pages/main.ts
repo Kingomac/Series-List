@@ -107,7 +107,12 @@ export default class Main extends IComponent {
           ) {
             i++;
           }
-          this.actualCategory = categories[i];
+          if (i === categories.length) {
+            window.history.pushState(null, "", categories[0]._id!);
+            this.actualCategory = categories[0];
+          } else {
+            this.actualCategory = categories[i];
+          }
           console.log("actualCategory:", this.actualCategory);
         }
         await this.updateTabs(categories);
@@ -130,7 +135,6 @@ export default class Main extends IComponent {
     this.seriesDiv.classList.add("series", "container");
 
     this.floatBotMenu.onNewSerie = async () => {
-      console.log("AddSerieModal showwwwwwww");
       const modal = new AddSerieModal();
       this.append(modal);
       modal.onSubmit = async (serie) => {
