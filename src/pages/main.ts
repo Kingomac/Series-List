@@ -26,6 +26,7 @@ export default class Main extends IComponent {
 
   // Categories
   private actualCategory: Category;
+  private lastSerie?: Serie;
 
   //Components
   private floatBotMenu: FloatBottomMenu;
@@ -33,6 +34,8 @@ export default class Main extends IComponent {
   private seriesDiv: HTMLDivElement;
   private topBar: TopBar;
   private authModule: IComponent;
+  private endDiv: HTMLDivElement;
+  private viewDiv: HTMLDivElement;
 
   constructor() {
     super();
@@ -50,7 +53,12 @@ export default class Main extends IComponent {
 
     this.tabsMenu = new TabsMenu();
 
+    this.viewDiv = document.createElement("div");
+    this.viewDiv.className = "view-div";
     this.seriesDiv = document.createElement("div");
+    this.endDiv = document.createElement("div");
+    this.endDiv.className = "end-div";
+    this.endDiv.style.display = "none";
 
     this.floatBotMenu = new FloatBottomMenu();
 
@@ -128,6 +136,9 @@ export default class Main extends IComponent {
   };
 
   async connectedCallback(): Promise<void> {
+    this.append(this.topBar, this.tabsMenu, this.viewDiv);
+    this.viewDiv.append(this.seriesDiv, this.endDiv);
+
     this.topBar.setAttribute("title", APP_NAME);
     this.seriesDiv.classList.add("series", "container");
 
@@ -152,10 +163,31 @@ export default class Main extends IComponent {
         const id = await this.client.addCategory(categ);
         categ._id = id;
         this.tabsMenu.addTab((await this.createTabs(categ))[0]);
+        if (window.location.pathname == "/") {
+          window.history.pushState(null, "", id);
+          this.actualCategory = categ;
+          await this.updateSeries();
+          await this.tabsMenu.setActiveTabByPathname();
+        }
       };
     };
 
-    this.append(this.topBar, this.tabsMenu, this.seriesDiv);
+    this.endDiv.onmouseenter = async () => {
+      console.log("Getting more series!");
+      this.endDiv.style.display = "none";
+      if (this.lastSerie !== undefined) {
+        const moreSeries = await this.client.getSeriesLimitAfter({
+          categId: this.actualCategory._id!,
+          start: this.lastSerie!.timestamp!,
+        });
+        console.log("More series:", moreSeries);
+        const cards = await this.createCards.apply(this, moreSeries);
+        cards.forEach((i) => this.seriesDiv.append(i));
+        setTimeout(() => {
+          this.endDiv.style.display = "block";
+        }, 200);
+      }
+    };
   }
 
   /**
@@ -188,14 +220,19 @@ export default class Main extends IComponent {
       throw new Error("Error with category " + this.actualCategory._id);
     }
 
-    const series = await this.client.getSeriesByCategoryId(
-      this.actualCategory._id
-    );
+    const series = await this.client.getSeriesLimitFirst({
+      categId: this.actualCategory._id,
+    });
+
+    this.lastSerie = series[series.length - 1];
 
     this.seriesDiv.textContent = "";
     (await this.createCards.apply(this, series)).forEach((s) =>
       this.seriesDiv.append(s)
     );
+    setTimeout(() => {
+      this.endDiv.style.display = "block";
+    }, 250);
   }
 
   async findAndDeleteCard(id: string) {

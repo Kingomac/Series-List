@@ -12,9 +12,15 @@ import {
   Timestamp,
   updateDoc,
   useFirestoreEmulator,
+  DocumentData,
+  limit,
+  orderBy,
+  QuerySnapshot,
+  startAfter,
 } from "firebase/firestore/lite";
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, Serie } from "../../interfaces/Models";
+import { SERIES_LIMIT } from "../../../app.config";
 
 export default class FirebaseClient implements IDbClient {
   private readonly db: FirebaseFirestore;
@@ -24,6 +30,38 @@ export default class FirebaseClient implements IDbClient {
     if (APP_MODE == AppModes.DEBUG) {
       useFirestoreEmulator(this.db, "localhost", 8080);
     }
+  }
+  async getSeriesLimitFirst(x: { categId: string }): Promise<Serie[]> {
+    const q = query(
+      collection(this.db, x.categId),
+      orderBy("timestamp"),
+      limit(SERIES_LIMIT)
+    );
+    const docs = await getDocs(q);
+    return await FirebaseClient.formatDocsToSeries(docs);
+  }
+  async getSeriesLimitAfter(x: {
+    categId: string;
+    start: Date;
+  }): Promise<Serie[]> {
+    const q = query(
+      collection(this.db, x.categId),
+      orderBy("timestamp"),
+      limit(SERIES_LIMIT),
+      startAfter(x.start)
+    );
+    const docs = await getDocs(q);
+    return await FirebaseClient.formatDocsToSeries(docs);
+  }
+
+  private static async formatDocsToSeries(
+    docs: QuerySnapshot<DocumentData>
+  ): Promise<Serie[]> {
+    let series: Serie[] = [];
+    docs.forEach((d) => {
+      series.push(Object.assign({ _id: d.id }, d.data()) as Serie);
+    });
+    return series;
   }
 
   async moveSerie(

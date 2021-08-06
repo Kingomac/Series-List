@@ -17,6 +17,8 @@ export interface IDbClient {
   ): Promise<void>;
   updateCategory(oldCategId: string, newCateg: Category): Promise<void>;
   getAllSeries(): Promise<Serie[]>;
+  getSeriesLimitFirst(x: { categId: string }): Promise<Serie[]>;
+  getSeriesLimitAfter(x: { categId: string; start: Date }): Promise<Serie[]>;
   getAllCategories(): Promise<Category[]>;
   getSeriesByCategoryId(categId: string): Promise<Serie[]>;
   addSerie(serie: Serie, categId: string): Promise<string>;

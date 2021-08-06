@@ -2,24 +2,38 @@ body,
 html {
   margin: 0;
   overflow: hidden;
+  height: 100%;
 }
 sl-main {
   font-family: "Arial";
   margin: 0;
   overflow-x: hidden;
 }
+
+.view-div {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+  scrollbar-color: white #131313;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
+
 .series.container {
   margin: 10px;
   scroll-behavior: smooth;
-  width: 100vw;
-  height: 88vh;
+  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: start;
-  overflow-y: scroll;
-  overflow-x: hidden;
   transition: flex-grow 1000ms linear;
+}
+
+.end-div {
+  border: solid red 2px;
+  width: 100%;
+  height: 500px;
 }
 
 sl-float-bottom-menu {
@@ -59,7 +73,6 @@ sl-tabs-menu {
   scrollbar-color: white #131313;
   scrollbar-width: thin;
   scroll-behavior: smooth;
-  height: 15%;
   background-color: white;
   display: flex;
   flex-direction: row;
