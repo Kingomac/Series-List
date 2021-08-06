@@ -1,4 +1,4 @@
-import { APP_MODE, AppModes } from "../../../app.config";
+import { APP_MODE, AppModes } from "../../../app.modes";
 import { FirebaseApp } from "firebase/app";
 import {
   getFirestore,

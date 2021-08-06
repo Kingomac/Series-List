@@ -1,6 +1,4 @@
 import IComponent from "../interfaces/Component";
-import { Serie } from "../interfaces/Models";
-import { AddSerieModal } from "./AddSerieModal";
 
 export class FloatBottomMenu extends IComponent {
   onNewSerie?(): void;

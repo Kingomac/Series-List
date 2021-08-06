@@ -1,4 +1,4 @@
-import { APP_MODE, AppModes } from "../../app.config";
+import { APP_MODE, AppModes } from "../../app.modes";
 import Placeholders from "../../test/Placeholders";
 import ModalView from "../interfaces/ModalView";
 import { Category } from "../interfaces/Models";

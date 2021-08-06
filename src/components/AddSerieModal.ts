@@ -1,8 +1,5 @@
-import { APP_MODE, AppModes } from "../../app.config";
-import { FakeClient } from "../../test/FakeClient";
+import { APP_MODE, AppModes } from "../../app.modes";
 import Placeholders from "../../test/Placeholders";
-import IComponent from "../interfaces/Component";
-import { IDbClient } from "../interfaces/DbClient";
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";

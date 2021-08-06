@@ -1,9 +1,4 @@
-import { APP_MODE, AppModes } from "../../app.config";
-import Placeholders from "../../test/Placeholders";
-import IComponent from "../interfaces/Component";
-import { IDbClient } from "../interfaces/DbClient";
 import { Serie } from "../interfaces/Models";
-import { AddSerieModal } from "./AddSerieModal";
 import "../styles/Modal.scss";
 import ModalView from "../interfaces/ModalView";
 

@@ -1,4 +1,3 @@
-import { FirebaseApp } from "firebase/app";
 import FirebaseAuthController from "../../controllers/auth/FirebaseAuthController";
 import IComponent from "../../interfaces/Component";
 import { AuthModuleAttributes } from "./AuthModuleAttributes";

@@ -7,7 +7,7 @@ import {
   useAuthEmulator,
 } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
-import { APP_MODE, AppModes } from "../../../app.config";
+import { APP_MODE, AppModes } from "../../../app.modes";
 
 export type AuthChangeEvent = {
   isSudo: boolean;

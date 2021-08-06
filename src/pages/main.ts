@@ -1,11 +1,8 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { APP_NAME, FirebaseKeys } from "../../app.config";
-import FakeAuth from "../../test/FakeAuth";
-import { FakeClient } from "../../test/FakeClient";
+import { FirebaseKeys, APP_NAME } from "../../app.config";
 import { AddCategoryModal } from "../components/AddCategoryModal";
 import { AddSerieModal } from "../components/AddSerieModal";
 import { AuthModuleAttributes } from "../components/auth/AuthModuleAttributes";
-import FakeAuthModule from "../components/auth/FakeAuthModule";
 import FirebaseAuth from "../components/auth/FirebaseAuth";
 import { FloatBottomMenu } from "../components/FloatBottomMenu";
 import { SerieCard } from "../components/SerieCard";

@@ -1,8 +1,6 @@
-import WSAuthController from "../controllers/auth/WSAuthController";
 import IComponent from "../interfaces/Component";
 import { IAuthController } from "../interfaces/IAuthController";
 import "../styles/TopBar.scss";
-import { WSAuthModule } from "./auth/WSAuthModule";
 
 export default class TopBar extends IComponent {
   private static attrTitle: string = "title";

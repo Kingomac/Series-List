@@ -1,8 +1,7 @@
-import WSAuthController from "../controllers/auth/WSAuthController";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
-import { Category, Serie } from "../interfaces/Models";
+import { Serie } from "../interfaces/Models";
 import "../styles/SerieCard.scss";
 import EditSerieModal from "./EditSerieModal";
 
