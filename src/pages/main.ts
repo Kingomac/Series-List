@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { FirebaseKeys, APP_NAME } from "../../app.config";
+import { FirebaseKeys, APP_NAME, SERIES_LIMIT } from "../../app.config";
 import { AddCategoryModal } from "../components/AddCategoryModal";
 import { AddSerieModal } from "../components/AddSerieModal";
 import { AuthModuleAttributes } from "../components/auth/AuthModuleAttributes";
@@ -58,7 +58,7 @@ export default class Main extends IComponent {
     this.seriesDiv = document.createElement("div");
     this.endDiv = document.createElement("div");
     this.endDiv.className = "end-div";
-    this.endDiv.style.display = "none";
+    this.endDiv.setAttribute("active", "false");
 
     this.floatBotMenu = new FloatBottomMenu();
 
@@ -173,19 +173,25 @@ export default class Main extends IComponent {
     };
 
     this.endDiv.onmouseenter = async () => {
-      console.log("Getting more series!");
-      this.endDiv.style.display = "none";
-      if (this.lastSerie !== undefined) {
-        const moreSeries = await this.client.getSeriesLimitAfter({
-          categId: this.actualCategory._id!,
-          start: this.lastSerie!.timestamp!,
-        });
-        console.log("More series:", moreSeries);
-        const cards = await this.createCards.apply(this, moreSeries);
-        cards.forEach((i) => this.seriesDiv.append(i));
-        setTimeout(() => {
-          this.endDiv.style.display = "block";
-        }, 200);
+      console.log("Getting more series?:", this.endDiv.getAttribute("active"));
+      if (this.endDiv.getAttribute("active") == "true") {
+        this.endDiv.setAttribute("active", "false");
+        if (this.lastSerie !== undefined) {
+          console.log("Last serie:", this.lastSerie);
+          const moreSeries = await this.client.getSeriesLimitAfter({
+            categId: this.actualCategory._id!,
+            start: this.lastSerie.timestamp!,
+          });
+          this.lastSerie = moreSeries[moreSeries.length - 1];
+          console.log("More series:", moreSeries);
+          const cards = await this.createCards.apply(this, moreSeries);
+          cards.forEach((i) => this.seriesDiv.append(i));
+          if (moreSeries.length > 0) {
+            setTimeout(() => {
+              this.endDiv.setAttribute("active", "true");
+            }, 200);
+          }
+        }
       }
     };
   }
@@ -231,7 +237,7 @@ export default class Main extends IComponent {
       this.seriesDiv.append(s)
     );
     setTimeout(() => {
-      this.endDiv.style.display = "block";
+      this.endDiv.setAttribute("active", "true");
     }, 250);
   }
 

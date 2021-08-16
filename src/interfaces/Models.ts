@@ -5,7 +5,6 @@ export interface DbDoc {
 
 export interface Serie extends DbDoc {
   name: string;
-  nameAlt: string;
   image: string;
   url: string;
   chapter: number;

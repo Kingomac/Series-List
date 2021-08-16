@@ -21,12 +21,15 @@ export class SerieCard extends IComponent {
   connectedCallback(): void {
     this.id = this.serie._id!;
     this.setAttribute("draggable", "true");
-    const img = document.createElement("img");
+    const img = document.createElement("div");
     img.setAttribute("draggable", "false");
     const title = document.createElement("span");
     const chapter = document.createElement("i");
 
-    img.src = this.serie.image;
+    //img.src = this.serie.image;
+    img.style.backgroundImage = `url(${this.serie.image})`;
+    //img.style.width = "250px";
+    //img.style.height = "475px";
     title.innerText = this.serie.name;
     chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
@@ -65,7 +68,8 @@ export class SerieCard extends IComponent {
           console.log("Serie edited:", serie);
           this.serie = serie;
           await this.client.updateSerieInfo(this.categId, serie);
-          img.src = this.serie.image;
+          //img.src = this.serie.image;
+          img.style.backgroundImage = `url(${this.serie.image})`;
           title.innerText = this.serie.name;
           chapter.innerText = "Capítulo: ".concat(
             this.serie.chapter.toString()

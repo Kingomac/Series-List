@@ -7,6 +7,18 @@ export class FakeClient implements IDbClient {
   private data: Map<string, Serie[]> = new Map();
 
   constructor() {}
+  async getSeriesLimitFirst(x: { categId: string }): Promise<Serie[]> {
+    let result = [];
+    const q = this.data.get(x.categId);
+    if (q === undefined) return [];
+    for (let i = 0; i < 14; i++) {
+      result.push(q[i]);
+    }
+    return result;
+  }
+  getSeriesLimitAfter(x: { categId: string; start: Date }): Promise<Serie[]> {
+    throw new Error("Method not implemented.");
+  }
 
   async setup(): Promise<void> {
     for (let i = 0; i < Math.floor(Math.random() * 20); i++) {
