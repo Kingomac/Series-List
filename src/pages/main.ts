@@ -46,7 +46,7 @@ export default class Main extends IComponent {
 
     this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
     //this.authModule = new FakeAuthModule(this.auth);
-    this.topBar = new TopBar(this.auth, this.authModule);
+    this.topBar = new TopBar(this.authModule);
     this.client = new FirebaseClient(this.app);
     //this.client = new FakeClient();
     this.actualCategory = { name: "" };

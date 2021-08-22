@@ -12,7 +12,7 @@ export class FloatBottomMenu extends IComponent {
 
   connectedCallback(): void {
     this.append(this.addSerieBtn);
-    this.addSerieBtn.innerText = "➕";
+    this.addSerieBtn.innerText = "+";
     this.addSerieBtn.onclick = () => {
       this.onNewSerie!();
     };

@@ -16,13 +16,25 @@ export class AddCategoryModal extends ModalView {
   }
 
   async connectedCallback() {
-    this.window.append(this.titleDiv, this.nameInput, this.submitBtn);
+    const separator = document.createElement("div");
+    separator.className = "separator";
+    const separator2 = document.createElement("div");
+    separator2.className = "separator";
+    this.window.append(
+      this.titleDiv,
+      separator,
+      this.nameInput,
+      separator2,
+      this.submitBtn
+    );
     this.titleDiv.append(this.titleSpan, this.closeBtn);
+    this.titleDiv.className = "title";
 
     this.nameInput.type = "text";
 
     this.titleSpan.innerText = "Añadir categoría";
-    this.closeBtn.innerText = "❌";
+    this.closeBtn.className = "title-btn";
+    this.closeBtn.innerText = "X";
     this.closeBtn.onclick = () => {
       this.remove();
     };

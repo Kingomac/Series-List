@@ -22,6 +22,8 @@ export class SerieCard extends IComponent {
     this.id = this.serie._id!;
     this.setAttribute("draggable", "true");
     const img = document.createElement("div");
+    //const img = document.createElement('img');
+    img.className = "card image";
     img.setAttribute("draggable", "false");
     const title = document.createElement("span");
     const chapter = document.createElement("i");
@@ -36,7 +38,6 @@ export class SerieCard extends IComponent {
     this.append(img, title, chapter);
 
     if (this.authController.isSudo()) {
-      this.style.height = "475px";
       const actions = document.createElement("div");
       actions.classList.add("card", "actions");
       this.append(actions);

@@ -22,14 +22,23 @@ export class AddSerieModal extends ModalView {
   }
 
   async connectedCallback() {
+    const separator = document.createElement("div");
+    separator.className = "separator";
+    const separator2 = document.createElement("div");
+    separator2.className = "separator";
     this.window.append(
       this.titleDiv,
+      separator,
       this.nameInput,
       this.imgInput,
       this.urlInput,
+      separator2,
       this.submitBtn
     );
+
     this.titleDiv.append(this.titleSpan, this.modalClose);
+
+    this.titleDiv.className = "title";
 
     this.nameInput.type = "text";
     this.imgInput.type = "text";
@@ -40,7 +49,8 @@ export class AddSerieModal extends ModalView {
     this.urlInput.placeholder = "Url";
 
     this.titleSpan.innerText = "Añadir serie";
-    this.modalClose.innerText = "❌";
+    this.modalClose.className = "title-btn";
+    this.modalClose.innerText = "X";
     this.modalClose.onclick = () => this.remove();
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {

@@ -60,9 +60,13 @@ export class Tab extends IComponent {
   attributeChangedCallback(name: string, lastValue: any, newValue: any) {
     if (name == Tab.observedAttributes[0]) {
       if (newValue === "true") {
-        this.style.borderBottomColor = "red";
+        //this.style.backgroundColor = "#3b3f49";
+        this.style.color = "#89ddff";
+        this.style.borderBottomColor = "#89ddff";
       } else {
-        this.style.borderBottomColor = "black";
+        //this.style.removeProperty("background-color");
+        this.style.removeProperty("border-bottom-color");
+        this.style.removeProperty("color");
       }
     }
   }

@@ -21,15 +21,23 @@ export default class EditSerieModal extends ModalView {
     console.log("Editing serie:", serie);
   }
   connectedCallback() {
+    const separator = document.createElement("div");
+    separator.className = "separator";
+    const separator2 = document.createElement("div");
+    separator2.className = "separator";
     this.window.append(
       this.titleDiv,
+      separator,
       this.nameInput,
       this.imgInput,
       this.urlInput,
       this.chapterInput,
+      separator2,
       this.submitBtn
     );
     this.titleDiv.append(this.titleSpan, this.modalClose);
+
+    this.titleDiv.className = "title";
 
     this.nameInput.type = "text";
     this.imgInput.type = "text";
@@ -42,7 +50,8 @@ export default class EditSerieModal extends ModalView {
     this.chapterInput.placeholder = "Capítulo";
 
     this.titleSpan.innerText = "Editar serie";
-    this.modalClose.innerText = "❌";
+    this.modalClose.innerText = "X";
+    this.modalClose.className = "title-btn";
     this.modalClose.onclick = () => {
       this.disconnectedCallback!();
       this.remove();
