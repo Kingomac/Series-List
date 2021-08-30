@@ -150,20 +150,20 @@ const CATEGS = [
 ];
 
 export default class Placeholders {
-  static async getRandomSerie() {
+  static async getRandomSerie(): Promise<Serie> {
     const s = SERIES[Math.floor(SERIES.length * Math.random())];
     return {
       _id: await this.getRandomText(),
       timestamp: new Date(),
       name: s.name,
-      image: s.image,
       nameAlt: s.name,
+      image: s.image,
       url: "",
       chapter: Math.floor(Math.random() * 24),
     };
   }
 
-  static async getRandomCategory() {
+  static async getRandomCategory(): Promise<Category> {
     const c = CATEGS[Math.floor(CATEGS.length * Math.random())];
     return {
       _id: await this.getRandomText(),

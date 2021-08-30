@@ -1,13 +1,15 @@
-import { APP_MODE, AppModes } from "../../app.modes";
+import AppModes from "../interfaces/AppModes";
 import Placeholders from "../../test/Placeholders";
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
+import { APP_MODE } from "../../app.config";
 
 export class AddSerieModal extends ModalView {
   onSubmit?(serie: Serie): void;
 
   private nameInput = document.createElement("input");
+  private altNameInput = document.createElement("input");
   private imgInput = document.createElement("input");
   private urlInput = document.createElement("input");
 
@@ -30,6 +32,7 @@ export class AddSerieModal extends ModalView {
       this.titleDiv,
       separator,
       this.nameInput,
+      this.altNameInput,
       this.imgInput,
       this.urlInput,
       separator2,
@@ -41,10 +44,12 @@ export class AddSerieModal extends ModalView {
     this.titleDiv.className = "title";
 
     this.nameInput.type = "text";
+    this.altNameInput.type = "text";
     this.imgInput.type = "text";
     this.urlInput.type = "text";
 
     this.nameInput.placeholder = "Nombre";
+    this.altNameInput.placeholder = "Nombre alternativo";
     this.imgInput.placeholder = "Link imagen";
     this.urlInput.placeholder = "Url";
 
@@ -56,6 +61,7 @@ export class AddSerieModal extends ModalView {
     this.submitBtn.onclick = async () => {
       this.onSubmit!({
         name: this.nameInput.value,
+        nameAlt: this.altNameInput.value,
         chapter: 0,
         image: this.imgInput.value,
         url: this.urlInput.value,
@@ -66,7 +72,9 @@ export class AddSerieModal extends ModalView {
     if (APP_MODE == AppModes.DEBUG) {
       this.submitBtn.onauxclick = async () => {
         for (let i = 0; i < 14; i++) {
-          this.onSubmit!(await Placeholders.getRandomSerie());
+          const s = await Placeholders.getRandomSerie();
+          delete s._id, s.timestamp;
+          this.onSubmit!(s);
         }
       };
     }
@@ -74,6 +82,7 @@ export class AddSerieModal extends ModalView {
   }
   async clearInputs() {
     this.nameInput.value = "";
+    this.altNameInput.value = "";
     this.imgInput.value = "";
     this.urlInput.value = "";
   }
@@ -82,6 +91,7 @@ export class AddSerieModal extends ModalView {
     if (APP_MODE == AppModes.DEBUG) {
       const serie = await Placeholders.getRandomSerie();
       this.nameInput.value = serie.name;
+      this.altNameInput.value = serie.nameAlt;
       this.imgInput.value = serie.image;
       this.urlInput.value = serie.url;
     }

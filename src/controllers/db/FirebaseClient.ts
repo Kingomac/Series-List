@@ -1,34 +1,34 @@
-import { APP_MODE, AppModes } from "../../../app.modes";
+import AppModes from "../../interfaces/AppModes";
 import { FirebaseApp } from "firebase/app";
 import {
   getFirestore,
   collection,
   query,
   getDocs,
-  FirebaseFirestore,
   doc,
   deleteDoc,
   addDoc,
   Timestamp,
   updateDoc,
-  useFirestoreEmulator,
+  connectFirestoreEmulator,
   DocumentData,
   limit,
   orderBy,
   QuerySnapshot,
+  Firestore,
   startAfter,
 } from "firebase/firestore/lite";
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, Serie } from "../../interfaces/Models";
-import { SERIES_LIMIT } from "../../../app.config";
+import { APP_MODE, SERIES_LIMIT } from "../../../app.config";
 
 export default class FirebaseClient implements IDbClient {
-  private readonly db: FirebaseFirestore;
+  private readonly db: Firestore;
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
     if (APP_MODE == AppModes.DEBUG) {
-      useFirestoreEmulator(this.db, "localhost", 8080);
+      connectFirestoreEmulator(this.db, "localhost", 8080);
     }
   }
   async getSeriesLimitFirst(x: { categId: string }): Promise<Serie[]> {
@@ -89,6 +89,7 @@ export default class FirebaseClient implements IDbClient {
   }
 
   async updateSerieChapter(serieId: string, categId: string, chapter: number) {
+    console.log("Requesting chapter update for serie:", serieId);
     const ref = doc(this.db, categId, serieId);
     await updateDoc(ref, {
       chapter,

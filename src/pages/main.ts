@@ -13,6 +13,7 @@ import FirebaseAuthController, {
   AuthChangeEvent,
 } from "../controllers/auth/FirebaseAuthController";
 import FirebaseClient from "../controllers/db/FirebaseClient";
+import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
@@ -92,7 +93,7 @@ export default class Main extends IComponent {
 
   authChangeEvent = async (x: AuthChangeEvent) => {
     console.log("Auth changed!");
-    if (x.isSudo) {
+    if (x.status === AuthStatus.SIGNED || x.status === AuthStatus.SUDO) {
       console.log("Logged");
       this.tabsMenu.showAddCategTab();
       this.authModule.setAttribute(
@@ -122,8 +123,11 @@ export default class Main extends IComponent {
         }
         await this.updateTabs(categories);
         await this.updateSeries();
+        this.tabsMenu.showAddCategTab(x.status == AuthStatus.SUDO);
+        x.status === AuthStatus.SUDO
+          ? this.append(this.floatBotMenu)
+          : this.floatBotMenu.remove();
       }
-      this.append(this.floatBotMenu);
     } else {
       console.log("Not logged");
       this.authModule.setAttribute(
@@ -156,10 +160,17 @@ export default class Main extends IComponent {
       };
     };
 
+    this.floatBotMenu.onAltSwitch = (x) => {
+      this.seriesDiv.querySelectorAll("sl-serie-card").forEach((i) => {
+        i.setAttribute("alt", `${x.alt}`);
+      });
+    };
+
     this.tabsMenu.onRequestNewCateg = async () => {
       const modal = new AddCategoryModal();
       this.append(modal);
       modal.onSubmit = async (categ) => {
+        if (!this.floatBotMenu.isConnected) this.append(this.floatBotMenu);
         const id = await this.client.addCategory(categ);
         categ._id = id;
         this.tabsMenu.addTab((await this.createTabs(categ))[0]);

@@ -1,7 +1,8 @@
-import { APP_MODE, AppModes } from "../../app.modes";
+import AppModes from "../interfaces/AppModes";
 import Placeholders from "../../test/Placeholders";
 import ModalView from "../interfaces/ModalView";
 import { Category } from "../interfaces/Models";
+import { APP_MODE } from "../../app.config";
 export class AddCategoryModal extends ModalView {
   onSubmit?(categ: Category): void;
 

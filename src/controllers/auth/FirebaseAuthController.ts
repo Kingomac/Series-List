@@ -4,36 +4,49 @@ import {
   getAuth,
   signInWithRedirect,
   onAuthStateChanged,
-  useAuthEmulator,
+  connectAuthEmulator,
 } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
-import { APP_MODE, AppModes } from "../../../app.modes";
+import AppModes from "../../interfaces/AppModes";
+import AuthStatus from "../../interfaces/AuthStatus";
+import { APP_MODE, SUDO_EMAILS } from "../../../app.config";
 
 export type AuthChangeEvent = {
-  isSudo: boolean;
+  status: AuthStatus;
 };
 
 export default class FirebaseAuthController implements IAuthController {
   private readonly auth;
-  private logged = false;
+  private status = AuthStatus.ANONYMOUS;
 
   onAuthChange?(x: AuthChangeEvent): void;
 
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
     if (APP_MODE == AppModes.DEBUG) {
-      useAuthEmulator(this.auth, "http://localhost:9099", {
+      connectAuthEmulator(this.auth, "http://localhost:9099", {
         disableWarnings: true,
       });
     }
     onAuthStateChanged(this.auth, (user) => {
-      this.logged = user != null;
-      console.log("Firebase logged:", user);
-      if (this.onAuthChange) this.onAuthChange({ isSudo: user != null });
+      if (user === null) {
+        this.status = AuthStatus.ANONYMOUS;
+      } else if (user && user.email && SUDO_EMAILS.includes(user.email)) {
+        this.status = AuthStatus.SUDO;
+      } else {
+        this.status = AuthStatus.SIGNED;
+      }
+      console.log(
+        "Firebase logged:",
+        user,
+        "with status",
+        this.status.toString()
+      );
+      if (this.onAuthChange) this.onAuthChange({ status: this.status });
     });
   }
-  isSudo(): boolean {
-    return this.logged;
+  getStatus(): AuthStatus {
+    return this.status;
   }
   async login(): Promise<void> {
     const provider = new GoogleAuthProvider();

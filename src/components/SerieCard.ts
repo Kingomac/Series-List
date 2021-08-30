@@ -1,3 +1,4 @@
+import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
@@ -7,6 +8,11 @@ import EditSerieModal from "./EditSerieModal";
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
+  private titleSpan: HTMLSpanElement = document.createElement("span");
+
+  static get observedAttributes(): string[] {
+    return ["alt"];
+  }
 
   constructor(
     private serie: Serie,
@@ -25,19 +31,18 @@ export class SerieCard extends IComponent {
     //const img = document.createElement('img');
     img.className = "card image";
     img.setAttribute("draggable", "false");
-    const title = document.createElement("span");
     const chapter = document.createElement("i");
 
     //img.src = this.serie.image;
     img.style.backgroundImage = `url(${this.serie.image})`;
     //img.style.width = "250px";
     //img.style.height = "475px";
-    title.innerText = this.serie.name;
+    this.titleSpan.innerText = this.serie.name;
     chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
-    this.append(img, title, chapter);
+    this.append(img, this.titleSpan, chapter);
 
-    if (this.authController.isSudo()) {
+    if (this.authController.getStatus() === AuthStatus.SUDO) {
       const actions = document.createElement("div");
       actions.classList.add("card", "actions");
       this.append(actions);
@@ -71,7 +76,7 @@ export class SerieCard extends IComponent {
           await this.client.updateSerieInfo(this.categId, serie);
           //img.src = this.serie.image;
           img.style.backgroundImage = `url(${this.serie.image})`;
-          title.innerText = this.serie.name;
+          this.titleSpan.innerText = this.serie.name;
           chapter.innerText = "Capítulo: ".concat(
             this.serie.chapter.toString()
           );
@@ -112,6 +117,16 @@ export class SerieCard extends IComponent {
       this.remove();
     }, 1000);
   };
+
+  attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
+    if (name === SerieCard.observedAttributes[0]) {
+      if (newValue == "true") {
+        this.titleSpan.innerText = this.serie.nameAlt;
+      } else {
+        this.titleSpan.innerText = this.serie.name;
+      }
+    }
+  }
 }
 
 window.customElements.define("sl-serie-card", SerieCard);
