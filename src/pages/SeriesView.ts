@@ -96,7 +96,6 @@ export default class SeriesView extends IComponent {
     console.log("Auth changed!");
     if (x.status === AuthStatus.SIGNED || x.status === AuthStatus.SUDO) {
       console.log("Logged");
-      this.tabsMenu.showAddCategTab();
       this.authModule.setAttribute(
         AuthModuleAttributes.logged.name,
         AuthModuleAttributes.logged.yes
@@ -124,7 +123,6 @@ export default class SeriesView extends IComponent {
         }
         await this.updateTabs(categories);
         await this.updateSeries();
-        this.tabsMenu.showAddCategTab(x.status == AuthStatus.SUDO);
         x.status === AuthStatus.SUDO
           ? this.append(this.floatBotMenu)
           : this.floatBotMenu.remove();
@@ -135,9 +133,9 @@ export default class SeriesView extends IComponent {
         AuthModuleAttributes.logged.name,
         AuthModuleAttributes.logged.no
       );
-      this.tabsMenu.showAddCategTab(false);
       if (this.floatBotMenu.isConnected) this.floatBotMenu.remove();
     }
+    this.tabsMenu.showAddCategTab(x.status === AuthStatus.SUDO);
   };
 
   async connectedCallback(): Promise<void> {
@@ -233,6 +231,7 @@ export default class SeriesView extends IComponent {
   }
 
   async updateSeries() {
+    this.viewDiv.scrollTo({ top: 0, left: 0 });
     console.log("Updating series with category:", this.actualCategory);
     if (this.actualCategory._id === undefined) {
       throw new Error("Error with category " + this.actualCategory._id);

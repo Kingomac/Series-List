@@ -7,26 +7,42 @@ export default class BackupsView extends IComponent {
   }
 
   connectedCallback() {
+    const list = document.createElement("ul");
+    const saveLi = document.createElement("li");
+    const loadLi = document.createElement("li");
+
     const saveBtn = document.createElement("button");
     saveBtn.innerText = "Guardar copia de seguridad";
     saveBtn.onclick = async () => {
       await this.controller.save();
     };
 
-    const loadDiv = document.createElement("div");
     const loadLabel = document.createElement("label");
     loadLabel.innerText = "Cargar copia de seguridad";
     const loadInput = document.createElement("input");
     loadInput.type = "file";
-    //loadBtn.accept = ".json";
+    loadInput.accept = ".json";
     loadInput.multiple = false;
     const loadBtn = document.createElement("button");
     loadBtn.innerText = "Cargar";
-    loadBtn.onclick = () => {
-      this.controller.load(loadInput.files?.item(0)!);
+    loadInput.onchange = async () => {
+      if (
+        loadInput.files!.length > 0 &&
+        confirm(
+          `${loadInput.files!.item(0)!.name} - ${
+            loadInput.files!.item(0)!.size / 1024
+          } KB\nLa información de la base de datos no se eliminará ¿Quieres continuar?`
+        )
+      ) {
+        await this.controller.load(loadInput.files?.item(0)!);
+        alert("Backup cargado");
+      }
     };
-    this.append(saveBtn, loadDiv);
-    loadDiv.append(loadLabel, loadInput, loadBtn);
+    this.append(list);
+    loadLabel.append(loadInput);
+    list.append(saveLi, loadLi);
+    saveLi.append(saveBtn);
+    loadLi.append(loadLabel);
   }
 }
 

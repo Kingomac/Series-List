@@ -36,13 +36,13 @@ export default class FirebaseAuthController implements IAuthController {
       } else {
         this.status = AuthStatus.SIGNED;
       }
+      if (this.onAuthChange) this.onAuthChange({ status: this.status });
       console.log(
         "Firebase logged:",
         user,
         "with status",
-        this.status.toString()
+        AuthStatus[this.status].toString()
       );
-      if (this.onAuthChange) this.onAuthChange({ status: this.status });
     });
   }
   getStatus(): AuthStatus {

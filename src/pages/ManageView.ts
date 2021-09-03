@@ -11,6 +11,7 @@ import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
 import BackupsView from "./manage/BackupsView";
 import BackupController from "../controllers/BackupController";
+import "../styles/ManageView.scss";
 
 export default class ManageView extends IComponent {
   private app: FirebaseApp;
@@ -70,8 +71,8 @@ export default class ManageView extends IComponent {
         view = placeholder;
     }
     console.log("New view", view);
-    this.viewPlaceholder.replaceWith(view);
-    this.viewPlaceholder = view;
+    this.viewPlaceholder.textContent = "";
+    this.viewPlaceholder.append(view);
   }
 }
 

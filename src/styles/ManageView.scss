@@ -1,0 +1,41 @@
+sl-manage {
+  width: 100%;
+  height: 100%;
+}
+.manage-view {
+  width: 100%;
+  height: 100%;
+  font-family: Arial;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  background-color: #2e3345;
+  div {
+    padding: 50px;
+    button,
+    label {
+      width: 100%;
+      font-size: 14px;
+      color: #2e3345;
+      background-color: whitesmoke;
+      border: none;
+      padding: 10px 14px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      font-weight: bold;
+      transition: background-color ease-in-out 0.3s;
+      &:hover {
+        background-color: rgb(167, 167, 167);
+      }
+      &:active {
+        background-color: rgb(88, 87, 87);
+      }
+    }
+    input[type="file"] {
+      display: none;
+    }
+    li {
+      margin-bottom: 25px;
+    }
+  }
+}

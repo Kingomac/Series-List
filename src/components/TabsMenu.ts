@@ -35,6 +35,7 @@ export class TabsMenu extends IComponent {
   }
 
   connectedCallback() {
+    this.showAddCategTab(false);
     this.append(this.addCategTab);
   }
 
