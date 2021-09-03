@@ -1,5 +1,5 @@
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { FirebaseKeys, APP_NAME, SERIES_LIMIT } from "../../app.config";
+import { FirebaseApp } from "firebase/app";
+import { APP_NAME } from "../../app.config";
 import { AddCategoryModal } from "../components/AddCategoryModal";
 import { AddSerieModal } from "../components/AddSerieModal";
 import { AuthModuleAttributes } from "../components/auth/AuthModuleAttributes";
@@ -20,7 +20,7 @@ import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
 import "../styles/main.scss";
 
-export default class Main extends IComponent {
+export default class SeriesView extends IComponent {
   private client: IDbClient;
   private auth: IAuthController;
   private app: FirebaseApp;
@@ -38,9 +38,10 @@ export default class Main extends IComponent {
   private endDiv: HTMLDivElement;
   private viewDiv: HTMLDivElement;
 
-  constructor() {
+  constructor(x: { app?: FirebaseApp }) {
     super();
-    this.app = initializeApp(FirebaseKeys);
+    if (x.app === undefined) throw new Error("Firebase app is undefined");
+    this.app = x.app;
     this.auth = new FirebaseAuthController(this.app);
 
     //this.auth = new FakeAuth();
@@ -265,4 +266,4 @@ export default class Main extends IComponent {
   }
 }
 
-window.customElements.define("sl-main", Main);
+window.customElements.define("sl-series-view", SeriesView);

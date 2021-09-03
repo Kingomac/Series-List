@@ -1,0 +1,45 @@
+sl-manage {
+  width: 100%;
+  height: 100%;
+}
+.manage-view {
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: row;
+  div {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    color: white;
+    background-color: #2e3345;
+  }
+}
+sl-navigation-drawer {
+  height: 100%;
+  padding: 20px 2px;
+  background-color: #282c34;
+  a {
+    font-size: smaller;
+    font-weight: bold;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 5px;
+    padding: 10px 50px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: white;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    transition: background-color ease-in-out 0.2s;
+    &:hover {
+      cursor: pointer;
+      background-color: #24272e;
+    }
+    &:active {
+      background-color: #4c515c;
+    }
+  }
+}
