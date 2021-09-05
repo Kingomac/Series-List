@@ -1,11 +1,8 @@
 import { FirebaseApp } from "firebase/app";
 import { APP_NAME } from "../../app.config";
-import { AddCategoryModal } from "../components/AddCategoryModal";
-import { AddSerieModal } from "../components/AddSerieModal";
 import { AuthModuleAttributes } from "../components/auth/AuthModuleAttributes";
 import FirebaseAuth from "../components/auth/FirebaseAuth";
 import { FloatBottomMenu } from "../components/FloatBottomMenu";
-import { SerieCard } from "../components/SerieCard";
 import { ITab } from "../components/Tab";
 import { TabsMenu } from "../components/TabsMenu";
 import TopBar from "../components/TopBar";
@@ -146,6 +143,7 @@ export default class SeriesView extends IComponent {
     this.seriesDiv.classList.add("series", "container");
 
     this.floatBotMenu.onNewSerie = async () => {
+      const { AddSerieModal } = await import("../components/AddSerieModal");
       const modal = new AddSerieModal();
       this.append(modal);
       modal.onSubmit = async (serie) => {
@@ -166,6 +164,9 @@ export default class SeriesView extends IComponent {
     };
 
     this.tabsMenu.onRequestNewCateg = async () => {
+      const { AddCategoryModal } = await import(
+        "../components/AddCategoryModal"
+      );
       const modal = new AddCategoryModal();
       this.append(modal);
       modal.onSubmit = async (categ) => {
@@ -211,7 +212,8 @@ export default class SeriesView extends IComponent {
    * @param series
    * @returns
    */
-  async createCards(...series: Serie[]): Promise<SerieCard[]> {
+  async createCards(...series: Serie[]) {
+    const { SerieCard } = await import("../components/SerieCard");
     return series.map(
       (s: Serie) =>
         new SerieCard(s, this.actualCategory._id || "", this.client, this.auth)

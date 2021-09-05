@@ -1,10 +1,6 @@
-import { Timestamp } from "firebase/firestore";
 import { APP_NAME } from "../../app.config";
-import WSAuthController from "../controllers/auth/WSAuthController";
 import IComponent from "../interfaces/Component";
-import { IAuthController } from "../interfaces/IAuthController";
-import { Category, Serie } from "../interfaces/Models";
-import { AddCategoryModal } from "./AddCategoryModal";
+import { Serie } from "../interfaces/Models";
 import { ITab, Tab } from "./Tab";
 
 export class TabsMenu extends IComponent {

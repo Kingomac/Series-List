@@ -19,7 +19,8 @@ export default class TopBar extends IComponent {
   connectedCallback(): void {
     this.append(this.fujiwara, this.titleSpan, this.authModule);
     this.titleSpan.innerText = this.getAttribute("title") || "";
-    this.fujiwara.src = "https://tinyimg.io/i/PIZN54o.png";
+    this.fujiwara.src =
+      "https://firebasestorage.googleapis.com/v0/b/memeshare-a3107.appspot.com/o/fujiwara.webp?alt=media&token=33c26161-35ea-4d4e-b72c-866b813a1313";
     this.fujiwara.onclick = () => {
       if (
         this.authModule.getAttribute(AuthModuleAttributes.logged.name) ===

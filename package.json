@@ -6,7 +6,7 @@
     "dev": "node ./scripts/dev.js",
     "emulators": "npx firebase emulators:start",
     "serve": "npx parcel serve ./src/index.html",
-    "build": "npx parcel build ./src/index.html"
+    "build": "node ./scripts/build.js"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +17,11 @@
   ],
   "devDependencies": {
     "@firebase/firestore-types": "^2.5.0",
+    "@parcel/transformer-image": "^2.0.0-rc.0",
     "@parcel/transformer-inline-string": "^2.0.0-rc.0",
     "@parcel/transformer-sass": "^2.0.0-rc.0",
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.29.3",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-standard": "^16.0.3",
@@ -28,12 +29,14 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "firebase-admin": "^9.11.1",
-    "firebase-tools": "^9.16.6",
+    "firebase-tools": "^9.17.0",
     "parcel": "^2.0.0-rc.0",
-    "sass": "^1.38.2",
-    "typescript": "^4.4.2"
+    "purgecss": "^4.0.3",
+    "sass": "^1.39.0",
+    "typescript": "^4.4.2",
+    "uglify-js": "^3.14.1"
   },
   "dependencies": {
-    "firebase": "^9.0.0"
+    "firebase": "^9.0.1"
   }
 }

@@ -9,8 +9,6 @@ import AuthStatus from "../interfaces/AuthStatus";
 import { IAuthController } from "../interfaces/IAuthController";
 import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
-import BackupsView from "./manage/BackupsView";
-import BackupController from "../controllers/BackupController";
 import "../styles/ManageView.scss";
 
 export default class ManageView extends IComponent {
@@ -42,14 +40,14 @@ export default class ManageView extends IComponent {
       console.log("Loading new manage view", x);
       this.updateView(x.href);
     };
-    this.auth.onAuthChange = (x) => {
+    this.auth.onAuthChange = async (x) => {
       x.status === AuthStatus.SUDO || x.status === AuthStatus.SIGNED
         ? this.authModule.setAttribute("logged", "yes")
         : this.authModule.setAttribute("logged", "no");
       console.log("Auth changed!! =>", AuthStatus[x.status].toString());
       if (x.status === AuthStatus.SUDO) {
         this.append(this.viewDiv);
-        this.updateView(window.location.pathname.replace("/manage", ""));
+        await this.updateView(window.location.pathname.replace("/manage", ""));
       } else {
         this.viewDiv.remove();
       }
@@ -59,10 +57,14 @@ export default class ManageView extends IComponent {
     this.topBar.setAttribute("title", APP_NAME);
   }
 
-  updateView(path: string) {
+  async updateView(path: string) {
     let view: HTMLElement;
     switch (path) {
       case "/backups":
+        const { default: BackupsView } = await import("./manage/BackupsView");
+        const { default: BackupController } = await import(
+          "../controllers/BackupController"
+        );
         view = new BackupsView(new BackupController(this.dbClient));
         break;
       default:

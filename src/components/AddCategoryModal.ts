@@ -1,5 +1,4 @@
 import AppModes from "../interfaces/AppModes";
-import Placeholders from "../../test/Placeholders";
 import ModalView from "../interfaces/ModalView";
 import { Category } from "../interfaces/Models";
 import { APP_MODE } from "../../app.config";
@@ -54,6 +53,7 @@ export class AddCategoryModal extends ModalView {
 
   private async setRandomName() {
     if (APP_MODE == AppModes.DEBUG) {
+      const { default: Placeholders } = await import("../../test/Placeholders");
       const categ = await Placeholders.getRandomCategory();
       this.nameInput.value = categ.name;
     }

@@ -1,5 +1,4 @@
 import AppModes from "../interfaces/AppModes";
-import Placeholders from "../../test/Placeholders";
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
@@ -71,6 +70,9 @@ export class AddSerieModal extends ModalView {
     };
     if (APP_MODE == AppModes.DEBUG) {
       this.submitBtn.onauxclick = async () => {
+        const { default: Placeholders } = await import(
+          "../../test/Placeholders"
+        );
         for (let i = 0; i < 14; i++) {
           const s = await Placeholders.getRandomSerie();
           delete s._id, s.timestamp;
@@ -89,6 +91,7 @@ export class AddSerieModal extends ModalView {
 
   async generateData() {
     if (APP_MODE == AppModes.DEBUG) {
+      const { default: Placeholders } = await import("../../test/Placeholders");
       const serie = await Placeholders.getRandomSerie();
       this.nameInput.value = serie.name;
       this.altNameInput.value = serie.nameAlt;

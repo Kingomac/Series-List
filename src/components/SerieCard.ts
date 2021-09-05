@@ -4,7 +4,6 @@ import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Serie } from "../interfaces/Models";
 import "../styles/SerieCard.scss";
-import EditSerieModal from "./EditSerieModal";
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
@@ -22,20 +21,22 @@ export class SerieCard extends IComponent {
   ) {
     super();
     this.initialChapter = this.serie.chapter;
-    console.log(this.serie);
   }
   connectedCallback(): void {
     this.id = this.serie._id!;
-    this.setAttribute("draggable", "true");
-    const img = document.createElement("div");
-    //const img = document.createElement('img');
+    if (this.authController.getStatus() === AuthStatus.SUDO) {
+      this.setAttribute("draggable", "true");
+    }
+    // const img = document.createElement("div");
+    const img = document.createElement("img");
     img.className = "card image";
     img.setAttribute("draggable", "false");
+    img.setAttribute("loading", "lazy");
     const chapter = document.createElement("i");
 
-    //img.src = this.serie.image;
-    img.style.backgroundImage = `url(${this.serie.image})`;
-    //img.style.width = "250px";
+    img.src = this.serie.image;
+    // img.style.backgroundImage = `url(${this.serie.image})`;
+    // img.style.width = "250px";
     //img.style.height = "475px";
     this.titleSpan.innerText = this.serie.name;
     chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
@@ -67,7 +68,8 @@ export class SerieCard extends IComponent {
         this.serie.chapter--;
         chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
       };
-      editBtn.onclick = () => {
+      editBtn.onclick = async () => {
+        const { default: EditSerieModal } = await import("./EditSerieModal");
         const editModal = new EditSerieModal(this.serie);
         this.setAttribute("draggable", "false");
         editModal.onSubmit = async (serie) => {
@@ -87,8 +89,6 @@ export class SerieCard extends IComponent {
       };
       actions.onmouseleave = this.saveChapter;
       deleteBtn.onclick = this.deleteSerie;
-    } else {
-      this.style.height = "425px";
     }
   }
 

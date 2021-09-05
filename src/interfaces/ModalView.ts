@@ -16,7 +16,6 @@ export default abstract class ModalView extends IComponent {
     <style>
 main {
   position: absolute;
-  padding: 10px;
   z-index: 3;
   width: 100%;
   height: 100%;
@@ -45,49 +44,17 @@ main {
   margin-right: 15vw;
   background-color: #2e3345;
   padding: 10px;
-  width: 40vw;
+  width: 50vw;
   height: min-content;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-@media (max-width: 500px) {  
-  .window {
-  width: 100%;
-  border-radius: 5px;
-  color: white;
-  margin-top: 15vh;
-  margin-left: 15vw;
-  margin-right: 15vw;
-  margin-left: 15px;
-  margin-right: 15px;
-  background-color: black;
-  padding: 10px;
-  width: 40vw;
-  height: min-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  }
 }
 @media (max-width: 900px) {
     .window {
-  width: 50vw;
-  border-radius: 5px;
-  color: white;
-  margin-top: 15vh;
-  margin-left: 15vw;
-  margin-right: 15vw;
-  margin-left: 15px;
-  margin-right: 15px;
-  background-color: black;
-  padding: 10px;
-  width: 40vw;
-  height: min-content;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  width: 100%;
+  margin-left: 2px;
+  margin-right: 2px;
   }
  }
 
@@ -140,36 +107,15 @@ background-color: #4c515c;
 
 
 .title {
-  width: 36vw;
+  width: 100%;
   margin-top: 0;
   margin-left: 20px;
   display: flex;
   flex-direction: row;
 }
 
-@media (max-width: 500px) {
-  .title {
-    width: 80%;
-    right: 0;
-    margin-top: 0;
-    margin-left: 20px;
-    display: flex;
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 900px) {
-  .title{
-      width: 50vw;
-      margin-top: 0;
-      margin-left: 20px;
-      display: flex;
-      flex-direction: row;
-    }
-  }
-
 span {
-  width: 100%;
+  width: 90%;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
