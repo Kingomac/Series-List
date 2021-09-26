@@ -19,16 +19,11 @@ sl-serie-card {
   &:hover {
     background: #353a4b;
   }
-
   img {
-    height: 475px;
-    margin-bottom: 2px;
-  }
-  .card.image {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     width: 100%;
-    height: 425px;
+    height: 400px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

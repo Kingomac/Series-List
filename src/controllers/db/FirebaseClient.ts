@@ -197,4 +197,35 @@ export default class FirebaseClient implements IDbClient {
     const { deleteDoc, doc } = await import("firebase/firestore/lite");
     await deleteDoc(doc(this.db, categId, serieId));
   }
+
+  async migrateOld(): Promise<void> {
+    const categs = [
+      "viendo",
+      "vistos",
+      "favoritos",
+      "abandonados",
+      "pendientes",
+    ];
+    const { getDocs, collection, addDoc } = await import(
+      "firebase/firestore/lite"
+    );
+    for await (const c of categs) {
+      const categId = await this.addCategory({ name: c });
+      const docs = await getDocs(collection(this.db, c));
+      docs.forEach(async (d) => {
+        const data = d.data();
+        await this.addSerie(
+          {
+            name: data.nombre_jp,
+            nameAlt: data.nombre_en,
+            image: data.imagen,
+            chapter: data.capitulo,
+            timestamp: data.actualizado_en,
+            url: "",
+          },
+          categId
+        );
+      });
+    }
+  }
 }

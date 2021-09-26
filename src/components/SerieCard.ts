@@ -29,15 +29,11 @@ export class SerieCard extends IComponent {
     }
     // const img = document.createElement("div");
     const img = document.createElement("img");
-    img.className = "card image";
     img.setAttribute("draggable", "false");
     img.setAttribute("loading", "lazy");
     const chapter = document.createElement("i");
 
     img.src = this.serie.image;
-    // img.style.backgroundImage = `url(${this.serie.image})`;
-    // img.style.width = "250px";
-    //img.style.height = "475px";
     this.titleSpan.innerText = this.serie.name;
     chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
