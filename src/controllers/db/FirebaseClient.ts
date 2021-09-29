@@ -11,7 +11,7 @@ import { Category, Serie } from "../../interfaces/Models";
 import { APP_MODE, SERIES_LIMIT } from "../../../app.config";
 
 export default class FirebaseClient implements IDbClient {
-  private readonly db: Firestore;
+  readonly db: Firestore;
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
@@ -196,36 +196,5 @@ export default class FirebaseClient implements IDbClient {
   async deleteSerieById(serieId: string, categId: string): Promise<void> {
     const { deleteDoc, doc } = await import("firebase/firestore/lite");
     await deleteDoc(doc(this.db, categId, serieId));
-  }
-
-  async migrateOld(): Promise<void> {
-    const categs = [
-      "viendo",
-      "vistos",
-      "favoritos",
-      "abandonados",
-      "pendientes",
-    ];
-    const { getDocs, collection, addDoc } = await import(
-      "firebase/firestore/lite"
-    );
-    for await (const c of categs) {
-      const categId = await this.addCategory({ name: c });
-      const docs = await getDocs(collection(this.db, c));
-      docs.forEach(async (d) => {
-        const data = d.data();
-        await this.addSerie(
-          {
-            name: data.nombre_jp,
-            nameAlt: data.nombre_en,
-            image: data.imagen,
-            chapter: data.capitulo,
-            timestamp: data.actualizado_en,
-            url: "",
-          },
-          categId
-        );
-      });
-    }
   }
 }

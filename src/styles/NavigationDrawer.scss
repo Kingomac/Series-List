@@ -2,7 +2,10 @@ sl-navigation-drawer {
   height: 100%;
   padding: 20px 2px;
   background-color: #282c34;
+  display: flex;
+  flex-direction: column;
   a {
+    width: fit-content;
     font-size: smaller;
     font-weight: bold;
     text-decoration: none;

@@ -9,6 +9,7 @@ import AuthStatus from "../interfaces/AuthStatus";
 import { IAuthController } from "../interfaces/IAuthController";
 import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
+import "../styles/main.scss";
 import "../styles/ManageView.scss";
 
 export default class ManageView extends IComponent {
@@ -35,7 +36,10 @@ export default class ManageView extends IComponent {
 
   connectedCallback() {
     this.append(this.topBar);
-    this.navigatorDrawer.addItems({ name: "Backups", href: "/backups" });
+    this.navigatorDrawer.addItems(
+      { name: "Backups", href: "/backups" },
+      { name: "Migrations", href: "/migrations" }
+    );
     this.navigatorDrawer.onItemClick = (x) => {
       console.log("Loading new manage view", x);
       this.updateView(x.href);
@@ -58,6 +62,7 @@ export default class ManageView extends IComponent {
   }
 
   async updateView(path: string) {
+    console.log("Updating view for", `"${path}"`);
     let view: HTMLElement;
     switch (path) {
       case "/backups":
@@ -67,14 +72,31 @@ export default class ManageView extends IComponent {
         );
         view = new BackupsView(new BackupController(this.dbClient));
         break;
+      case "/migrations":
+        const { default: MigrationsView } = await import(
+          "./manage/MigrationsView"
+        );
+        const { migrateOld } = await import(
+          "../controllers/db/FirebaseMigrations"
+        );
+        view = new MigrationsView({
+          fromOldMigration: async () => {
+            if (!confirm("YOU KNOW I GOT I BANBAN BLOW YOUR MINDDDDD")) return;
+            if (this.dbClient instanceof FirebaseClient)
+              await migrateOld({ client: this.dbClient as FirebaseClient });
+            else alert("This action requires a Firebase Db");
+          },
+        });
+        break;
       default:
         const placeholder = document.createElement("div");
         placeholder.innerText = "Elige una opción del panel";
         view = placeholder;
     }
     console.log("New view", view);
-    this.viewPlaceholder.textContent = "";
-    this.viewPlaceholder.append(view);
+    view.className = "view";
+    this.viewPlaceholder.replaceWith(view);
+    this.viewPlaceholder = view;
   }
 }
 

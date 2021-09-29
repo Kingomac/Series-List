@@ -16,6 +16,7 @@ import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
 import "../styles/main.scss";
+import "../styles/SeriesView.scss";
 
 export default class SeriesView extends IComponent {
   private client: IDbClient;

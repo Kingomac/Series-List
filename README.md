@@ -7,7 +7,7 @@ To build the app you need a config file `app.config.ts` with this structure:
 ```typescript
 import AppModes from "./src/interfaces/AppModes";
 
-export const FirebaseKeys = {
+export const FIREBASE_KEYS = {
   apiKey: "############################",
   authDomain: "########################",
   databaseURL: "#######################",
@@ -16,10 +16,13 @@ export const FirebaseKeys = {
   messagingSenderId: "#################",
   appId: "#############################",
 };
-export const APP_NAME = "Series List Next";
-export const SERIES_LIMIT = 14;
-export const SUDO_EMAILS = ["email@gmail.com"];
-export const APP_MODE = AppModes.PRODUCTION; // while dev use AppModes.DEBUG
+
+export const APP_NAME: string = "Series List Next";
+export const SERIES_LIMIT: number = 14;
+export const APP_MODE: AppModes = AppModes.DEBUG; // while dev use AppModes.DEBUG
+export const SUDO_EMAILS: (string | RegExp)[] =
+  APP_MODE === AppModes.DEBUG ? [/@/] : ["someone@gmail.com"]; // Use regular expressions or strings
+// This way in DEBUG any email is sudo and in PRODUCTION just someone@gmail.com
 ```
 
 ## Scripts

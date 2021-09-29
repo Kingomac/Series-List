@@ -4,6 +4,7 @@ import { FirebaseApp } from "firebase/app";
 import AppModes from "../../interfaces/AppModes";
 import AuthStatus from "../../interfaces/AuthStatus";
 import { APP_MODE, SUDO_EMAILS } from "../../../app.config";
+import { isEmailSudo } from "./AuthUtil";
 
 export type AuthChangeEvent = {
   status: AuthStatus;
@@ -24,13 +25,12 @@ export default class FirebaseAuthController implements IAuthController {
         });
       });
     }
-    onAuthStateChanged(this.auth, (user) => {
+    onAuthStateChanged(this.auth, async (user) => {
       if (user === null) {
         this.status = AuthStatus.ANONYMOUS;
-      } else if (user && user.email && SUDO_EMAILS.includes(user.email)) {
-        this.status = AuthStatus.SUDO;
       } else {
-        this.status = AuthStatus.SIGNED;
+        const isSudo = user.email ? await isEmailSudo(user.email) : false;
+        this.status = isSudo ? AuthStatus.SUDO : AuthStatus.SIGNED;
       }
       if (this.onAuthChange) this.onAuthChange({ status: this.status });
       console.log(
