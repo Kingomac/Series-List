@@ -5,7 +5,7 @@ import "../styles/Modal.scss";
 import { APP_MODE } from "../../app.config";
 
 export class AddSerieModal extends ModalView {
-  onSubmit?(serie: Serie): void;
+  onSubmit?(serie: Serie): Promise<void>;
 
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
@@ -58,13 +58,16 @@ export class AddSerieModal extends ModalView {
     this.modalClose.onclick = () => this.remove();
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
-      this.onSubmit!({
-        name: this.nameInput.value,
-        nameAlt: this.altNameInput.value,
-        chapter: 0,
-        image: this.imgInput.value,
-        url: this.urlInput.value,
-      });
+      const { runLoading } = await import("./RunLoading");
+      await runLoading(async () => {
+        await this.onSubmit!({
+          name: this.nameInput.value,
+          nameAlt: this.altNameInput.value,
+          chapter: 0,
+          image: this.imgInput.value,
+          url: this.urlInput.value,
+        });
+      }, this.submitBtn);
       await this.clearInputs();
       await this.generateData();
     };
@@ -73,11 +76,14 @@ export class AddSerieModal extends ModalView {
         const { default: Placeholders } = await import(
           "../../test/Placeholders"
         );
-        for (let i = 0; i < 14; i++) {
-          const s = await Placeholders.getRandomSerie();
-          delete s._id, s.timestamp;
-          this.onSubmit!(s);
-        }
+        const { runLoading } = await import("./RunLoading");
+        await runLoading(async () => {
+          for (let i = 0; i < 14; i++) {
+            const s = await Placeholders.getRandomSerie();
+            delete s._id, s.timestamp;
+            await this.onSubmit!(s);
+          }
+        }, this.submitBtn);
       };
     }
     this.generateData();

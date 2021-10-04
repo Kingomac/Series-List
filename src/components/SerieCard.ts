@@ -34,6 +34,7 @@ export class SerieCard extends IComponent {
     const chapter = document.createElement("i");
 
     img.src = this.serie.image;
+    img.alt = `Cover art of ${this.serie.name} (${this.serie.nameAlt})`;
     this.titleSpan.innerText = this.serie.name;
     chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
@@ -48,13 +49,21 @@ export class SerieCard extends IComponent {
       const lessChapterBtn = document.createElement("button");
       const editBtn = document.createElement("button");
       const deleteBtn = document.createElement("button");
+      const viewBtn = document.createElement("button");
 
       addChapterBtn.innerText = "▶";
       lessChapterBtn.innerText = "◀";
       editBtn.innerText = "✏";
       deleteBtn.innerText = "🗑";
+      viewBtn.innerText = "↗";
 
-      actions.append(lessChapterBtn, addChapterBtn, editBtn, deleteBtn);
+      actions.append(
+        lessChapterBtn,
+        addChapterBtn,
+        viewBtn,
+        editBtn,
+        deleteBtn
+      );
 
       addChapterBtn.onclick = async () => {
         this.serie.chapter++;
@@ -85,6 +94,9 @@ export class SerieCard extends IComponent {
       };
       actions.onmouseleave = this.saveChapter;
       deleteBtn.onclick = this.deleteSerie;
+      viewBtn.onclick = () => {
+        window.open(this.serie.url, "_blank");
+      };
     }
   }
 

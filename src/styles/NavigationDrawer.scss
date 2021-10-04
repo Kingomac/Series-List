@@ -6,6 +6,7 @@ sl-navigation-drawer {
   flex-direction: column;
   a {
     width: fit-content;
+    width: -moz-fit-content;
     font-size: smaller;
     font-weight: bold;
     text-decoration: none;

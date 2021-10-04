@@ -3,7 +3,7 @@ import ModalView from "../interfaces/ModalView";
 import { Category } from "../interfaces/Models";
 import { APP_MODE } from "../../app.config";
 export class AddCategoryModal extends ModalView {
-  onSubmit?(categ: Category): void;
+  onSubmit?(categ: Category): Promise<void>;
 
   private titleDiv: HTMLDivElement = document.createElement("div");
   private titleSpan: HTMLSpanElement = document.createElement("span");
@@ -42,7 +42,7 @@ export class AddCategoryModal extends ModalView {
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
       console.log("Create category with name", this.nameInput.value);
-      this.onSubmit!({
+      await this.onSubmit!({
         name: this.nameInput.value,
         timestamp: new Date(),
       });

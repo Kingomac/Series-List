@@ -62,15 +62,18 @@ export default class EditSerieModal extends ModalView {
     };
     this.submitBtn.innerText = "Guardar";
     this.submitBtn.onclick = async () => {
-      this.onSubmit!({
-        _id: this.serie._id,
-        name: this.nameInput.value,
-        nameAlt: this.altNameInput.value,
-        chapter: this.chapterInput.valueAsNumber,
-        image: this.imgInput.value,
-        url: this.urlInput.value,
-        timestamp: new Date(),
-      });
+      const { runLoading } = await import("./RunLoading");
+      await runLoading(async () => {
+        await this.onSubmit!({
+          _id: this.serie._id,
+          name: this.nameInput.value,
+          nameAlt: this.altNameInput.value,
+          chapter: this.chapterInput.valueAsNumber,
+          image: this.imgInput.value,
+          url: this.urlInput.value,
+          timestamp: new Date(),
+        });
+      }, this.submitBtn);
       this.disconnectedCallback!();
       this.remove();
     };
