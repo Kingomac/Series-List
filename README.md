@@ -28,4 +28,4 @@ export const SUDO_EMAILS: (string | RegExp)[] =
 ## Scripts
 
 - `npm run dev` : development server
-- `npm run build` : production build
+- `npm run build` : production build. Optional parameters `compression=null(default)/brotli/gzip`
