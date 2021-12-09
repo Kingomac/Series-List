@@ -5,6 +5,7 @@ import ModalView from "../interfaces/ModalView";
 export default class EditSerieModal extends ModalView {
   onSubmit?(serie: Serie): void;
 
+  private imgPrev = document.createElement('img');
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
   private imgInput = document.createElement("input");
@@ -26,14 +27,25 @@ export default class EditSerieModal extends ModalView {
     separator.className = "separator";
     const separator2 = document.createElement("div");
     separator2.className = "separator";
-    this.window.append(
-      this.titleDiv,
-      separator,
-      this.nameInput,
+    const inputsContainer = document.createElement('div')
+    const allContainer = document.createElement('div')
+    inputsContainer.className = 'inputs-container'
+    allContainer.className = 'all-container'
+    this.imgPrev.className = 'img-prev'
+
+    inputsContainer.append(this.nameInput,
       this.altNameInput,
       this.imgInput,
       this.urlInput,
-      this.chapterInput,
+      this.chapterInput
+    )
+
+    allContainer.append(inputsContainer, this.imgPrev)
+
+    this.window.append(
+      this.titleDiv,
+      separator,
+      allContainer,
       separator2,
       this.submitBtn
     );
@@ -46,6 +58,9 @@ export default class EditSerieModal extends ModalView {
     this.imgInput.type = "text";
     this.urlInput.type = "text";
     this.chapterInput.type = "number";
+
+    this.imgPrev.style.height = "400px";
+    this.imgPrev.style.width = "250px";
 
     this.nameInput.placeholder = "Nombre";
     this.altNameInput.placeholder = "Nombre alternativo";
@@ -60,6 +75,11 @@ export default class EditSerieModal extends ModalView {
       this.disconnectedCallback!();
       this.remove();
     };
+
+    this.imgInput.oninput = () => {
+      this.imgPrev.src = this.imgInput.value;
+    }
+
     this.submitBtn.innerText = "Guardar";
     this.submitBtn.onclick = async () => {
       const { runLoading } = await import("./RunLoading");
@@ -80,6 +100,7 @@ export default class EditSerieModal extends ModalView {
 
     this.nameInput.value = this.serie.name;
     this.altNameInput.value = this.serie.nameAlt;
+    this.imgPrev.src = this.serie.image;
     this.imgInput.value = this.serie.image;
     this.urlInput.value = this.serie.url;
     this.chapterInput.value = this.serie.chapter.toString();

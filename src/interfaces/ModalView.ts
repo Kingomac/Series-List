@@ -143,6 +143,31 @@ padding: 0;
 .title-btn:active {
   background-color: #555b73;
 }
+
+.all-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.img-prev {
+  margin: 0 2% 0 2%;
+}
+
+@media (max-width: 900px) {
+  .all-container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .img-prev {
+    align-self: center;
+  }
+}
     </style>
     `;
     this.window.className = "window";
