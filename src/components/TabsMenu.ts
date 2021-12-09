@@ -27,7 +27,7 @@ export class TabsMenu extends IComponent {
     this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
     this.addCategTab.onclick = async () => await this.onRequestNewCateg!();
-    this.addCategTab.onauxclick = async () => {};
+    this.addCategTab.onauxclick = async () => { };
   }
 
   connectedCallback() {
@@ -65,6 +65,7 @@ export class TabsMenu extends IComponent {
           await this.setActiveTab(elT);
           this.onTabsClick!(tab);
         };
+        elT.onDelete = this.onRequestDelete;
         return elT;
       })
     );

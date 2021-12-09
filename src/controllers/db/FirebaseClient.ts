@@ -83,7 +83,7 @@ export default class FirebaseClient implements IDbClient {
     const serieId = serie._id;
     delete serie._id;
     serie.timestamp = new Date();
-    await updateDoc(doc(this.db, categId, serieId), serie);
+    await updateDoc(doc(this.db, categId, serieId), serie as any);
     serie._id = serieId;
   }
 
@@ -190,8 +190,16 @@ export default class FirebaseClient implements IDbClient {
     return doc.id;
   }
   async deleteCategoryById(categId: string): Promise<void> {
+    console.time(`Deleting category with id ${categId}`)
     const { deleteDoc, doc } = await import("firebase/firestore/lite");
     await deleteDoc(doc(this.db, "categories", categId));
+
+    const { collection, getDocs, query } = await import("firebase/firestore/lite")
+    const docs = await getDocs(query(collection(this.db, categId)));
+    docs.forEach(async (d) => {
+      await deleteDoc(d.ref);
+    })
+    console.timeEnd(`Deleting category with id ${categId}`)
   }
   async deleteSerieById(serieId: string, categId: string): Promise<void> {
     const { deleteDoc, doc } = await import("firebase/firestore/lite");
