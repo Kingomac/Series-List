@@ -15,14 +15,14 @@ export async function runCommand(command) {
       stdio: "inherit",
     });
   } else {
-    process = spawn(command.split(" ")[0], command.split(" ").splice(0, 1));
+    process = spawn(command, { shell: '/bin/bash' });
   }
-  // process.stdout.on('data', (data) => { console.log(data) })
-  // process.stderr.on('data', (data) => { console.log(data) })
+  process.stdout.on('data', (data) => { console.log(Buffer.from(data).toString('utf-8')) })
+  process.stderr.on('data', (data) => { console.log(Buffer.from(data).toString('utf-8')) })
   process.on("exit", (code) => {
     console.log(`Command ${command} exited with code ${code}`);
   });
   process.on("error", (err) => {
-    console.log(err);
+    console.log(console.log(Buffer.from(err).toString('utf-8')));
   });
 }
