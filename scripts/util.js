@@ -1,14 +1,17 @@
-import { spawn } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import { platform } from "os";
 
 /**
  *
  * @param {string} command
  * @param {string[]} args
- * @returns {Promise<void>}
+ * @returns {Promise<ChildProcess>}
  */
 export async function runCommand(command) {
   console.log("Running", command);
+  /**
+   * @type ChildProcess
+   */
   let process;
   if (platform() == "win32") {
     process = spawn("cmd", ["/c"].concat(command.split(" ")), {
@@ -25,4 +28,6 @@ export async function runCommand(command) {
   process.on("error", (err) => {
     console.log(console.log(Buffer.from(err).toString('utf-8')));
   });
+
+  return process;
 }
