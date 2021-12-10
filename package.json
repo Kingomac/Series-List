@@ -6,7 +6,9 @@
     "dev": "node ./scripts/dev.js",
     "emulators": "npx firebase emulators:start",
     "serve": "npx parcel serve ./src/index.html",
-    "build": "node ./scripts/build.js"
+    "build": "npx parcel build ./src/index.html",
+    "minify": "node ./scripts/minify.js",
+    "compress": "node ./scripts/compress.js"
   },
   "keywords": [],
   "author": "",
