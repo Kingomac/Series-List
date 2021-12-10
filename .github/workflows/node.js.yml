@@ -18,10 +18,11 @@ jobs:
       with:
         node-version: 16.x
         cache: 'npm'
-    - run: echo "${{ secrets.APP_CONFIG }}" > app.config.ts
+    - run: echo -e "${{ secrets.APP_CONFIG }}" > app.config.ts
     - run: npm i
     - run: mkdir dist
-    - run: npx parcel build ./src/index.html
+    - run: npm run build
+    - run: npm run minify
     - uses: w9jds/firebase-action@master
       with:
         args: deploy --only hosting
