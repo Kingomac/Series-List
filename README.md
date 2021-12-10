@@ -3,6 +3,7 @@
 ## Configuration
 
 To build the app you need a config file `app.config.ts` with this structure:
+> Requires Nodejs >=14.x
 
 ```typescript
 import AppModes from "./src/interfaces/AppModes";
@@ -26,6 +27,7 @@ export const SUDO_EMAILS: (string | RegExp)[] =
 ```
 
 ## Scripts
-
-- `npm run dev` : development server
+- `npm run serve`: runs parcel development server with hot reload
+- `npm run emulators`: runs firebase emulators
+- `npm run dev` : development server with emulators
 - `npm run build` : production build. Optional parameters `compression=null(default)/brotli/gzip`
