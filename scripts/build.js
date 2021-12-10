@@ -7,7 +7,11 @@ import { brotliCompress, createBrotliCompress, gzip } from "zlib";
 import { argv } from "process";
 import { parseArgs } from "./argsParser.js";
 
-await fs.rm("./dist", { recursive: true });
+try {
+  await fs.rm("./dist", { recursive: true });
+} catch (e) {
+  console.log("Dist directory does not exist");
+}
 await fs.mkdir("./dist");
 
 const process = exec("npx parcel build ./src/index.html");
