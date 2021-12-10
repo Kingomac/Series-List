@@ -1,21 +1,31 @@
 import { initializeApp } from "firebase/app";
 import { FIREBASE_KEYS } from "../app.config";
+import SeriesView from "./pages/SeriesView";
+import { Route } from "./routes";
 window.onload = async () => {
   const app = document.querySelector("#app");
   const firebaseApp = initializeApp(FIREBASE_KEYS);
-  if (app == null) {
-    console.error("Page couldn't load 😥");
-  } else {
-    if (window.location.pathname.split("/").includes("manage")) {
-      console.time("Loading ManageView");
-      const { default: ManageView } = await import("./pages/ManageView");
-      app.replaceWith(new ManageView({ app: firebaseApp }));
-      console.timeEnd("Loading ManageView");
-    } else {
-      console.time("Loading SeriesView");
-      const { default: SeriesView } = await import("./pages/SeriesView");
-      app.replaceWith(new SeriesView({ app: firebaseApp }));
-      console.timeEnd("Loading SeriesView");
+
+  async function changeView(path: Route) {
+    if (app == null) {
+      throw new Error("Page couldn't load 😥");
+    } 
+    window.history.pushState(path, "", null);
+    switch(path) {
+      case Route.SERIES:
+        console.time("Loading ManageView");
+        const { default: SeriesView } = await import('./pages/ManageView');
+        app.replaceWith(new SeriesView({ app: firebaseApp, changeView }))
+        console.timeEnd("Loading ManageView");
+        break;
+      case Route.MANAGE:
+        console.time("Loading ManageView");
+        const { default: ManageView } = await import('./pages/ManageView');
+        app.replaceWith(new ManageView({ app: firebaseApp, changeView }))
+        console.timeEnd("Loading ManageView");
+        break;
     }
   }
+
+  await changeView(window.location.pathname as Route)
 };

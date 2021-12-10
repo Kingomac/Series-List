@@ -15,6 +15,7 @@ import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
+import { Route } from "../routes";
 import "../styles/main.scss";
 import "../styles/SeriesView.scss";
 
@@ -36,9 +37,8 @@ export default class SeriesView extends IComponent {
   private endDiv: HTMLDivElement;
   private viewDiv: HTMLDivElement;
 
-  constructor(x: { app?: FirebaseApp }) {
+  constructor(x: { app: FirebaseApp, changeView: (path: Route) => Promise<void> }) {
     super();
-    if (x.app === undefined) throw new Error("Firebase app is undefined");
     this.app = x.app;
     this.auth = new FirebaseAuthController(this.app);
 
@@ -46,7 +46,7 @@ export default class SeriesView extends IComponent {
 
     this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
     //this.authModule = new FakeAuthModule(this.auth);
-    this.topBar = new TopBar(this.authModule);
+    this.topBar = new TopBar({ authModule: this.authModule, changeView: x.changeView });
     this.client = new FirebaseClient(this.app);
     //this.client = new FakeClient();
     this.actualCategory = { name: "" };

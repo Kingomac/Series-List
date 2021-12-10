@@ -11,6 +11,7 @@ import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
 import "../styles/main.scss";
 import "../styles/ManageView.scss";
+import { Route } from "../routes";
 
 export default class ManageView extends IComponent {
   private app: FirebaseApp;
@@ -24,13 +25,12 @@ export default class ManageView extends IComponent {
   private viewDiv: HTMLDivElement = document.createElement("div");
   private viewPlaceholder: HTMLElement = document.createElement("div");
 
-  constructor(x: { app?: FirebaseApp }) {
+  constructor(x: { app: FirebaseApp, changeView: (path: Route) => Promise<void>  }) {
     super();
-    if (x.app === undefined) throw new Error("Firebase app is undefined");
     this.app = x.app;
     this.auth = new FirebaseAuthController(this.app);
     this.authModule = new FirebaseAuth(this.auth);
-    this.topBar = new TopBar(this.authModule);
+    this.topBar = new TopBar({ authModule: this.authModule, changeView: x.changeView } );
     this.dbClient = new FirebaseClient(this.app);
   }
 
