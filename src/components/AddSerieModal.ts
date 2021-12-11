@@ -1,7 +1,6 @@
 import AppModes from "../interfaces/AppModes";
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
-import "../styles/Modal.scss";
 import { APP_MODE } from "../../app.config";
 
 export class AddSerieModal extends ModalView {
@@ -10,7 +9,9 @@ export class AddSerieModal extends ModalView {
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
   private imgInput = document.createElement("input");
+  private imgPrev = document.createElement("img");
   private urlInput = document.createElement("input");
+  private chapterInput = document.createElement("input");
 
   private titleDiv = document.createElement("div");
   private titleSpan = document.createElement("span");
@@ -27,17 +28,29 @@ export class AddSerieModal extends ModalView {
     separator.className = "separator";
     const separator2 = document.createElement("div");
     separator2.className = "separator";
-    this.window.append(
-      this.titleDiv,
-      separator,
+    const inputsContainer = document.createElement("div");
+    const allContainer = document.createElement("div");
+    inputsContainer.className = "inputs-container";
+    allContainer.className = "all-container";
+    this.imgPrev.className = "img-prev";
+
+    inputsContainer.append(
       this.nameInput,
       this.altNameInput,
       this.imgInput,
       this.urlInput,
+      this.chapterInput
+    );
+
+    allContainer.append(inputsContainer, this.imgPrev);
+
+    this.window.append(
+      this.titleDiv,
+      separator,
+      allContainer,
       separator2,
       this.submitBtn
     );
-
     this.titleDiv.append(this.titleSpan, this.modalClose);
 
     this.titleDiv.className = "title";
@@ -46,11 +59,13 @@ export class AddSerieModal extends ModalView {
     this.altNameInput.type = "text";
     this.imgInput.type = "text";
     this.urlInput.type = "text";
+    this.chapterInput.type = "number";
 
     this.nameInput.placeholder = "Nombre";
     this.altNameInput.placeholder = "Nombre alternativo";
     this.imgInput.placeholder = "Link imagen";
     this.urlInput.placeholder = "Url";
+    this.chapterInput.value = "0";
 
     this.titleSpan.innerText = "Añadir serie";
     this.modalClose.className = "title-btn";
@@ -63,7 +78,7 @@ export class AddSerieModal extends ModalView {
         await this.onSubmit!({
           name: this.nameInput.value,
           nameAlt: this.altNameInput.value,
-          chapter: 0,
+          chapter: this.chapterInput.valueAsNumber,
           image: this.imgInput.value,
           url: this.urlInput.value,
         });
@@ -86,6 +101,9 @@ export class AddSerieModal extends ModalView {
         }, this.submitBtn);
       };
     }
+    this.imgInput.oninput = () => {
+      this.imgPrev.src = this.imgInput.value;
+    };
     this.generateData();
   }
   async clearInputs() {
@@ -93,6 +111,7 @@ export class AddSerieModal extends ModalView {
     this.altNameInput.value = "";
     this.imgInput.value = "";
     this.urlInput.value = "";
+    this.chapterInput.value = "0";
   }
 
   async generateData() {
@@ -103,6 +122,7 @@ export class AddSerieModal extends ModalView {
       this.altNameInput.value = serie.nameAlt;
       this.imgInput.value = serie.image;
       this.urlInput.value = serie.url;
+      this.imgPrev.src = serie.image;
     }
   }
 }
