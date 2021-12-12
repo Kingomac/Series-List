@@ -1,3 +1,4 @@
+import AuthStatus from "../../interfaces/AuthStatus";
 import { IAuthController } from "../../interfaces/IAuthController";
 
 export default class WSAuthController implements IAuthController {
@@ -11,6 +12,9 @@ export default class WSAuthController implements IAuthController {
     if (auth != null) {
       this.permission = Permission.RW;
     }
+  }
+  getStatus(): AuthStatus {
+    throw new Error("Method not implemented.");
   }
 
   isSudo(): boolean {

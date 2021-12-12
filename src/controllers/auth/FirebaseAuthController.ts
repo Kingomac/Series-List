@@ -3,8 +3,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
 import AppModes from "../../interfaces/AppModes";
 import AuthStatus from "../../interfaces/AuthStatus";
-import { APP_MODE, SUDO_EMAILS } from "../../../app.config";
+import { APP_MODE } from "../../../app.config";
 import { isEmailSudo } from "./AuthUtil";
+import {
+  connectAuthEmulator,
+  GoogleAuthProvider,
+  signInWithRedirect,
+} from "firebase/auth";
 
 export type AuthChangeEvent = {
   status: AuthStatus;
@@ -19,10 +24,10 @@ export default class FirebaseAuthController implements IAuthController {
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
     if (APP_MODE == AppModes.DEBUG) {
-      import("firebase/auth").then(({ connectAuthEmulator }) => {
-        connectAuthEmulator(this.auth, "http://localhost:9099", {
-          disableWarnings: true,
-        });
+      //import("firebase/auth").then(({ connectAuthEmulator }) => {
+      connectAuthEmulator(this.auth, "http://localhost:9099", {
+        disableWarnings: true,
+        //});
       });
     }
     onAuthStateChanged(this.auth, async (user) => {
@@ -45,9 +50,9 @@ export default class FirebaseAuthController implements IAuthController {
     return this.status;
   }
   async login(): Promise<void> {
-    const { GoogleAuthProvider, signInWithRedirect } = await import(
+    /*const { GoogleAuthProvider, signInWithRedirect } = await import(
       "firebase/auth"
-    );
+    );*/
     const provider = new GoogleAuthProvider();
     await signInWithRedirect(this.auth, provider);
   }

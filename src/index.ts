@@ -1,27 +1,47 @@
 import { initializeApp } from "firebase/app";
 import { FIREBASE_KEYS } from "../app.config";
-import SeriesView from "./pages/SeriesView";
+import FirebaseAuthController from "./controllers/auth/FirebaseAuthController";
+import FirebaseClient from "./controllers/db/FirebaseClient";
+import { IDbClient } from "./interfaces/DbClient";
+import { IAuthController } from "./interfaces/IAuthController";
 import { Route } from "./routes";
+import "./styles/main.scss";
 window.onload = async () => {
-  const app = document.querySelector("#app");
+  let app = document.querySelector("#app");
   const firebaseApp = initializeApp(FIREBASE_KEYS);
+  const dbClient: IDbClient = new FirebaseClient(firebaseApp);
+  const authController: IAuthController = new FirebaseAuthController(
+    firebaseApp
+  );
 
   async function changeView(path: Route) {
     if (app == null) {
       throw new Error("Page couldn't load 😥");
     }
-    window.history.pushState(path, "", null);
+    //window.history.pushState(null, "", path + inpath);
     switch (path) {
       case Route.SERIES:
         console.time("Loading ManageView");
         const { default: SeriesView } = await import("./pages/SeriesView");
-        app.replaceWith(new SeriesView({ app: firebaseApp, changeView }));
+        const newSeriesView = new SeriesView({
+          authController,
+          dbClient,
+          changeView,
+        });
+        app.replaceWith(newSeriesView);
+        app = newSeriesView;
         console.timeEnd("Loading ManageView");
         break;
       case Route.MANAGE:
         console.time("Loading ManageView");
         const { default: ManageView } = await import("./pages/ManageView");
-        app.replaceWith(new ManageView({ app: firebaseApp, changeView }));
+        const newManageView = new ManageView({
+          authController,
+          dbClient,
+          changeView,
+        });
+        app.replaceWith(newManageView);
+        app = newManageView;
         console.timeEnd("Loading ManageView");
         break;
     }
@@ -31,7 +51,7 @@ window.onload = async () => {
   if (window.location.pathname == "") {
     console.log("Initial view: Route.SERIES");
     await changeView(Route.SERIES);
-  } else if (window.location.pathname == "/manage") {
+  } else if (window.location.pathname.startsWith("/manage")) {
     console.log("Initial view: Route.MANAGE");
     await changeView(Route.MANAGE);
   } else {

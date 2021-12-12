@@ -1,4 +1,4 @@
 export enum Route {
-    SERIES = "/",
-    MANAGE = "/manage"
+  SERIES = "/",
+  MANAGE = "/manage",
 }

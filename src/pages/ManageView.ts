@@ -1,7 +1,9 @@
 import IComponent from "../interfaces/Component";
 import TopBar from "../components/TopBar";
 import FirebaseAuth from "../components/auth/FirebaseAuth";
-import FirebaseAuthController from "../controllers/auth/FirebaseAuthController";
+import FirebaseAuthController, {
+  AuthChangeEvent,
+} from "../controllers/auth/FirebaseAuthController";
 import { FirebaseApp } from "firebase/app";
 import { APP_NAME } from "../../app.config";
 import NavigationDrawer from "../components/NavigationDrawer";
@@ -9,13 +11,17 @@ import AuthStatus from "../interfaces/AuthStatus";
 import { IAuthController } from "../interfaces/IAuthController";
 import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
-import "../styles/main.scss";
 import "../styles/ManageView.scss";
 import { Route } from "../routes";
+/////////////////////////////////////////////
+import BackupsView from "./manage/BackupsView";
+import BackupController from "../controllers/BackupController";
+import MigrationsView from "./manage/MigrationsView";
+import { migrateOld } from "../controllers/db/FirebaseMigrations";
+////////////////////////////////////////////////////
 
 export default class ManageView extends IComponent {
-  private app: FirebaseApp;
-  private auth: FirebaseAuthController;
+  private auth: IAuthController;
   private authModule: FirebaseAuth;
   private dbClient: IDbClient;
   private topBar: TopBar;
@@ -25,13 +31,19 @@ export default class ManageView extends IComponent {
   private viewDiv: HTMLDivElement = document.createElement("div");
   private viewPlaceholder: HTMLElement = document.createElement("div");
 
-  constructor(x: { app: FirebaseApp, changeView: (path: Route) => Promise<void>  }) {
+  constructor(x: {
+    authController: IAuthController;
+    dbClient: IDbClient;
+    changeView: (path: Route) => Promise<void>;
+  }) {
     super();
-    this.app = x.app;
-    this.auth = new FirebaseAuthController(this.app);
-    this.authModule = new FirebaseAuth(this.auth);
-    this.topBar = new TopBar({ authModule: this.authModule, changeView: x.changeView } );
-    this.dbClient = new FirebaseClient(this.app);
+    this.auth = x.authController;
+    this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
+    this.topBar = new TopBar({
+      authModule: this.authModule,
+      changeView: x.changeView,
+    });
+    this.dbClient = x.dbClient;
   }
 
   connectedCallback() {
@@ -44,7 +56,7 @@ export default class ManageView extends IComponent {
       console.log("Loading new manage view", x);
       this.updateView(x.href);
     };
-    this.auth.onAuthChange = async (x) => {
+    this.auth.onAuthChange = async (x: AuthChangeEvent) => {
       x.status === AuthStatus.SUDO || x.status === AuthStatus.SIGNED
         ? this.authModule.setAttribute("logged", "yes")
         : this.authModule.setAttribute("logged", "no");
@@ -66,19 +78,19 @@ export default class ManageView extends IComponent {
     let view: HTMLElement;
     switch (path) {
       case "/backups":
-        const { default: BackupsView } = await import("./manage/BackupsView");
-        const { default: BackupController } = await import(
+        //const { default: BackupsView } = await import("./manage/BackupsView");
+        /*const { default: BackupController } = await import(
           "../controllers/BackupController"
-        );
+        );*/
         view = new BackupsView(new BackupController(this.dbClient));
         break;
       case "/migrations":
-        const { default: MigrationsView } = await import(
+        /*const { default: MigrationsView } = await import(
           "./manage/MigrationsView"
-        );
-        const { migrateOld } = await import(
+        );*/
+        /*const { migrateOld } = await import(
           "../controllers/db/FirebaseMigrations"
-        );
+        );*/
         view = new MigrationsView({
           fromOldMigration: async () => {
             if (!confirm("YOU KNOW I GOT I BANBAN BLOW YOUR MINDDDDD")) return;
