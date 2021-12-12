@@ -13,7 +13,12 @@ export default class TopBar extends IComponent {
     return ["title"];
   }
 
-  constructor(private x: { authModule: IComponent, changeView: (path: Route) => Promise<void>  }) {
+  constructor(
+    private x: {
+      authModule: IComponent;
+      changeView: (path: Route) => Promise<void>;
+    }
+  ) {
     super();
   }
 
@@ -28,16 +33,20 @@ export default class TopBar extends IComponent {
         this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
           AuthModuleAttributes.logged.yes &&
         !window.location.pathname.split("/").includes("manage")
-      )
-        this.x.changeView(Route.MANAGE)
+      ) {
+        window.history.pushState(null, "", "/manage");
+        this.x.changeView(Route.MANAGE);
+      }
     };
     this.titleSpan.onclick = () => {
       if (
         this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
           AuthModuleAttributes.logged.yes &&
         window.location.pathname.split("/").includes("manage")
-      )
-      this.x.changeView(Route.SERIES)
+      ) {
+        window.history.pushState(null, "", "/");
+        this.x.changeView(Route.SERIES);
+      }
     };
   }
 
