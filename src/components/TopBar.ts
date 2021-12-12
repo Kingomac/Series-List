@@ -1,5 +1,6 @@
 import IComponent from "../interfaces/Component";
 import { IAuthController } from "../interfaces/IAuthController";
+import { Route } from "../routes";
 import "../styles/TopBar.scss";
 import { AuthModuleAttributes } from "./auth/AuthModuleAttributes";
 
@@ -12,31 +13,31 @@ export default class TopBar extends IComponent {
     return ["title"];
   }
 
-  constructor(private authModule: IComponent) {
+  constructor(private x: { authModule: IComponent, changeView: (path: Route) => Promise<void>  }) {
     super();
   }
 
   connectedCallback(): void {
-    this.append(this.fujiwara, this.titleSpan, this.authModule);
+    this.append(this.fujiwara, this.titleSpan, this.x.authModule);
     this.titleSpan.innerText = this.getAttribute("title") || "";
     this.fujiwara.src =
       "https://firebasestorage.googleapis.com/v0/b/memeshare-a3107.appspot.com/o/fujiwara.webp?alt=media&token=33c26161-35ea-4d4e-b72c-866b813a1313";
     this.fujiwara.alt = "Fujiwara Chika detective";
     this.fujiwara.onclick = () => {
       if (
-        this.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
+        this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
           AuthModuleAttributes.logged.yes &&
         !window.location.pathname.split("/").includes("manage")
       )
-        window.location.pathname = "/manage";
+        this.x.changeView(Route.MANAGE)
     };
     this.titleSpan.onclick = () => {
       if (
-        this.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
+        this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
           AuthModuleAttributes.logged.yes &&
         window.location.pathname.split("/").includes("manage")
       )
-        window.location.pathname = "/";
+      this.x.changeView(Route.SERIES)
     };
   }
 

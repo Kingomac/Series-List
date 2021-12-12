@@ -157,6 +157,8 @@ padding: 0;
 
 .img-prev {
   margin: 0 2% 0 2%;
+  width: 250px;
+  height: 400px;
 }
 
 @media (max-width: 900px) {

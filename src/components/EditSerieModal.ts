@@ -1,11 +1,14 @@
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
 import ModalView from "../interfaces/ModalView";
+/////////////////////////////////////////////
+import { runLoading } from "./RunLoading";
+/////////////////////////////////////////////////
 
 export default class EditSerieModal extends ModalView {
   onSubmit?(serie: Serie): void;
 
-  private imgPrev = document.createElement('img');
+  private imgPrev = document.createElement("img");
   private nameInput = document.createElement("input");
   private altNameInput = document.createElement("input");
   private imgInput = document.createElement("input");
@@ -27,20 +30,21 @@ export default class EditSerieModal extends ModalView {
     separator.className = "separator";
     const separator2 = document.createElement("div");
     separator2.className = "separator";
-    const inputsContainer = document.createElement('div')
-    const allContainer = document.createElement('div')
-    inputsContainer.className = 'inputs-container'
-    allContainer.className = 'all-container'
-    this.imgPrev.className = 'img-prev'
+    const inputsContainer = document.createElement("div");
+    const allContainer = document.createElement("div");
+    inputsContainer.className = "inputs-container";
+    allContainer.className = "all-container";
+    this.imgPrev.className = "img-prev";
 
-    inputsContainer.append(this.nameInput,
+    inputsContainer.append(
+      this.nameInput,
       this.altNameInput,
       this.imgInput,
       this.urlInput,
       this.chapterInput
-    )
+    );
 
-    allContainer.append(inputsContainer, this.imgPrev)
+    allContainer.append(inputsContainer, this.imgPrev);
 
     this.window.append(
       this.titleDiv,
@@ -59,9 +63,6 @@ export default class EditSerieModal extends ModalView {
     this.urlInput.type = "text";
     this.chapterInput.type = "number";
 
-    this.imgPrev.style.height = "400px";
-    this.imgPrev.style.width = "250px";
-
     this.nameInput.placeholder = "Nombre";
     this.altNameInput.placeholder = "Nombre alternativo";
     this.imgInput.placeholder = "Link imagen";
@@ -78,11 +79,11 @@ export default class EditSerieModal extends ModalView {
 
     this.imgInput.oninput = () => {
       this.imgPrev.src = this.imgInput.value;
-    }
+    };
 
     this.submitBtn.innerText = "Guardar";
     this.submitBtn.onclick = async () => {
-      const { runLoading } = await import("./RunLoading");
+      //const { runLoading } = await import("./RunLoading");
       await runLoading(async () => {
         await this.onSubmit!({
           _id: this.serie._id,

@@ -4,6 +4,9 @@ import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Serie } from "../interfaces/Models";
 import "../styles/SerieCard.scss";
+////////////////////////////////////////////////
+import EditSerieModal from "./EditSerieModal";
+///////////////////////////////////////////////
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
@@ -74,7 +77,7 @@ export class SerieCard extends IComponent {
         chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
       };
       editBtn.onclick = async () => {
-        const { default: EditSerieModal } = await import("./EditSerieModal");
+        //const { default: EditSerieModal } = await import("./EditSerieModal");
         const editModal = new EditSerieModal(this.serie);
         this.setAttribute("draggable", "false");
         editModal.onSubmit = async (serie) => {

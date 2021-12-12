@@ -9,19 +9,22 @@ import TopBar from "../components/TopBar";
 import FirebaseAuthController, {
   AuthChangeEvent,
 } from "../controllers/auth/FirebaseAuthController";
-import FirebaseClient from "../controllers/db/FirebaseClient";
 import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
 import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
-import "../styles/main.scss";
+import { Route } from "../routes";
 import "../styles/SeriesView.scss";
+////////////////////////////////////////////////////////////
+import { AddSerieModal } from "../components/AddSerieModal";
+import { AddCategoryModal } from "../components/AddCategoryModal";
+import { SerieCard } from "../components/SerieCard";
+////////////////////////////////////////////////////////////
 
 export default class SeriesView extends IComponent {
   private client: IDbClient;
   private auth: IAuthController;
-  private app: FirebaseApp;
 
   // Categories
   private actualCategory: Category;
@@ -36,18 +39,23 @@ export default class SeriesView extends IComponent {
   private endDiv: HTMLDivElement;
   private viewDiv: HTMLDivElement;
 
-  constructor(x: { app?: FirebaseApp }) {
+  constructor(x: {
+    authController: IAuthController;
+    dbClient: IDbClient;
+    changeView: (path: Route) => Promise<void>;
+  }) {
     super();
-    if (x.app === undefined) throw new Error("Firebase app is undefined");
-    this.app = x.app;
-    this.auth = new FirebaseAuthController(this.app);
+    this.auth = x.authController;
 
     //this.auth = new FakeAuth();
 
     this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
     //this.authModule = new FakeAuthModule(this.auth);
-    this.topBar = new TopBar(this.authModule);
-    this.client = new FirebaseClient(this.app);
+    this.topBar = new TopBar({
+      authModule: this.authModule,
+      changeView: x.changeView,
+    });
+    this.client = x.dbClient;
     //this.client = new FakeClient();
     this.actualCategory = { name: "" };
 
@@ -144,7 +152,7 @@ export default class SeriesView extends IComponent {
     this.seriesDiv.classList.add("series", "container");
 
     this.floatBotMenu.onNewSerie = async () => {
-      const { AddSerieModal } = await import("../components/AddSerieModal");
+      //const { AddSerieModal } = await import("../components/AddSerieModal");
       const modal = new AddSerieModal();
       this.append(modal);
       modal.onSubmit = async (serie) => {
@@ -165,9 +173,9 @@ export default class SeriesView extends IComponent {
     };
 
     this.tabsMenu.onRequestNewCateg = async () => {
-      const { AddCategoryModal } = await import(
+      /*const { AddCategoryModal } = await import(
         "../components/AddCategoryModal"
-      );
+      );*/
       const modal = new AddCategoryModal();
       this.append(modal);
       modal.onSubmit = async (categ) => {
@@ -214,7 +222,7 @@ export default class SeriesView extends IComponent {
    * @returns
    */
   async createCards(...series: Serie[]) {
-    const { SerieCard } = await import("../components/SerieCard");
+    //const { SerieCard } = await import("../components/SerieCard");
     return series.map(
       (s: Serie) =>
         new SerieCard(s, this.actualCategory._id || "", this.client, this.auth)
