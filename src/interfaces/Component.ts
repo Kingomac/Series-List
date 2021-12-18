@@ -1,3 +1,5 @@
+import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
+
 export default abstract class IComponent extends HTMLElement {
   /**
    * @description Attributes that fire the attributeChangedCallback()
@@ -32,4 +34,6 @@ export default abstract class IComponent extends HTMLElement {
    * @param newDocument
    */
   adoptedCallback?(lastDocument: HTMLDocument, newDocument: HTMLDocument): void;
+
+  authChangeEvent?(x: AuthChangeEvent): Promise<void>;
 }

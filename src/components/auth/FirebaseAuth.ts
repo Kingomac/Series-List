@@ -1,12 +1,9 @@
 import FirebaseAuthController from "../../controllers/auth/FirebaseAuthController";
+import AuthStatus from "../../interfaces/AuthStatus";
 import IComponent from "../../interfaces/Component";
-import { AuthModuleAttributes } from "./AuthModuleAttributes";
 
 export default class FirebaseAuth extends IComponent {
-  static get observedAttributes() {
-    return [AuthModuleAttributes.logged.name];
-  }
-
+  private loggedState: AuthStatus = AuthStatus.ANONYMOUS;
   private btn = document.createElement("button");
 
   constructor(private readonly controller: FirebaseAuthController) {
@@ -35,14 +32,9 @@ export default class FirebaseAuth extends IComponent {
     this.append(this.btn);
   }
 
-  attributeChangedCallback(name: string, lastValue: string, newValue: string) {
-    if (name == AuthModuleAttributes.logged.name) {
-      if (newValue == AuthModuleAttributes.logged.yes) {
-        this.logged();
-      } else {
-        this.notLogged();
-      }
-    }
+  setState(newState: AuthStatus) {
+    if (newState == AuthStatus.SUDO) this.logged();
+    else this.notLogged();
   }
 }
 

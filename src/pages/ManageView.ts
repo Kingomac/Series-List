@@ -1,14 +1,7 @@
 import IComponent from "../interfaces/Component";
 import TopBar from "../components/TopBar";
-import FirebaseAuth from "../components/auth/FirebaseAuth";
-import FirebaseAuthController, {
-  AuthChangeEvent,
-} from "../controllers/auth/FirebaseAuthController";
-import { FirebaseApp } from "firebase/app";
 import { APP_NAME } from "../../app.config";
 import NavigationDrawer from "../components/NavigationDrawer";
-import AuthStatus from "../interfaces/AuthStatus";
-import { IAuthController } from "../interfaces/IAuthController";
 import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
 import "../styles/ManageView.scss";
@@ -18,13 +11,12 @@ import BackupsView from "./manage/BackupsView";
 import BackupController from "../controllers/BackupController";
 import MigrationsView from "./manage/MigrationsView";
 import { migrateOld } from "../controllers/db/FirebaseMigrations";
+import View from "../interfaces/View";
+import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 ////////////////////////////////////////////////////
 
-export default class ManageView extends IComponent {
-  private auth: IAuthController;
-  private authModule: FirebaseAuth;
+export default class ManageView extends View {
   private dbClient: IDbClient;
-  private topBar: TopBar;
   private navigatorDrawer: NavigationDrawer = new NavigationDrawer({
     hrefRoot: "/manage",
   });
@@ -32,22 +24,14 @@ export default class ManageView extends IComponent {
   private viewPlaceholder: HTMLElement = document.createElement("div");
 
   constructor(x: {
-    authController: IAuthController;
     dbClient: IDbClient;
     changeView: (path: Route) => Promise<void>;
   }) {
     super();
-    this.auth = x.authController;
-    this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
-    this.topBar = new TopBar({
-      authModule: this.authModule,
-      changeView: x.changeView,
-    });
     this.dbClient = x.dbClient;
   }
 
   connectedCallback() {
-    this.append(this.topBar);
     this.navigatorDrawer.addItems(
       { name: "Backups", href: "/backups" },
       { name: "Migrations", href: "/migrations" }
@@ -56,21 +40,12 @@ export default class ManageView extends IComponent {
       console.log("Loading new manage view", x);
       this.updateView(x.href);
     };
-    this.auth.onAuthChange = async (x: AuthChangeEvent) => {
-      x.status === AuthStatus.SUDO || x.status === AuthStatus.SIGNED
-        ? this.authModule.setAttribute("logged", "yes")
-        : this.authModule.setAttribute("logged", "no");
-      console.log("Auth changed!! =>", AuthStatus[x.status].toString());
-      if (x.status === AuthStatus.SUDO) {
-        this.append(this.viewDiv);
-        await this.updateView(window.location.pathname.replace("/manage", ""));
-      } else {
-        this.viewDiv.remove();
-      }
-    };
     this.viewDiv.className = "manage-view";
     this.viewDiv.append(this.navigatorDrawer, this.viewPlaceholder);
-    this.topBar.setAttribute("title", APP_NAME);
+  }
+
+  authChangeEvent = async (x: AuthChangeEvent) => {
+
   }
 
   async updateView(path: string) {
