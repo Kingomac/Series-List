@@ -14,7 +14,12 @@ export default class TopBar extends IComponent {
     return ["title"];
   }
 
-  constructor(private x: { authModule: IComponent, changeView: (path: Route) => Promise<void>  }) {
+  constructor(
+    private x: {
+      authModule: IComponent;
+      changeView: (path: Route) => Promise<void>;
+    }
+  ) {
     super();
   }
 
@@ -24,25 +29,6 @@ export default class TopBar extends IComponent {
     this.fujiwara.src =
       "https://firebasestorage.googleapis.com/v0/b/memeshare-a3107.appspot.com/o/fujiwara.webp?alt=media&token=33c26161-35ea-4d4e-b72c-866b813a1313";
     this.fujiwara.alt = "Fujiwara Chika detective";
-<<<<<<< Updated upstream
-    this.fujiwara.onclick = () => {
-      if (
-        this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
-          AuthModuleAttributes.logged.yes &&
-        !window.location.pathname.split("/").includes("manage")
-      )
-        this.x.changeView(Route.MANAGE)
-    };
-    this.titleSpan.onclick = () => {
-      if (
-        this.x.authModule.getAttribute(AuthModuleAttributes.logged.name) ===
-          AuthModuleAttributes.logged.yes &&
-        window.location.pathname.split("/").includes("manage")
-      )
-      this.x.changeView(Route.SERIES)
-    };
-=======
->>>>>>> Stashed changes
   }
 
   attributeChangedCallback(name: string, lastValue: any, newValue: any) {
