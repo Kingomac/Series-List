@@ -10,13 +10,13 @@ import AuthStatus from "./interfaces/AuthStatus";
 import { IDbClient } from "./interfaces/DbClient";
 import { IAuthController } from "./interfaces/IAuthController";
 import { Route } from "./routes";
-import View from './interfaces/View'
+import View from "./interfaces/View";
 import "./styles/main.scss";
 window.onload = async () => {
   const main = document.querySelector("main");
-  if(main == null) throw new Error("Main not found")
-  const appDiv = document.createElement('div');
-  appDiv.id = "app"
+  if (main == null) throw new Error("Main not found");
+  const appDiv = document.createElement("div");
+  appDiv.id = "app";
   let app: View | null;
   const firebaseApp = initializeApp(FIREBASE_KEYS);
   const dbClient: IDbClient = new FirebaseClient(firebaseApp);
@@ -54,6 +54,8 @@ window.onload = async () => {
         console.timeEnd("Loading ManageView");
         break;
     }
+
+    app.authChangeEvent({ status: authController.getStatus() });
   }
 
   const topBar = new TopBar({
@@ -65,6 +67,7 @@ window.onload = async () => {
     authModule.setState(x.status);
     console.log("Auth changed!! =>", AuthStatus[x.status].toString());
     app?.authChangeEvent(x);
+    topBar.authChangeEvent!(x);
   };
 
   console.log("Initial pathname:", window.location.pathname);
@@ -81,6 +84,5 @@ window.onload = async () => {
 
   topBar.setAttribute("title", APP_NAME);
 
-  main.append(topBar);
-  main.append(appDiv);
+  main.append(topBar, appDiv);
 };

@@ -37,7 +37,8 @@ export default class TopBar extends IComponent {
     }
   }
 
-  onAuthChange(state: AuthChangeEvent) {
+  authChangeEvent = async (state: AuthChangeEvent) => {
+    console.log("Topbar auth change");
     if (state.status == AuthStatus.SUDO) {
       this.fujiwara.onclick = () => {
         if (!window.location.pathname.split("/").includes("manage")) {
@@ -55,7 +56,7 @@ export default class TopBar extends IComponent {
       this.fujiwara.onclick = () => {};
       this.titleSpan.onclick = () => {};
     }
-  }
+  };
 }
 
 window.customElements.define("sl-topbar", TopBar);

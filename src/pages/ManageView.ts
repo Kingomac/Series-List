@@ -13,6 +13,7 @@ import MigrationsView from "./manage/MigrationsView";
 import { migrateOld } from "../controllers/db/FirebaseMigrations";
 import View from "../interfaces/View";
 import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
+import AuthStatus from "../interfaces/AuthStatus";
 ////////////////////////////////////////////////////
 
 export default class ManageView extends View {
@@ -45,8 +46,12 @@ export default class ManageView extends View {
   }
 
   authChangeEvent = async (x: AuthChangeEvent) => {
-
-  }
+    if (x.status == AuthStatus.SUDO) {
+      this.append(this.viewDiv);
+    } else {
+      this.viewDiv.remove();
+    }
+  };
 
   async updateView(path: string) {
     console.log("Updating view for", `"${path}"`);

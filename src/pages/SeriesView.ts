@@ -120,9 +120,9 @@ export default class SeriesView extends View {
       if (this.floatBotMenu.isConnected) this.floatBotMenu.remove();
     }
     this.tabsMenu.showAddCategTab(x.status === AuthStatus.SUDO);
-    this.querySelectorAll<SerieCard>("SerieCard").forEach((i: SerieCard) => {
-      i.authChangeEvent(x);
-    });
+    for await (const i of this.querySelectorAll<SerieCard>("sl-serie-card")) {
+      await i.authChangeEvent(x);
+    }
   }
 
   async connectedCallback(): Promise<void> {
@@ -208,6 +208,7 @@ export default class SeriesView extends View {
    * @returns
    */
   async createCards(...series: Serie[]) {
+    console.log("Creating cards");
     //const { SerieCard } = await import("../components/SerieCard");
     return series.map(async (s: Serie) => {
       const card = new SerieCard(s, this.actualCategory._id || "", this.client);
@@ -251,7 +252,8 @@ export default class SeriesView extends View {
   }
 
   async findAndDeleteCard(id: string) {
-    const card = this.seriesDiv.querySelector("#" + id) as IComponent;
+    const card = this.seriesDiv.querySelector("#" + id) as SerieCard;
+    card.draggable = false;
     if (card === null)
       throw new Error("Card to delete with id " + id + " is null");
     card.style.transition = "visibility 0.3s linear,opacity 0.3s linear";

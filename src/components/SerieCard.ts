@@ -37,8 +37,8 @@ export class SerieCard extends IComponent {
   connectedCallback(): void {
     this.id = this.serie._id!;
 
-    this.img.setAttribute("draggable", "false");
-    this.img.setAttribute("loading", "lazy");
+    this.img.draggable = false;
+    this.img.loading = "lazy";
 
     this.img.src = this.serie.image;
     this.img.alt = `Cover art of ${this.serie.name} (${this.serie.nameAlt})`;
@@ -75,7 +75,7 @@ export class SerieCard extends IComponent {
     this.editBtn.onclick = async () => {
       //const { default: EditSerieModal } = await import("./EditSerieModal");
       const editModal = new EditSerieModal(this.serie);
-      this.setAttribute("draggable", "false");
+      this.draggable = false;
       editModal.onSubmit = async (serie) => {
         console.log("Serie edited:", serie);
         this.serie = serie;
@@ -86,8 +86,7 @@ export class SerieCard extends IComponent {
           this.serie.chapter.toString()
         );
       };
-      editModal.disconnectedCallback = () =>
-        this.setAttribute("draggable", "true");
+      editModal.disconnectedCallback = () => (this.draggable = true);
       this.append(editModal);
     };
     this.actions.onmouseleave = this.saveChapter;
@@ -114,6 +113,7 @@ export class SerieCard extends IComponent {
   };
 
   deleteSerie = async () => {
+    this.draggable = false;
     this.style.transition = "visibility 0.3s linear,opacity 0.3s linear";
     this.style.opacity = "0";
     this.style.visibility = "hidden";
@@ -134,8 +134,11 @@ export class SerieCard extends IComponent {
   }
 
   async authChangeEvent(x: AuthChangeEvent) {
-    if (x.status == AuthStatus.SUDO) this.append(this.actions);
-    else this.actions.remove();
+    if (x.status == AuthStatus.SUDO) {
+      this.draggable = true;
+      this.append(this.actions);
+    } else this.actions.remove();
+    console.log("CARD AUTH CHANGE");
   }
 }
 
