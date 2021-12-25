@@ -1,7 +1,7 @@
 import { APP_NAME } from "../../app.config";
 import FirebaseAuth from "../components/auth/FirebaseAuth";
 import { FloatBottomMenu } from "../components/FloatBottomMenu";
-import { ITab } from "../components/Tab";
+import { ITab, Tab } from "../components/Tab";
 import { TabsMenu } from "../components/TabsMenu";
 import TopBar from "../components/TopBar";
 import FirebaseAuthController, {
@@ -19,6 +19,7 @@ import View from "../interfaces/View";
 import { AddSerieModal } from "../components/AddSerieModal";
 import { AddCategoryModal } from "../components/AddCategoryModal";
 import { SerieCard } from "../components/SerieCard";
+import { EditCategoryModal } from "../components/EditCategoryModal";
 ////////////////////////////////////////////////////////////
 
 export default class SeriesView extends View {
@@ -66,6 +67,15 @@ export default class SeriesView extends View {
           "Category " + this.actualCategory.name + " id is undefined"
         );
       await this.updateSeries();
+    };
+
+    this.tabsMenu.onRequestEditCateg = async (categ) => {
+      const modal = new EditCategoryModal(categ);
+      this.append(modal);
+      modal.onSubmit = async (data) => {
+        await this.client.updateCategory(data);
+        await this.tabsMenu.updateTab(data);
+      };
     };
 
     this.tabsMenu.onSerieDrop = async (x) => {

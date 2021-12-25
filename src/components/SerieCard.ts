@@ -1,3 +1,4 @@
+import { ContextMenuBuilder } from "../builders/ContextMenu";
 import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
@@ -121,6 +122,19 @@ export class SerieCard extends IComponent {
     setTimeout(() => {
       this.remove();
     }, 1000);
+  };
+
+  oncontextmenu = async (ev: MouseEvent) => {
+    ev.preventDefault();
+    const menu = await new ContextMenuBuilder()
+      .button("Copiar título", async () => {
+        navigator.clipboard.writeText(this.serie.name);
+      })
+      .button("Copiar título alternativo", async () => {
+        navigator.clipboard.writeText(this.serie.nameAlt);
+      })
+      .build({ mouseX: ev.pageX, mouseY: ev.pageY });
+    this.append(menu);
   };
 
   attributeChangedCallback(name: string, lastValue: any, newValue: any): void {

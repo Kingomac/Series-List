@@ -13,7 +13,10 @@
         "titleBar.activeBackground": "#125bd6",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#125bd699",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "sash.hoverBorder": "#2e75ed",
+        "statusBarItem.remoteBackground": "#125bd6",
+        "statusBarItem.remoteForeground": "#e7e7e7"
     },
     "peacock.color": "#125bd6",
     "liveServer.settings.multiRootWorkspaceName": "Series-List"
