@@ -1,9 +1,7 @@
-import { FirebaseApp } from "firebase/app";
 import { APP_NAME } from "../../app.config";
-import { AuthModuleAttributes } from "../components/auth/AuthModuleAttributes";
 import FirebaseAuth from "../components/auth/FirebaseAuth";
 import { FloatBottomMenu } from "../components/FloatBottomMenu";
-import { ITab } from "../components/Tab";
+import { ITab, Tab } from "../components/Tab";
 import { TabsMenu } from "../components/TabsMenu";
 import TopBar from "../components/TopBar";
 import FirebaseAuthController, {
@@ -16,15 +14,16 @@ import { IAuthController } from "../interfaces/IAuthController";
 import { Category, Serie } from "../interfaces/Models";
 import { Route } from "../routes";
 import "../styles/SeriesView.scss";
+import View from "../interfaces/View";
 ////////////////////////////////////////////////////////////
 import { AddSerieModal } from "../components/AddSerieModal";
 import { AddCategoryModal } from "../components/AddCategoryModal";
 import { SerieCard } from "../components/SerieCard";
+import { EditCategoryModal } from "../components/EditCategoryModal";
 ////////////////////////////////////////////////////////////
 
-export default class SeriesView extends IComponent {
+export default class SeriesView extends View {
   private client: IDbClient;
-  private auth: IAuthController;
 
   // Categories
   private actualCategory: Category;
@@ -34,27 +33,17 @@ export default class SeriesView extends IComponent {
   private floatBotMenu: FloatBottomMenu;
   private tabsMenu: TabsMenu;
   private seriesDiv: HTMLDivElement;
-  private topBar: TopBar;
-  private authModule: IComponent;
   private endDiv: HTMLDivElement;
   private viewDiv: HTMLDivElement;
 
+  private lastAuthEvent: AuthChangeEvent = { status: AuthStatus.ANONYMOUS };
+
   constructor(x: {
-    authController: IAuthController;
     dbClient: IDbClient;
     changeView: (path: Route) => Promise<void>;
   }) {
     super();
-    this.auth = x.authController;
 
-    //this.auth = new FakeAuth();
-
-    this.authModule = new FirebaseAuth(this.auth as FirebaseAuthController);
-    //this.authModule = new FakeAuthModule(this.auth);
-    this.topBar = new TopBar({
-      authModule: this.authModule,
-      changeView: x.changeView,
-    });
     this.client = x.dbClient;
     //this.client = new FakeClient();
     this.actualCategory = { name: "" };
@@ -80,6 +69,15 @@ export default class SeriesView extends IComponent {
       await this.updateSeries();
     };
 
+    this.tabsMenu.onRequestEditCateg = async (categ) => {
+      const modal = new EditCategoryModal(categ);
+      this.append(modal);
+      modal.onSubmit = async (data) => {
+        await this.client.updateCategory(data);
+        await this.tabsMenu.updateTab(data);
+      };
+    };
+
     this.tabsMenu.onSerieDrop = async (x) => {
       console.log("Serie dropped:", x);
       const oldId = x.serie._id;
@@ -94,18 +92,13 @@ export default class SeriesView extends IComponent {
     this.tabsMenu.onRequestDelete = async (categId) => {
       await this.client.deleteCategoryById(categId);
     };
-
-    this.auth.onAuthChange = this.authChangeEvent;
   }
 
-  authChangeEvent = async (x: AuthChangeEvent) => {
+  async authChangeEvent(x: AuthChangeEvent) {
     console.log("Auth changed!");
+    this.lastAuthEvent = x;
     if (x.status === AuthStatus.SIGNED || x.status === AuthStatus.SUDO) {
       console.log("Logged");
-      this.authModule.setAttribute(
-        AuthModuleAttributes.logged.name,
-        AuthModuleAttributes.logged.yes
-      );
       const categories = await this.client.getAllCategories();
       if (categories.length > 0) {
         if (window.location.pathname === "/") {
@@ -134,21 +127,18 @@ export default class SeriesView extends IComponent {
           : this.floatBotMenu.remove();
       }
     } else {
-      console.log("Not logged");
-      this.authModule.setAttribute(
-        AuthModuleAttributes.logged.name,
-        AuthModuleAttributes.logged.no
-      );
       if (this.floatBotMenu.isConnected) this.floatBotMenu.remove();
     }
     this.tabsMenu.showAddCategTab(x.status === AuthStatus.SUDO);
-  };
+    for await (const i of this.querySelectorAll<SerieCard>("sl-serie-card")) {
+      await i.authChangeEvent(x);
+    }
+  }
 
   async connectedCallback(): Promise<void> {
-    this.append(this.topBar, this.tabsMenu, this.viewDiv);
+    this.append(this.tabsMenu, this.viewDiv);
     this.viewDiv.append(this.seriesDiv, this.endDiv);
 
-    this.topBar.setAttribute("title", APP_NAME);
     this.seriesDiv.classList.add("series", "container");
 
     this.floatBotMenu.onNewSerie = async () => {
@@ -160,7 +150,11 @@ export default class SeriesView extends IComponent {
           throw new Error("Category id is undefined");
         const id = await this.client.addSerie(serie, this.actualCategory._id);
         this.seriesDiv.insertBefore(
-          (await this.createCards(Object.assign({ _id: id }, serie)))[0],
+          (
+            await Promise.all(
+              await this.createCards(Object.assign({ _id: id }, serie))
+            )
+          )[0],
           this.seriesDiv.children[0]
         );
       };
@@ -204,7 +198,9 @@ export default class SeriesView extends IComponent {
           });
           this.lastSerie = moreSeries[moreSeries.length - 1];
           console.log("More series:", moreSeries);
-          const cards = await this.createCards.apply(this, moreSeries);
+          const cards = await Promise.all(
+            await this.createCards.apply(this, moreSeries)
+          );
           cards.forEach((i) => this.seriesDiv.append(i));
           if (moreSeries.length > 0) {
             setTimeout(() => {
@@ -222,11 +218,13 @@ export default class SeriesView extends IComponent {
    * @returns
    */
   async createCards(...series: Serie[]) {
+    console.log("Creating cards");
     //const { SerieCard } = await import("../components/SerieCard");
-    return series.map(
-      (s: Serie) =>
-        new SerieCard(s, this.actualCategory._id || "", this.client, this.auth)
-    );
+    return series.map(async (s: Serie) => {
+      const card = new SerieCard(s, this.actualCategory._id || "", this.client);
+      await card.authChangeEvent(this.lastAuthEvent);
+      return card;
+    });
   }
 
   async createTabs(...categs: Category[]): Promise<ITab[]> {
@@ -255,8 +253,8 @@ export default class SeriesView extends IComponent {
     this.lastSerie = series[series.length - 1];
 
     this.seriesDiv.textContent = "";
-    (await this.createCards.apply(this, series)).forEach((s) =>
-      this.seriesDiv.append(s)
+    (await this.createCards.apply(this, series)).forEach(async (s) =>
+      this.seriesDiv.append(await s)
     );
     setTimeout(() => {
       this.endDiv.setAttribute("active", "true");
@@ -264,7 +262,8 @@ export default class SeriesView extends IComponent {
   }
 
   async findAndDeleteCard(id: string) {
-    const card = this.seriesDiv.querySelector("#" + id) as IComponent;
+    const card = this.seriesDiv.querySelector("#" + id) as SerieCard;
+    card.draggable = false;
     if (card === null)
       throw new Error("Card to delete with id " + id + " is null");
     card.style.transition = "visibility 0.3s linear,opacity 0.3s linear";

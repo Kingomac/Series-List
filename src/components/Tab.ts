@@ -1,3 +1,4 @@
+import { ContextMenuBuilder } from "../builders/ContextMenu";
 import IComponent from "../interfaces/Component";
 import { Category, Serie } from "../interfaces/Models";
 
@@ -7,6 +8,9 @@ export interface ITab extends Category {
 export class Tab extends IComponent {
   public onActive?: () => void;
   public onDropSerie?: (serie: Serie) => void;
+  /**
+   * Fires a delete this category event
+   */
   public onDelete?: (categId: string) => Promise<void>;
 
   static get observedAttributes() {
@@ -23,24 +27,6 @@ export class Tab extends IComponent {
   connectedCallback() {
     this.innerText = this.tab.name;
   }
-
-  onauxclick = async (ev: MouseEvent) => {
-    if (ev.button === 2) {
-      ev.preventDefault();
-      const del = confirm(
-        "¿Quieres eliminar esta categoría con todas las series que pertenecen a ella?"
-      );
-      if (del) {
-        this.style.transition = "opacity .3s linear, visibility .3s linear";
-        this.style.opacity = "0";
-        this.style.visibility = "hidden";
-        await this.onDelete!(this.tab._id!);
-        setTimeout(() => {
-          this.remove();
-        }, 350);
-      }
-    }
-  };
 
   ondrop = (ev: DragEvent) => {
     const data = ev.dataTransfer?.getData("serie");

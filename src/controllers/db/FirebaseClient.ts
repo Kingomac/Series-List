@@ -111,20 +111,13 @@ export default class FirebaseClient implements IDbClient {
       chapter,
     });
   }
-  async updateCategory(oldCategId: string, newCateg: Category): Promise<void> {
+  async updateCategory(newData: Category): Promise<void> {
     /*const { addDoc, query, collection, getDocs } = await import(
       "firebase/firestore/lite"
     );*/
-    delete newCateg._id;
-    newCateg.timestamp = new Date();
-    const newDoc = await addDoc(collection(this.db, "categories"), newCateg);
-    const newId = newDoc.id;
-
-    const q = query(collection(this.db, oldCategId));
-    const snapshot = await getDocs(q);
-    const newCollection = collection(this.db, newId);
-    snapshot.forEach((i) => {
-      addDoc(newCollection, i.data());
+    await updateDoc(doc(this.db, "categories", newData._id!), {
+      name: newData.name,
+      timestamp: newData.timestamp,
     });
   }
   async getAllSeries(): Promise<Serie[]> {

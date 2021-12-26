@@ -1,3 +1,5 @@
+import { ContextMenuBuilder } from "../builders/ContextMenu";
+import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
@@ -10,7 +12,15 @@ import EditSerieModal from "./EditSerieModal";
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
-  private titleSpan: HTMLSpanElement = document.createElement("span");
+  private readonly titleSpan: HTMLSpanElement = document.createElement("span");
+  private readonly img: HTMLImageElement = document.createElement("img");
+  private readonly chapter: HTMLElement = document.createElement("i");
+  private readonly actions = document.createElement("div");
+  private readonly addChapterBtn = document.createElement("button");
+  private readonly lessChapterBtn = document.createElement("button");
+  private readonly editBtn = document.createElement("button");
+  private readonly deleteBtn = document.createElement("button");
+  private readonly viewBtn = document.createElement("button");
 
   static get observedAttributes(): string[] {
     return ["alt"];
@@ -19,88 +29,72 @@ export class SerieCard extends IComponent {
   constructor(
     private serie: Serie,
     private categId: string,
-    private client: IDbClient,
-    private authController: IAuthController
+    private client: IDbClient
   ) {
     super();
     this.initialChapter = this.serie.chapter;
+    this.append(this.img, this.titleSpan, this.chapter);
   }
   connectedCallback(): void {
     this.id = this.serie._id!;
-    if (this.authController.getStatus() === AuthStatus.SUDO) {
-      this.setAttribute("draggable", "true");
-    }
-    // const img = document.createElement("div");
-    const img = document.createElement("img");
-    img.setAttribute("draggable", "false");
-    img.setAttribute("loading", "lazy");
-    const chapter = document.createElement("i");
 
-    img.src = this.serie.image;
-    img.alt = `Cover art of ${this.serie.name} (${this.serie.nameAlt})`;
+    this.img.draggable = false;
+    this.img.loading = "lazy";
+
+    this.img.src = this.serie.image;
+    this.img.alt = `Cover art of ${this.serie.name} (${this.serie.nameAlt})`;
     this.titleSpan.innerText = this.serie.name;
-    chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
+    this.chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
-    this.append(img, this.titleSpan, chapter);
+    this.actions.classList.add("card", "actions");
+    this.addChapterBtn.innerText = "▶";
+    this.lessChapterBtn.innerText = "◀";
+    this.editBtn.innerText = "✏";
+    this.deleteBtn.innerText = "🗑";
+    this.viewBtn.innerText = "↗";
 
-    if (this.authController.getStatus() === AuthStatus.SUDO) {
-      const actions = document.createElement("div");
-      actions.classList.add("card", "actions");
-      this.append(actions);
+    this.actions.append(
+      this.lessChapterBtn,
+      this.addChapterBtn,
+      this.viewBtn,
+      this.editBtn,
+      this.deleteBtn
+    );
 
-      const addChapterBtn = document.createElement("button");
-      const lessChapterBtn = document.createElement("button");
-      const editBtn = document.createElement("button");
-      const deleteBtn = document.createElement("button");
-      const viewBtn = document.createElement("button");
-
-      addChapterBtn.innerText = "▶";
-      lessChapterBtn.innerText = "◀";
-      editBtn.innerText = "✏";
-      deleteBtn.innerText = "🗑";
-      viewBtn.innerText = "↗";
-
-      actions.append(
-        lessChapterBtn,
-        addChapterBtn,
-        viewBtn,
-        editBtn,
-        deleteBtn
+    this.addChapterBtn.onclick = async () => {
+      this.serie.chapter++;
+      this.chapter.innerText = "Capítulo: ".concat(
+        this.serie.chapter.toString()
       );
-
-      addChapterBtn.onclick = async () => {
-        this.serie.chapter++;
-        chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
+    };
+    this.lessChapterBtn.onclick = () => {
+      this.serie.chapter--;
+      this.chapter.innerText = "Capítulo: ".concat(
+        this.serie.chapter.toString()
+      );
+    };
+    this.editBtn.onclick = async () => {
+      //const { default: EditSerieModal } = await import("./EditSerieModal");
+      const editModal = new EditSerieModal(this.serie);
+      this.draggable = false;
+      editModal.onSubmit = async (serie) => {
+        console.log("Serie edited:", serie);
+        this.serie = serie;
+        await this.client.updateSerieInfo(this.categId, serie);
+        this.img.style.backgroundImage = `url(${this.serie.image})`;
+        this.titleSpan.innerText = this.serie.name;
+        this.chapter.innerText = "Capítulo: ".concat(
+          this.serie.chapter.toString()
+        );
       };
-      lessChapterBtn.onclick = () => {
-        this.serie.chapter--;
-        chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
-      };
-      editBtn.onclick = async () => {
-        //const { default: EditSerieModal } = await import("./EditSerieModal");
-        const editModal = new EditSerieModal(this.serie);
-        this.setAttribute("draggable", "false");
-        editModal.onSubmit = async (serie) => {
-          console.log("Serie edited:", serie);
-          this.serie = serie;
-          await this.client.updateSerieInfo(this.categId, serie);
-          //img.src = this.serie.image;
-          img.style.backgroundImage = `url(${this.serie.image})`;
-          this.titleSpan.innerText = this.serie.name;
-          chapter.innerText = "Capítulo: ".concat(
-            this.serie.chapter.toString()
-          );
-        };
-        editModal.disconnectedCallback = () =>
-          this.setAttribute("draggable", "true");
-        this.append(editModal);
-      };
-      actions.onmouseleave = this.saveChapter;
-      deleteBtn.onclick = this.deleteSerie;
-      viewBtn.onclick = () => {
-        window.open(this.serie.url, "_blank");
-      };
-    }
+      editModal.disconnectedCallback = () => (this.draggable = true);
+      this.append(editModal);
+    };
+    this.actions.onmouseleave = this.saveChapter;
+    this.deleteBtn.onclick = this.deleteSerie;
+    this.viewBtn.onclick = () => {
+      window.open(this.serie.url, "_blank");
+    };
   }
 
   ondragstart = (ev: DragEvent) => {
@@ -120,6 +114,7 @@ export class SerieCard extends IComponent {
   };
 
   deleteSerie = async () => {
+    this.draggable = false;
     this.style.transition = "visibility 0.3s linear,opacity 0.3s linear";
     this.style.opacity = "0";
     this.style.visibility = "hidden";
@@ -127,6 +122,19 @@ export class SerieCard extends IComponent {
     setTimeout(() => {
       this.remove();
     }, 1000);
+  };
+
+  oncontextmenu = async (ev: MouseEvent) => {
+    ev.preventDefault();
+    const menu = await new ContextMenuBuilder()
+      .button("Copiar título", async () => {
+        navigator.clipboard.writeText(this.serie.name);
+      })
+      .button("Copiar título alternativo", async () => {
+        navigator.clipboard.writeText(this.serie.nameAlt);
+      })
+      .build({ mouseX: ev.pageX, mouseY: ev.pageY });
+    this.append(menu);
   };
 
   attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
@@ -137,6 +145,14 @@ export class SerieCard extends IComponent {
         this.titleSpan.innerText = this.serie.name;
       }
     }
+  }
+
+  async authChangeEvent(x: AuthChangeEvent) {
+    if (x.status == AuthStatus.SUDO) {
+      this.draggable = true;
+      this.append(this.actions);
+    } else this.actions.remove();
+    console.log("CARD AUTH CHANGE");
   }
 }
 
