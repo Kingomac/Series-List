@@ -142,7 +142,10 @@ export default class FirebaseClient implements IDbClient {
       "firebase/firestore/lite"
     );*/
 
-    const q = query(collection(this.db, "categories"));
+    const q = query(
+      collection(this.db, "categories"),
+      orderBy("timestamp", "desc")
+    );
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       toret.push(Object.assign({ _id: doc.id }, doc.data()) as Category);

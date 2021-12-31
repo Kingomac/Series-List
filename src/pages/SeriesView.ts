@@ -81,12 +81,12 @@ export default class SeriesView extends View {
     this.tabsMenu.onSerieDrop = async (x) => {
       console.log("Serie dropped:", x);
       const oldId = x.serie._id;
+      await this.findAndDeleteCard(oldId!);
       await this.client.moveSerie(
         this.actualCategory._id!,
         x.categoryId,
         x.serie
       );
-      await this.findAndDeleteCard(oldId!);
     };
 
     this.tabsMenu.onRequestDelete = async (categId) => {
@@ -262,10 +262,10 @@ export default class SeriesView extends View {
   }
 
   async findAndDeleteCard(id: string) {
-    const card = this.seriesDiv.querySelector("#" + id) as SerieCard;
-    card.draggable = false;
+    const card = this.seriesDiv.querySelector<SerieCard>(`[id='${id}']`);
     if (card === null)
       throw new Error("Card to delete with id " + id + " is null");
+    card.draggable = false;
     card.style.transition = "visibility 0.3s linear,opacity 0.3s linear";
     card.style.opacity = "0";
     card.style.visibility = "hidden";

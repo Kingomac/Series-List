@@ -114,7 +114,6 @@ export class SerieCard extends IComponent {
   };
 
   deleteSerie = async () => {
-    this.draggable = false;
     this.style.transition = "visibility 0.3s linear,opacity 0.3s linear";
     this.style.opacity = "0";
     this.style.visibility = "hidden";

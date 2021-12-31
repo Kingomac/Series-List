@@ -30,6 +30,7 @@ export class EditCategoryModal extends ModalView {
     this.titleDiv.className = "title";
 
     this.nameInput.type = "text";
+    this.nameInput.value = this.categ.name;
 
     this.titleSpan.innerText = "Renombrar categoría";
     this.closeBtn.className = "title-btn";
