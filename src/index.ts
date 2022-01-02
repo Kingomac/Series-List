@@ -13,6 +13,13 @@ import { Route } from "./routes";
 import View from "./interfaces/View";
 import "./styles/main.scss";
 window.onload = async () => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register(
+      new URL("./service-worker.ts", import.meta.url),
+      { type: "module" }
+    );
+  }
+
   const main = document.querySelector("main");
   if (main == null) throw new Error("Main not found");
   const appDiv = document.createElement("div");

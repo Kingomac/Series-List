@@ -1,4 +1,3 @@
-import AppModes from "../../interfaces/AppModes";
 import { FirebaseApp } from "firebase/app";
 import {
   getFirestore,
@@ -8,7 +7,7 @@ import {
 } from "firebase/firestore/lite";
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, Serie } from "../../interfaces/Models";
-import { APP_MODE, SERIES_LIMIT } from "../../../app.config";
+import { isDebug, SERIES_LIMIT } from "../../../app.config";
 //////////////////////////////////////////
 import {
   connectFirestoreEmulator,
@@ -31,7 +30,7 @@ export default class FirebaseClient implements IDbClient {
   onInitialize?(): void;
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
-    if (APP_MODE == AppModes.DEBUG) {
+    if (isDebug()) {
       //import("firebase/firestore/lite").then(({ connectFirestoreEmulator }) => {
       connectFirestoreEmulator(this.db, "localhost", 8080);
       //});

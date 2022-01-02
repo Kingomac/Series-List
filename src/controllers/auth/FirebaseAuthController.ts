@@ -1,15 +1,14 @@
 import { IAuthController } from "../../interfaces/IAuthController";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
-import AppModes from "../../interfaces/AppModes";
 import AuthStatus from "../../interfaces/AuthStatus";
-import { APP_MODE } from "../../../app.config";
 import { isEmailSudo } from "./AuthUtil";
 import {
   connectAuthEmulator,
   GoogleAuthProvider,
   signInWithRedirect,
 } from "firebase/auth";
+import { isDebug } from "../../../app.config";
 
 export type AuthChangeEvent = {
   status: AuthStatus;
@@ -23,7 +22,7 @@ export default class FirebaseAuthController implements IAuthController {
 
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
-    if (APP_MODE == AppModes.DEBUG) {
+    if (isDebug()) {
       //import("firebase/auth").then(({ connectAuthEmulator }) => {
       connectAuthEmulator(this.auth, "http://localhost:9099", {
         disableWarnings: true,

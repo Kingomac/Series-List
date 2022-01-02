@@ -1,10 +1,9 @@
-import AppModes from "../interfaces/AppModes";
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
-import { APP_MODE } from "../../app.config";
 //////////////////////////////////////////////////////
 import { runLoading } from "./RunLoading";
 import Placeholders from "../../test/Placeholders";
+import { isDebug } from "../../app.config";
 /////////////////////////////////////////////////////
 
 export class AddSerieModal extends ModalView {
@@ -90,7 +89,7 @@ export class AddSerieModal extends ModalView {
       await this.clearInputs();
       await this.generateData();
     };
-    if (APP_MODE == AppModes.DEBUG) {
+    if (isDebug()) {
       this.submitBtn.oncontextmenu = async (e) => {
         e.preventDefault();
         /*const { default: Placeholders } = await import(
@@ -120,7 +119,7 @@ export class AddSerieModal extends ModalView {
   }
 
   async generateData() {
-    if (APP_MODE == AppModes.DEBUG) {
+    if (isDebug()) {
       //const { default: Placeholders } = await import("../../test/Placeholders");
       const serie = await Placeholders.getRandomSerie();
       this.nameInput.value = serie.name;
