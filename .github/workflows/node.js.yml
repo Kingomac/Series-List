@@ -7,6 +7,9 @@ on:
   push:
     branches: [ master ]
 
+env:
+  NODE_ENV: prod
+
 jobs:
   build:
     runs-on: ubuntu-latest
