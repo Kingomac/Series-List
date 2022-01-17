@@ -27,7 +27,6 @@ export default class SeriesView extends View {
 
   // Categories
   private actualCategory: Category;
-  private lastSerie?: Serie;
 
   //Components
   private floatBotMenu: FloatBottomMenu;
@@ -37,6 +36,8 @@ export default class SeriesView extends View {
   private viewDiv: HTMLDivElement;
 
   private lastAuthEvent: AuthChangeEvent = { status: AuthStatus.ANONYMOUS };
+  private endObserver: IntersectionObserver;
+  private lastSerie?: Serie;
 
   constructor(x: {
     dbClient: IDbClient;
@@ -55,7 +56,6 @@ export default class SeriesView extends View {
     this.seriesDiv = document.createElement("div");
     this.endDiv = document.createElement("div");
     this.endDiv.className = "end-div";
-    this.endDiv.setAttribute("active", "false");
 
     this.floatBotMenu = new FloatBottomMenu();
 
@@ -66,7 +66,9 @@ export default class SeriesView extends View {
         throw new Error(
           "Category " + this.actualCategory.name + " id is undefined"
         );
-      await this.updateSeries();
+      this.endObserver.disconnect();
+      this.endDiv.remove();
+      await this.getFirstSeries();
     };
 
     this.tabsMenu.onRequestEditCateg = async (categ) => {
@@ -92,6 +94,14 @@ export default class SeriesView extends View {
     this.tabsMenu.onRequestDelete = async (categId) => {
       await this.client.deleteCategoryById(categId);
     };
+    this.endObserver = new IntersectionObserver(
+      (entries, observer) => this.handleEnd(entries, observer),
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.25,
+      }
+    );
   }
 
   async authChangeEvent(x: AuthChangeEvent) {
@@ -121,7 +131,7 @@ export default class SeriesView extends View {
           console.log("actualCategory:", this.actualCategory);
         }
         await this.updateTabs(categories);
-        await this.updateSeries();
+        await this.getFirstSeries();
         x.status === AuthStatus.SUDO
           ? this.append(this.floatBotMenu)
           : this.floatBotMenu.remove();
@@ -137,7 +147,7 @@ export default class SeriesView extends View {
 
   async connectedCallback(): Promise<void> {
     this.append(this.tabsMenu, this.viewDiv);
-    this.viewDiv.append(this.seriesDiv, this.endDiv);
+    this.viewDiv.append(this.seriesDiv);
 
     this.seriesDiv.classList.add("series", "container");
 
@@ -180,36 +190,44 @@ export default class SeriesView extends View {
         if (window.location.pathname == "/") {
           window.history.pushState(null, "", id);
           this.actualCategory = categ;
-          await this.updateSeries();
+          await this.getFirstSeries();
           await this.tabsMenu.setActiveTabByPathname();
         }
       };
     };
+  }
 
-    this.endDiv.onmouseenter = async () => {
-      console.log("Getting more series?:", this.endDiv.getAttribute("active"));
-      if (this.endDiv.getAttribute("active") == "true") {
-        this.endDiv.setAttribute("active", "false");
-        if (this.lastSerie !== undefined) {
-          console.log("Last serie:", this.lastSerie);
-          const moreSeries = await this.client.getSeriesLimitAfter({
-            categId: this.actualCategory._id!,
-            start: this.lastSerie.timestamp!,
-          });
-          this.lastSerie = moreSeries[moreSeries.length - 1];
-          console.log("More series:", moreSeries);
-          const cards = await Promise.all(
-            await this.createCards.apply(this, moreSeries)
-          );
-          cards.forEach((i) => this.seriesDiv.append(i));
-          if (moreSeries.length > 0) {
-            setTimeout(() => {
-              this.endDiv.setAttribute("active", "true");
-            }, 200);
-          }
-        }
+  async handleEnd(
+    entries: IntersectionObserverEntry[],
+    observer: IntersectionObserver
+  ): Promise<void> {
+    let i = 0;
+    while (i < entries.length && !entries[i].isIntersecting) {
+      i++;
+    }
+    if (i >= entries.length) {
+      console.log("Not getting more series");
+      return;
+    }
+
+    console.log("Getting more series!! Last serie:", this.lastSerie);
+    if (this.lastSerie !== undefined) {
+      console.log("Last serie:", this.lastSerie);
+      const moreSeries = await this.client.getSeriesLimitAfter({
+        categId: this.actualCategory._id!,
+        start: this.lastSerie.timestamp!,
+      });
+      if (moreSeries.length <= 0) {
+        observer.disconnect();
+        return;
       }
-    };
+      this.lastSerie = moreSeries[moreSeries.length - 1];
+      console.log("More series:", moreSeries);
+      const cards = await Promise.all(
+        await this.createCards.apply(this, moreSeries)
+      );
+      cards.forEach((i) => this.seriesDiv.append(i));
+    }
   }
 
   /**
@@ -239,7 +257,7 @@ export default class SeriesView extends View {
     await this.tabsMenu.setActiveTabByPathname();
   }
 
-  async updateSeries() {
+  async getFirstSeries() {
     this.viewDiv.scrollTo({ top: 0, left: 0 });
     console.log("Updating series with category:", this.actualCategory);
     if (this.actualCategory._id === undefined) {
@@ -251,14 +269,12 @@ export default class SeriesView extends View {
     });
 
     this.lastSerie = series[series.length - 1];
-
     this.seriesDiv.textContent = "";
     (await this.createCards.apply(this, series)).forEach(async (s) =>
       this.seriesDiv.append(await s)
     );
-    setTimeout(() => {
-      this.endDiv.setAttribute("active", "true");
-    }, 250);
+    this.viewDiv.append(this.endDiv);
+    this.endObserver.observe(this.endDiv);
   }
 
   async findAndDeleteCard(id: string) {
