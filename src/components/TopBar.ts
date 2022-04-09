@@ -27,7 +27,7 @@ export default class TopBar extends IComponent {
     this.append(this.fujiwara, this.titleSpan, this.x.authModule);
     this.titleSpan.innerText = this.getAttribute("title") || "";
     this.fujiwara.src =
-      "https://firebasestorage.googleapis.com/v0/b/memeshare-a3107.appspot.com/o/fujiwara.webp?alt=media&token=33c26161-35ea-4d4e-b72c-866b813a1313";
+      "https://firebasestorage.googleapis.com/v0/b/prueba-d1c99.appspot.com/o/fujiwara-chika.webp?alt=media&token=7d9c75ef-55e9-4696-a9bc-2e85700222f4";
     this.fujiwara.alt = "Fujiwara Chika detective";
   }
 
