@@ -1,10 +1,6 @@
 import ModalView from "../interfaces/ModalView";
 import { Serie } from "../interfaces/Models";
-//////////////////////////////////////////////////////
-import { runLoading } from "./RunLoading";
-import Placeholders from "../../test/Placeholders";
 import { isDebug } from "../../app.config";
-/////////////////////////////////////////////////////
 
 export class AddSerieModal extends ModalView {
   onSubmit?(serie: Serie): Promise<void>;
@@ -76,7 +72,7 @@ export class AddSerieModal extends ModalView {
     this.modalClose.onclick = () => this.remove();
     this.submitBtn.innerText = "Añadir";
     this.submitBtn.onclick = async () => {
-      //const { runLoading } = await import("./RunLoading");
+      const { runLoading } = await import("./RunLoading");
       await runLoading(async () => {
         await this.onSubmit!({
           name: this.nameInput.value,
@@ -92,10 +88,10 @@ export class AddSerieModal extends ModalView {
     if (isDebug()) {
       this.submitBtn.oncontextmenu = async (e) => {
         e.preventDefault();
-        /*const { default: Placeholders } = await import(
+        const { default: Placeholders } = await import(
           "../../test/Placeholders"
-        );*/
-        //const { runLoading } = await import("./RunLoading");
+        );
+        const { runLoading } = await import("./RunLoading");
         await runLoading(async () => {
           for (let i = 0; i < 14; i++) {
             const s = await Placeholders.getRandomSerie();
@@ -120,7 +116,7 @@ export class AddSerieModal extends ModalView {
 
   async generateData() {
     if (isDebug()) {
-      //const { default: Placeholders } = await import("../../test/Placeholders");
+      const { default: Placeholders } = await import("../../test/Placeholders");
       const serie = await Placeholders.getRandomSerie();
       this.nameInput.value = serie.name;
       this.altNameInput.value = serie.nameAlt;

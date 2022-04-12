@@ -1,20 +1,11 @@
-import IComponent from "../interfaces/Component";
-import TopBar from "../components/TopBar";
-import { APP_NAME } from "../../app.config";
 import NavigationDrawer from "../components/NavigationDrawer";
 import { IDbClient } from "../interfaces/DbClient";
 import FirebaseClient from "../controllers/db/FirebaseClient";
 import "../styles/ManageView.scss";
 import { Route } from "../routes";
-/////////////////////////////////////////////
-import BackupsView from "./manage/BackupsView";
-import BackupController from "../controllers/BackupController";
-import MigrationsView from "./manage/MigrationsView";
-import { migrateOld } from "../controllers/db/FirebaseMigrations";
 import View from "../interfaces/View";
 import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 import AuthStatus from "../interfaces/AuthStatus";
-////////////////////////////////////////////////////
 
 export default class ManageView extends View {
   private dbClient: IDbClient;
@@ -58,19 +49,19 @@ export default class ManageView extends View {
     let view: HTMLElement;
     switch (path) {
       case "/backups":
-        //const { default: BackupsView } = await import("./manage/BackupsView");
-        /*const { default: BackupController } = await import(
+        const { default: BackupsView } = await import("./manage/BackupsView");
+        const { default: BackupController } = await import(
           "../controllers/BackupController"
-        );*/
+        );
         view = new BackupsView(new BackupController(this.dbClient));
         break;
       case "/migrations":
-        /*const { default: MigrationsView } = await import(
+        const { default: MigrationsView } = await import(
           "./manage/MigrationsView"
-        );*/
-        /*const { migrateOld } = await import(
+        );
+        const { migrateOld } = await import(
           "../controllers/db/FirebaseMigrations"
-        );*/
+        );
         view = new MigrationsView({
           fromOldMigration: async () => {
             if (!confirm("YOU KNOW I GOT I BANBAN BLOW YOUR MINDDDDD")) return;

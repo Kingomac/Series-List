@@ -3,7 +3,6 @@ import AuthStatus from "../../interfaces/AuthStatus";
 import IComponent from "../../interfaces/Component";
 
 export default class FirebaseAuth extends IComponent {
-  private loggedState: AuthStatus = AuthStatus.ANONYMOUS;
   private btn = document.createElement("button");
 
   constructor(private readonly controller: FirebaseAuthController) {

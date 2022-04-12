@@ -1,9 +1,6 @@
 import ModalView from "../interfaces/ModalView";
 import { Category } from "../interfaces/Models";
-////////////////////////////////////////////////////
-import Placeholders from "../../test/Placeholders";
 import { isDebug } from "../../app.config";
-///////////////////////////////////////////////////
 
 export class AddCategoryModal extends ModalView {
   onSubmit?(categ: Category): Promise<void>;
@@ -56,7 +53,7 @@ export class AddCategoryModal extends ModalView {
 
   private async setRandomName() {
     if (isDebug()) {
-      //const { default: Placeholders } = await import("../../test/Placeholders");
+      const { default: Placeholders } = await import("../../test/Placeholders");
       const categ = await Placeholders.getRandomCategory();
       this.nameInput.value = categ.name;
     }

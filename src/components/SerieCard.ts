@@ -3,12 +3,8 @@ import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
 import { IDbClient } from "../interfaces/DbClient";
-import { IAuthController } from "../interfaces/IAuthController";
 import { Serie } from "../interfaces/Models";
 import "../styles/SerieCard.scss";
-////////////////////////////////////////////////
-import EditSerieModal from "./EditSerieModal";
-///////////////////////////////////////////////
 
 export class SerieCard extends IComponent {
   private initialChapter: number;
@@ -74,7 +70,7 @@ export class SerieCard extends IComponent {
       );
     };
     this.editBtn.onclick = async () => {
-      //const { default: EditSerieModal } = await import("./EditSerieModal");
+      const { default: EditSerieModal } = await import("./EditSerieModal");
       const editModal = new EditSerieModal(this.serie);
       this.draggable = false;
       editModal.onSubmit = async (serie) => {

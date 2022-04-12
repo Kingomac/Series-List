@@ -11,13 +11,17 @@ import { IDbClient } from "./interfaces/DbClient";
 import { IAuthController } from "./interfaces/IAuthController";
 import { Route } from "./routes";
 import View from "./interfaces/View";
+import { registerSW } from "virtual:pwa-register";
+
 import "./styles/main.scss";
 window.onload = async () => {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register(
+    /*navigator.serviceWorker.register(
       new URL("./service-worker.ts", import.meta.url),
       { type: "module" }
-    );
+    );*/
+
+    registerSW();
   }
 
   const main = document.querySelector("main");

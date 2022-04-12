@@ -1,9 +1,6 @@
 import { Serie } from "../interfaces/Models";
 import "../styles/Modal.scss";
 import ModalView from "../interfaces/ModalView";
-/////////////////////////////////////////////
-import { runLoading } from "./RunLoading";
-/////////////////////////////////////////////////
 
 export default class EditSerieModal extends ModalView {
   onSubmit?(serie: Serie): void;
@@ -83,7 +80,7 @@ export default class EditSerieModal extends ModalView {
 
     this.submitBtn.innerText = "Guardar";
     this.submitBtn.onclick = async () => {
-      //const { runLoading } = await import("./RunLoading");
+      const { runLoading } = await import("./RunLoading");
       await runLoading(async () => {
         await this.onSubmit!({
           _id: this.serie._id,

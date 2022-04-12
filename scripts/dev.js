@@ -1,6 +1,6 @@
 import { runCommand } from "./util.js";
 
-const parcel = await runCommand("npx parcel serve ./src/index.html");
+const parcel = await runCommand("npx vite serve");
 const firebase = await runCommand("npx firebase emulators:start");
 
 function killAll() {

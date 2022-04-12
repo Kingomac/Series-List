@@ -8,22 +8,6 @@ import {
 import { IDbClient } from "../../interfaces/DbClient";
 import { Category, Serie } from "../../interfaces/Models";
 import { isDebug, SERIES_LIMIT } from "../../../app.config";
-//////////////////////////////////////////
-import {
-  connectFirestoreEmulator,
-  query,
-  collection,
-  orderBy,
-  limit,
-  getDocs,
-  startAfter,
-  addDoc,
-  deleteDoc,
-  doc,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore/lite";
-//////////////////////////////////////////
 
 export default class FirebaseClient implements IDbClient {
   readonly db: Firestore;
@@ -31,15 +15,15 @@ export default class FirebaseClient implements IDbClient {
   constructor(private readonly app: FirebaseApp) {
     this.db = getFirestore(this.app);
     if (isDebug()) {
-      //import("firebase/firestore/lite").then(({ connectFirestoreEmulator }) => {
-      connectFirestoreEmulator(this.db, "localhost", 8080);
-      //});
+      import("firebase/firestore/lite").then(({ connectFirestoreEmulator }) => {
+        connectFirestoreEmulator(this.db, "localhost", 8080);
+      });
     }
   }
   async getSeriesLimitFirst(x: { categId: string }): Promise<Serie[]> {
-    /*const { query, collection, orderBy, limit, getDocs } = await import(
+    const { query, collection, orderBy, limit, getDocs } = await import(
       "firebase/firestore/lite"
-    );*/
+    );
     const q = query(
       collection(this.db, x.categId),
       orderBy("timestamp", "desc"),
@@ -52,8 +36,8 @@ export default class FirebaseClient implements IDbClient {
     categId: string;
     start: Date;
   }): Promise<Serie[]> {
-    /*const { query, collection, orderBy, limit, getDocs, startAfter } =
-      await import("firebase/firestore/lite");*/
+    const { query, collection, orderBy, limit, getDocs, startAfter } =
+      await import("firebase/firestore/lite");
     const q = query(
       collection(this.db, x.categId),
       orderBy("timestamp", "desc"),
@@ -80,9 +64,9 @@ export default class FirebaseClient implements IDbClient {
     serie: Serie
   ): Promise<string> {
     if (serie._id === undefined) throw new Error("Serie id must be defined");
-    /*const { addDoc, deleteDoc, doc, collection } = await import(
+    const { addDoc, deleteDoc, doc, collection } = await import(
       "firebase/firestore/lite"
-    );*/
+    );
     const oldSerieId = serie._id;
     delete serie._id;
     serie.timestamp = new Date();
@@ -94,7 +78,7 @@ export default class FirebaseClient implements IDbClient {
 
   async updateSerieInfo(categId: string, serie: Serie): Promise<void> {
     if (serie._id === undefined) throw new Error("Serie id must be defined");
-    //const { updateDoc, doc } = await import("firebase/firestore/lite");
+    const { updateDoc, doc } = await import("firebase/firestore/lite");
     const serieId = serie._id;
     delete serie._id;
     serie.timestamp = new Date();
@@ -104,16 +88,14 @@ export default class FirebaseClient implements IDbClient {
 
   async updateSerieChapter(serieId: string, categId: string, chapter: number) {
     console.log("Requesting chapter update for serie:", serieId);
-    //const { updateDoc, doc } = await import("firebase/firestore/lite");
+    const { updateDoc, doc } = await import("firebase/firestore/lite");
     const ref = doc(this.db, categId, serieId);
     await updateDoc(ref, {
       chapter,
     });
   }
   async updateCategory(newData: Category): Promise<void> {
-    /*const { addDoc, query, collection, getDocs } = await import(
-      "firebase/firestore/lite"
-    );*/
+    const { updateDoc, doc } = await import("firebase/firestore/lite");
     await updateDoc(doc(this.db, "categories", newData._id!), {
       name: newData.name,
       timestamp: newData.timestamp,
@@ -137,9 +119,9 @@ export default class FirebaseClient implements IDbClient {
 
     console.log("Fetching all categories...");
     console.time("Fetching categories");
-    /*const { query, collection, getDocs } = await import(
+    const { query, collection, getDocs, orderBy } = await import(
       "firebase/firestore/lite"
-    );*/
+    );
 
     const q = query(
       collection(this.db, "categories"),
@@ -163,9 +145,9 @@ export default class FirebaseClient implements IDbClient {
     }
 
     console.time("Fetching series");
-    /*const { query, collection, getDocs } = await import(
+    const { query, collection, getDocs } = await import(
       "firebase/firestore/lite"
-    );*/
+    );
     const q = query(collection(this.db, categId));
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
@@ -180,9 +162,9 @@ export default class FirebaseClient implements IDbClient {
 
   async addSerie(serie: Serie, categId: string): Promise<string> {
     console.time("Adding serie");
-    /*const { addDoc, Timestamp, collection } = await import(
+    const { addDoc, Timestamp, collection } = await import(
       "firebase/firestore/lite"
-    );*/
+    );
     const res = await addDoc(
       collection(this.db, categId),
       Object.assign(serie, { timestamp: Timestamp.fromDate(new Date()) })
@@ -192,7 +174,7 @@ export default class FirebaseClient implements IDbClient {
   }
   async addCategory(categ: Category): Promise<string> {
     console.time("Creating category:");
-    //const { addDoc, collection } = await import("firebase/firestore/lite");
+    const { addDoc, collection } = await import("firebase/firestore/lite");
     const doc = await addDoc(
       collection(this.db, "categories"),
       Object.assign(categ, { timestamp: new Date() })
@@ -202,10 +184,12 @@ export default class FirebaseClient implements IDbClient {
   }
   async deleteCategoryById(categId: string): Promise<void> {
     console.time(`Deleting category with id ${categId}`);
-    //const { deleteDoc, doc } = await import("firebase/firestore/lite");
+    const { deleteDoc, doc } = await import("firebase/firestore/lite");
     await deleteDoc(doc(this.db, "categories", categId));
 
-    //const { collection, getDocs, query } = await import("firebase/firestore/lite")
+    const { collection, getDocs, query } = await import(
+      "firebase/firestore/lite"
+    );
     const docs = await getDocs(query(collection(this.db, categId)));
     docs.forEach(async (d) => {
       await deleteDoc(d.ref);
@@ -213,7 +197,7 @@ export default class FirebaseClient implements IDbClient {
     console.timeEnd(`Deleting category with id ${categId}`);
   }
   async deleteSerieById(serieId: string, categId: string): Promise<void> {
-    //const { deleteDoc, doc } = await import("firebase/firestore/lite");
+    const { deleteDoc, doc } = await import("firebase/firestore/lite");
     await deleteDoc(doc(this.db, categId, serieId));
   }
 }

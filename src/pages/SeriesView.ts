@@ -152,7 +152,6 @@ export default class SeriesView extends View {
     this.seriesDiv.classList.add("series", "container");
 
     this.floatBotMenu.onNewSerie = async () => {
-      //const { AddSerieModal } = await import("../components/AddSerieModal");
       const modal = new AddSerieModal();
       this.append(modal);
       modal.onSubmit = async (serie) => {
@@ -177,9 +176,6 @@ export default class SeriesView extends View {
     };
 
     this.tabsMenu.onRequestNewCateg = async () => {
-      /*const { AddCategoryModal } = await import(
-        "../components/AddCategoryModal"
-      );*/
       const modal = new AddCategoryModal();
       this.append(modal);
       modal.onSubmit = async (categ) => {
@@ -237,7 +233,6 @@ export default class SeriesView extends View {
    */
   async createCards(...series: Serie[]) {
     console.log("Creating cards");
-    //const { SerieCard } = await import("../components/SerieCard");
     return series.map(async (s: Serie) => {
       const card = new SerieCard(s, this.actualCategory._id || "", this.client);
       await card.authChangeEvent(this.lastAuthEvent);

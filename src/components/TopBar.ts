@@ -1,7 +1,6 @@
 import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
 import AuthStatus from "../interfaces/AuthStatus";
 import IComponent from "../interfaces/Component";
-import { IAuthController } from "../interfaces/IAuthController";
 import { Route } from "../routes";
 import "../styles/TopBar.scss";
 

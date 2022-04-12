@@ -3,11 +3,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FirebaseApp } from "firebase/app";
 import AuthStatus from "../../interfaces/AuthStatus";
 import { isEmailSudo } from "./AuthUtil";
-import {
-  connectAuthEmulator,
-  GoogleAuthProvider,
-  signInWithRedirect,
-} from "firebase/auth";
 import { isDebug } from "../../../app.config";
 
 export type AuthChangeEvent = {
@@ -23,10 +18,10 @@ export default class FirebaseAuthController implements IAuthController {
   constructor(private readonly app: FirebaseApp) {
     this.auth = getAuth(this.app);
     if (isDebug()) {
-      //import("firebase/auth").then(({ connectAuthEmulator }) => {
-      connectAuthEmulator(this.auth, "http://localhost:9099", {
-        disableWarnings: true,
-        //});
+      import("firebase/auth").then(({ connectAuthEmulator }) => {
+        connectAuthEmulator(this.auth, "http://localhost:9099", {
+          disableWarnings: true,
+        });
       });
     }
     onAuthStateChanged(this.auth, async (user) => {
@@ -49,9 +44,9 @@ export default class FirebaseAuthController implements IAuthController {
     return this.status;
   }
   async login(): Promise<void> {
-    /*const { GoogleAuthProvider, signInWithRedirect } = await import(
+    const { GoogleAuthProvider, signInWithRedirect } = await import(
       "firebase/auth"
-    );*/
+    );
     const provider = new GoogleAuthProvider();
     await signInWithRedirect(this.auth, provider);
   }
