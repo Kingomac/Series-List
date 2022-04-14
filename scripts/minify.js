@@ -7,14 +7,18 @@ let jsfiles = [];
 let cssfiles = [];
 
 for await (const f of await fs.readdir("./dist/")) {
-  if (f.endsWith(".js")) jsfiles.push(f);
-  else if (f.endsWith(".css")) cssfiles.push(f);
+  if (f.endsWith(".js")) jsfiles.push("./dist/" + f);
+  else if (f.endsWith(".css")) cssfiles.push("./dist/" + f);
+}
+for await (const f of await fs.readdir("./dist/assets/")) {
+  if (f.endsWith(".js")) jsfiles.push("./dist/assets/" + f);
+  else if (f.endsWith(".css")) cssfiles.push("./dist/assets/" + f);
 }
 
 console.log("Minifying!");
 for await (const js of jsfiles) {
   console.log(js);
-  const source = await fs.readFile(path.join("./dist/", js), {
+  const source = await fs.readFile(js, {
     encoding: "utf-8",
   });
 
@@ -27,14 +31,14 @@ for await (const js of jsfiles) {
       toplevel: true,
     }
   ).code;
-  await fs.writeFile(path.join("./dist/", js), code, { encoding: "utf-8" });
+  await fs.writeFile(js, code, { encoding: "utf-8" });
   //await fs.writeFile(path.join("./dist/", js), code, "utf-8");
 }
 
 const purge = new PurgeCSS();
 const res = await purge.purge({
-  css: cssfiles.map((i) => `./dist/${i}`),
-  content: jsfiles.map((i) => `./dist/${i}`),
-  output: cssfiles.map((i) => `./dist/${i}`),
+  css: cssfiles.map((i) => `${i}`),
+  content: jsfiles.map((i) => `${i}`),
+  output: cssfiles.map((i) => `${i}`),
 });
 console.log(res);
