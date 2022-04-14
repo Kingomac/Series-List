@@ -5,7 +5,12 @@ import { isDebug } from "./app.config";
 export default defineConfig({
   base: "./",
   root: "./",
-  build: { outDir: "./dist" },
+  build: {
+    outDir: "./dist",
+    minify: "esbuild",
+    target: "esnext",
+    cssCodeSplit: true,
+  },
   plugins: [
     VitePWA({
       mode: isDebug() ? "development" : "production",

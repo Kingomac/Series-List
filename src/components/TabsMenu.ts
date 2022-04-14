@@ -31,7 +31,6 @@ export class TabsMenu extends IComponent {
     this.addCategTab.style.display = "none";
     this.addCategTab.id = "addtab";
     this.addCategTab.onclick = async () => await this.onRequestNewCateg!();
-    this.addCategTab.onauxclick = async () => {};
   }
 
   connectedCallback() {
@@ -53,20 +52,9 @@ export class TabsMenu extends IComponent {
     newTab.onDropSerie = (serie) => {
       this.onSerieDrop!({ serie, categoryId: tab._id! });
     };
-    newTab.oncontextmenu = async (ev) => await this.handleContextMenu(ev, tab);
+    newTab.onEditCateg = (categ) => this.onRequestEditCateg!(categ);
     this.tabs.unshift(newTab);
     this.insertBefore(this.tabs[0], this.addCategTab);
-  }
-
-  async handleContextMenu(ev: MouseEvent, categ: Category) {
-    ev.preventDefault();
-    const menu = await new ContextMenuBuilder()
-      .button("Editar", async () => await this.onRequestEditCateg!(categ))
-      .button("Eliminar", async () => {
-        alert("CHILLING BROOOOOO, CHILLING!!!!!!!!!");
-      })
-      .build({ mouseX: ev.pageX, mouseY: ev.pageY });
-    this.append(menu);
   }
 
   async addAllTab(tabs: ITab[]): Promise<void> {
@@ -81,7 +69,7 @@ export class TabsMenu extends IComponent {
           await this.setActiveTab(elT);
           this.onTabsClick!(tab);
         };
-        elT.oncontextmenu = async (ev) => await this.handleContextMenu(ev, t);
+        elT.onEditCateg = (categ) => this.onRequestEditCateg!(categ);
         elT.onDelete = this.onRequestDelete;
         return elT;
       })

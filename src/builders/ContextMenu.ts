@@ -46,17 +46,15 @@ export class ContextMenuBuilder {
   async build(
     x: { mouseY: number; mouseX: number } = { mouseX: 0, mouseY: 0 }
   ) {
-    document.onclick = document.onauxclick = () => {
-      document.querySelectorAll(".context-menu").forEach((i) => i.remove());
-    };
     this.container.className = "context-menu";
     for await (const i of this.buttons) {
       const li = document.createElement("li");
       const el = document.createElement("button");
       el.innerText = i.text;
-      el.onclick = async () => {
+      el.onclick = async (ev) => {
         await i.action();
         this.container.remove();
+        document.body.onclick = document.body.onclick = null;
       };
       this.list.append(li);
       li.append(el);
@@ -64,6 +62,16 @@ export class ContextMenuBuilder {
     this.shadowDom.append(this.list);
     this.list.style.top = `${x.mouseY}px`;
     this.list.style.left = `${x.mouseX}px`;
+    document.body.onclick = document.body.onauxclick = (ev) => {
+      console.log(ev.target, this.container.parentElement);
+      if (
+        ev.target != this.container &&
+        ev.target != this.container.parentElement
+      ) {
+        this.container.remove();
+        document.body.onclick = document.body.onclick = null;
+      }
+    };
     return this.container;
   }
 }

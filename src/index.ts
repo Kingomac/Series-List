@@ -15,6 +15,9 @@ import { registerSW } from "virtual:pwa-register";
 
 import "./styles/main.scss";
 window.onload = async () => {
+  /*document.oncontextmenu = (ev) => {
+    console.log(ev.target);
+  };*/
   if ("serviceWorker" in navigator) {
     /*navigator.serviceWorker.register(
       new URL("./service-worker.ts", import.meta.url),

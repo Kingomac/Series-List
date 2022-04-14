@@ -39,6 +39,7 @@ export class SerieCard extends IComponent {
 
     this.img.src = this.serie.image;
     this.img.alt = `Cover art of ${this.serie.name} (${this.serie.nameAlt})`;
+
     this.titleSpan.innerText = this.serie.name;
     this.chapter.innerText = "Capítulo: ".concat(this.serie.chapter.toString());
 
@@ -91,11 +92,23 @@ export class SerieCard extends IComponent {
     this.viewBtn.onclick = () => {
       window.open(this.serie.url, "_blank");
     };
+    this.oncontextmenu = async (ev: MouseEvent) => {
+      ev.preventDefault();
+      console.log("context menu for seriecard");
+      const menu = await new ContextMenuBuilder()
+        .button("Copiar título", async () => {
+          navigator.clipboard.writeText(this.serie.name);
+        })
+        .button("Copiar título alternativo", async () => {
+          navigator.clipboard.writeText(this.serie.nameAlt);
+        })
+        .build({ mouseX: ev.pageX, mouseY: ev.pageY });
+      this.append(menu);
+    };
+    this.ondragstart = (ev: DragEvent) => {
+      ev.dataTransfer?.setData("serie", JSON.stringify(this.serie));
+    };
   }
-
-  ondragstart = (ev: DragEvent) => {
-    ev.dataTransfer?.setData("serie", JSON.stringify(this.serie));
-  };
 
   saveChapter = async () => {
     if (this.initialChapter !== this.serie.chapter) {
@@ -117,19 +130,6 @@ export class SerieCard extends IComponent {
     setTimeout(() => {
       this.remove();
     }, 1000);
-  };
-
-  oncontextmenu = async (ev: MouseEvent) => {
-    ev.preventDefault();
-    const menu = await new ContextMenuBuilder()
-      .button("Copiar título", async () => {
-        navigator.clipboard.writeText(this.serie.name);
-      })
-      .button("Copiar título alternativo", async () => {
-        navigator.clipboard.writeText(this.serie.nameAlt);
-      })
-      .build({ mouseX: ev.pageX, mouseY: ev.pageY });
-    this.append(menu);
   };
 
   attributeChangedCallback(name: string, lastValue: any, newValue: any): void {
