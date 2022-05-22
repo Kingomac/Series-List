@@ -1,4 +1,4 @@
-import { AuthChangeEvent } from "../controllers/auth/FirebaseAuthController";
+import { AuthChangeEvent } from '../controllers/auth/FirebaseAuthController'
 
 export default abstract class IComponent extends HTMLElement {
   /**

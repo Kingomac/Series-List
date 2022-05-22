@@ -4,4 +4,4 @@ enum AuthStatus {
   SUDO,
 }
 
-export default AuthStatus;
+export default AuthStatus

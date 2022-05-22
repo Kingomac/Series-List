@@ -1,17 +1,17 @@
-import IComponent from "./Component";
-//import Modal from "bundle-text:../styles/Modal.scss";
+import IComponent from './Component'
+// import Modal from "bundle-text:../styles/Modal.scss";
 
 export default abstract class ModalView extends IComponent {
   onSubmit?(data: any): void;
-  private shadowDom: ShadowRoot;
-  protected window: HTMLDivElement = document.createElement("div");
-  private main: HTMLElement = document.createElement("main");
-  constructor() {
-    super();
-    this.shadowDom = this.attachShadow({ mode: "open" });
-    const styles = document.createElement("style");
-    //styles.textContent = Modal;
-    this.shadowDom.append(styles);
+  private shadowDom: ShadowRoot
+  protected window: HTMLDivElement = document.createElement('div')
+  private main: HTMLElement = document.createElement('main')
+  constructor () {
+    super()
+    this.shadowDom = this.attachShadow({ mode: 'open' })
+    const styles = document.createElement('style')
+    // styles.textContent = Modal;
+    this.shadowDom.append(styles)
     this.shadowDom.innerHTML = `
     <style>
 main {
@@ -171,9 +171,9 @@ padding: 0;
   }
 }
     </style>
-    `;
-    this.window.className = "window";
-    this.shadowDom.append(this.main);
-    this.main.append(this.window);
+    `
+    this.window.className = 'window'
+    this.shadowDom.append(this.main)
+    this.main.append(this.window)
   }
 }

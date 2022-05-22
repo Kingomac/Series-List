@@ -1,14 +1,14 @@
-import FirebaseClient from "./FirebaseClient";
+import FirebaseClient from './FirebaseClient'
 
-export async function migrateOld(x: { client: FirebaseClient }): Promise<void> {
-  console.time("Migrating from old");
-  const categs = ["viendo", "vistos", "favoritos", "abandonados", "pendientes"];
-  const { getDocs, collection } = await import("firebase/firestore/lite");
+export async function migrateOld (x: { client: FirebaseClient }): Promise<void> {
+  console.time('Migrating from old')
+  const categs = ['viendo', 'vistos', 'favoritos', 'abandonados', 'pendientes']
+  const { getDocs, collection } = await import('firebase/firestore/lite')
   for await (const c of categs) {
-    const categId = await x.client.addCategory({ name: c });
-    const docs = await getDocs(collection(x.client.db, c));
+    const categId = await x.client.addCategory({ name: c })
+    const docs = await getDocs(collection(x.client.db, c))
     docs.forEach(async (d) => {
-      const data = d.data();
+      const data = d.data()
       await x.client.addSerie(
         {
           name: data.nombre_jp,
@@ -16,11 +16,11 @@ export async function migrateOld(x: { client: FirebaseClient }): Promise<void> {
           image: data.imagen,
           chapter: data.capitulo,
           timestamp: data.actualizado_en,
-          url: "",
+          url: ''
         },
         categId
-      );
-    });
+      )
+    })
   }
-  console.timeEnd("Migrating from old");
+  console.timeEnd('Migrating from old')
 }

@@ -1,4 +1,4 @@
-import AuthStatus from "./AuthStatus";
+import AuthStatus from './AuthStatus'
 
 export interface IAuthController {
   onAuthChange?(x: {}): void;

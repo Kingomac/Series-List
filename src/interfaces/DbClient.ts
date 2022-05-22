@@ -1,4 +1,4 @@
-import { Category, Serie } from "./Models";
+import { Category, Serie } from './Models'
 
 export interface IDbClient {
   onInitialize?(): void;

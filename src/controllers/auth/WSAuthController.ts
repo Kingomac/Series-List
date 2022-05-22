@@ -1,53 +1,55 @@
-import AuthStatus from "../../interfaces/AuthStatus";
-import { IAuthController } from "../../interfaces/IAuthController";
+import AuthStatus from '../../interfaces/AuthStatus'
+import { IAuthController } from '../../interfaces/IAuthController'
+
+enum Permission {
+  R = 'read',
+  RW = 'read-write',
+}
 
 export default class WSAuthController implements IAuthController {
-  private permission: Permission = Permission.R;
-  static readonly AUTH_ITEM: string = "auth";
+  private permission: Permission = Permission.R
+  static readonly AUTH_ITEM: string = 'auth'
 
   onAuthChange?(x: { newAuth: Permission }): void;
 
-  constructor() {
-    let auth = window.localStorage.getItem(WSAuthController.AUTH_ITEM);
+  constructor () {
+    const auth = window.localStorage.getItem(WSAuthController.AUTH_ITEM)
     if (auth != null) {
-      this.permission = Permission.RW;
+      this.permission = Permission.RW
     }
   }
-  getStatus(): AuthStatus {
-    throw new Error("Method not implemented.");
+
+  getStatus (): AuthStatus {
+    throw new Error('Method not implemented.')
   }
 
-  isSudo(): boolean {
-    return this.permission == Permission.RW;
+  isSudo (): boolean {
+    return this.permission === Permission.RW
   }
 
-  login(x: { pass: string; url: string }): void {
-    const ws = new WebSocket(x.url);
+  login (x: { pass: string; url: string }): void {
+    const ws = new WebSocket(x.url)
     ws.onopen = () => {
-      ws.send(JSON.stringify({ pass: x.pass }));
-    };
+      ws.send(JSON.stringify({ pass: x.pass }))
+    }
     ws.onmessage = (ev) => {
-      if (ev.data == "OK") {
-        this.permission = Permission.RW;
+      if (ev.data === 'OK') {
+        this.permission = Permission.RW
       } else {
-        this.permission = Permission.R;
+        this.permission = Permission.R
       }
-      ws.close(1000);
+      ws.close(1000)
       if (this.onAuthChange !== undefined) {
-        this.onAuthChange({ newAuth: this.permission });
+        this.onAuthChange({ newAuth: this.permission })
       }
-    };
+    }
   }
 
-  logout(): void {
-    this.permission = Permission.R;
+  logout (): void {
+    this.permission = Permission.R
   }
-  remember(): void {
-    throw new Error("Method not implemented.");
-  }
-}
 
-enum Permission {
-  R = "read",
-  RW = "read-write",
+  remember (): void {
+    throw new Error('Method not implemented.')
+  }
 }
