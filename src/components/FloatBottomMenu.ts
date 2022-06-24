@@ -1,5 +1,7 @@
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 
+@CustomElement('sl-float-bottom-menu')
 export class FloatBottomMenu extends IComponent {
   onNewSerie?(): void;
   onAltSwitch?(x: { alt: boolean }): void;
@@ -22,5 +24,3 @@ export class FloatBottomMenu extends IComponent {
     }
   }
 }
-
-window.customElements.define('sl-float-bottom-menu', FloatBottomMenu)

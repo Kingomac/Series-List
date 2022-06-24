@@ -1,7 +1,9 @@
 import { Serie } from '../interfaces/Models'
 import '../styles/Modal.scss'
 import ModalView from '../interfaces/ModalView'
+import { CustomElement } from '../interfaces/CustomElement'
 
+@CustomElement('sl-edit-serie-modal')
 export default class EditSerieModal extends ModalView {
   onSubmit?(serie: Serie): void;
 
@@ -105,5 +107,3 @@ export default class EditSerieModal extends ModalView {
     this.chapterInput.value = this.serie.chapter.toString()
   }
 }
-
-window.customElements.define('sl-edit-serie-modal', EditSerieModal)

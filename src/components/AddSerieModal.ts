@@ -1,7 +1,9 @@
 import ModalView from '../interfaces/ModalView'
 import { Serie } from '../interfaces/Models'
 import { isDebug } from '../../app.config'
+import { CustomElement } from '../interfaces/CustomElement'
 
+@CustomElement('sl-add-serie-modal')
 export class AddSerieModal extends ModalView {
   onSubmit?(serie: Serie): Promise<void>;
 
@@ -67,19 +69,13 @@ export class AddSerieModal extends ModalView {
     this.modalClose.innerText = 'X'
     this.modalClose.onclick = () => this.remove()
     this.submitBtn.innerText = 'Añadir'
-    this.submitBtn.onclick = async () => {
-      const { runLoading } = await import('./RunLoading')
-      await runLoading(async () => {
-        await this.onSubmit!({
-          name: this.nameInput.value,
-          nameAlt: this.altNameInput.value,
-          chapter: this.chapterInput.valueAsNumber,
-          image: this.imgInput.value,
-          url: this.urlInput.value
-        })
-      }, this.submitBtn)
-      await this.clearInputs()
-      await this.generateData()
+    this.submitBtn.onclick = async () => await this.submit()
+    this.onkeydown = async (e) => {
+      if (e.key === 'Enter') {
+        await this.submit()
+      } else if (e.key === 'Escape') {
+        this.remove()
+      }
     }
     if (isDebug()) {
       this.submitBtn.oncontextmenu = async (e) => {
@@ -104,7 +100,22 @@ export class AddSerieModal extends ModalView {
     this.generateData()
   }
 
-  async clearInputs () {
+  private async submit () {
+    const { runLoading } = await import('./RunLoading')
+    await runLoading(async () => {
+      await this.onSubmit!({
+        name: this.nameInput.value,
+        nameAlt: this.altNameInput.value,
+        chapter: this.chapterInput.valueAsNumber,
+        image: this.imgInput.value,
+        url: this.urlInput.value
+      })
+    }, this.submitBtn)
+    await this.clearInputs()
+    await this.generateData()
+  }
+
+  private async clearInputs () {
     this.nameInput.value = ''
     this.altNameInput.value = ''
     this.imgInput.value = ''
@@ -112,7 +123,7 @@ export class AddSerieModal extends ModalView {
     this.chapterInput.value = '0'
   }
 
-  async generateData () {
+  private async generateData () {
     if (isDebug()) {
       const { default: Placeholders } = await import('../../test/Placeholders')
       const serie = await Placeholders.getRandomSerie()
@@ -124,5 +135,3 @@ export class AddSerieModal extends ModalView {
     }
   }
 }
-
-window.customElements.define('sl-add-serie-modal', AddSerieModal)

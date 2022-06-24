@@ -1,10 +1,13 @@
 import { ContextMenuBuilder } from '../builders/ContextMenu'
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 import { Category, Serie } from '../interfaces/Models'
 
 export interface ITab extends Category {
   url: string;
 }
+
+@CustomElement('sl-tab')
 export class Tab extends IComponent {
   public onActive?: () => void
   public onDropSerie?: (serie: Serie) => void
@@ -68,5 +71,3 @@ export class Tab extends IComponent {
     }
   }
 }
-
-window.customElements.define('sl-tab', Tab)

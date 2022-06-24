@@ -1,4 +1,5 @@
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 import '../styles/NavigationDrawer.scss'
 
 interface NavigatorItem {
@@ -6,6 +7,7 @@ interface NavigatorItem {
   name: string;
 }
 
+@CustomElement('sl-navigation-drawer')
 export default class NavigationDrawer extends IComponent {
   onItemClick?(x: NavigatorItem): void;
 
@@ -34,5 +36,3 @@ export default class NavigationDrawer extends IComponent {
     this.querySelector(`#${itemName}`)?.remove()
   }
 }
-
-window.customElements.define('sl-navigation-drawer', NavigationDrawer)

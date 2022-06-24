@@ -2,10 +2,12 @@ import { ContextMenuBuilder } from '../builders/ContextMenu'
 import { AuthChangeEvent } from '../controllers/auth/FirebaseAuthController'
 import AuthStatus from '../interfaces/AuthStatus'
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 import { IDbClient } from '../interfaces/DbClient'
 import { Serie } from '../interfaces/Models'
 import '../styles/SerieCard.scss'
 
+@CustomElement('sl-serie-card')
 export class SerieCard extends IComponent {
   private initialChapter: number
   private readonly titleSpan: HTMLSpanElement = document.createElement('span')
@@ -151,5 +153,3 @@ export class SerieCard extends IComponent {
     console.log('CARD AUTH CHANGE')
   }
 }
-
-window.customElements.define('sl-serie-card', SerieCard)

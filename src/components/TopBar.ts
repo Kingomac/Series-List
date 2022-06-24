@@ -1,9 +1,11 @@
 import { AuthChangeEvent } from '../controllers/auth/FirebaseAuthController'
 import AuthStatus from '../interfaces/AuthStatus'
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 import { Route } from '../routes'
 import '../styles/TopBar.scss'
 
+@CustomElement('sl-topbar')
 export default class TopBar extends IComponent {
   private static attrTitle: string = 'title'
   private titleSpan: HTMLSpanElement = document.createElement('span')
@@ -57,5 +59,3 @@ export default class TopBar extends IComponent {
     }
   }
 }
-
-window.customElements.define('sl-topbar', TopBar)

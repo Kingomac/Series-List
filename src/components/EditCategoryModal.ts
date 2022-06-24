@@ -1,6 +1,8 @@
+import { CustomElement } from '../interfaces/CustomElement'
 import ModalView from '../interfaces/ModalView'
 import { Category } from '../interfaces/Models'
 
+@CustomElement('sl-edit-category-modal')
 export class EditCategoryModal extends ModalView {
   onSubmit?(categ: Category): Promise<void>;
 
@@ -51,5 +53,3 @@ export class EditCategoryModal extends ModalView {
     }
   }
 }
-
-window.customElements.define('sl-edit-category-modal', EditCategoryModal)

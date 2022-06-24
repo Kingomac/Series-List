@@ -1,8 +1,10 @@
 import { APP_NAME } from '../../app.config'
 import IComponent from '../interfaces/Component'
+import { CustomElement } from '../interfaces/CustomElement'
 import { Category, Serie } from '../interfaces/Models'
 import { ITab, Tab } from './Tab'
 
+@CustomElement('sl-tabs-menu')
 export class TabsMenu extends IComponent {
   private tabs: Tab[]
   private addCategTab: Tab
@@ -122,5 +124,3 @@ export class TabsMenu extends IComponent {
     this.tabs = []
   }
 }
-
-window.customElements.define('sl-tabs-menu', TabsMenu)
