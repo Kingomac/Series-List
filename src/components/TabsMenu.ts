@@ -30,6 +30,7 @@ export class TabsMenu extends IComponent {
     this.addCategTab.style.display = 'none'
     this.addCategTab.id = 'addtab'
     this.addCategTab.onclick = async () => await this.onRequestNewCateg!()
+    this.addCategTab.oncontextmenu = () => {}
   }
 
   connectedCallback () {
