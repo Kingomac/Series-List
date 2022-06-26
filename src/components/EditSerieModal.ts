@@ -82,21 +82,13 @@ export default class EditSerieModal extends ModalView {
     }
 
     this.submitBtn.innerText = 'Guardar'
-    this.submitBtn.onclick = async () => {
-      const { runLoading } = await import('./RunLoading')
-      await runLoading(async () => {
-        await this.onSubmit!({
-          _id: this.serie._id,
-          name: this.nameInput.value,
-          nameAlt: this.altNameInput.value,
-          chapter: this.chapterInput.valueAsNumber,
-          image: this.imgInput.value,
-          url: this.urlInput.value,
-          timestamp: new Date()
-        })
-      }, this.submitBtn)
-      this.disconnectedCallback!()
-      this.remove()
+    this.submitBtn.onclick = this.submit
+    this.onkeydown = async (ev) => {
+      if (ev.key === 'Enter') {
+        await this.submit()
+      } else if (ev.key === 'Escape') {
+        this.remove()
+      }
     }
 
     this.nameInput.value = this.serie.name
@@ -105,5 +97,22 @@ export default class EditSerieModal extends ModalView {
     this.imgInput.value = this.serie.image
     this.urlInput.value = this.serie.url
     this.chapterInput.value = this.serie.chapter.toString()
+  }
+
+  private submit = async () => {
+    const { runLoading } = await import('./RunLoading')
+    await runLoading(async () => {
+      await this.onSubmit!({
+        _id: this.serie._id,
+        name: this.nameInput.value,
+        nameAlt: this.altNameInput.value,
+        chapter: this.chapterInput.valueAsNumber,
+        image: this.imgInput.value,
+        url: this.urlInput.value,
+        timestamp: new Date()
+      })
+    }, this.submitBtn)
+    this.disconnectedCallback!()
+    this.remove()
   }
 }

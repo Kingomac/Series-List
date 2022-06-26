@@ -42,14 +42,23 @@ export class EditCategoryModal extends ModalView {
     }
 
     this.submitBtn.innerText = 'Renombrar'
-    this.submitBtn.onclick = async () => {
-      console.log('Edit category with name', this.nameInput.value)
-      await this.onSubmit!({
-        _id: this.categ._id!,
-        name: this.nameInput.value,
-        timestamp: new Date()
-      })
-      this.remove()
+    this.submitBtn.onclick = this.submit
+    this.onkeydown = async (ev) => {
+      if (ev.key === 'Enter') {
+        await this.submit()
+      } else if (ev.key === 'Escape') {
+        this.remove()
+      }
     }
+  }
+
+  private submit = async () => {
+    console.log('Edit category with name', this.nameInput.value)
+    await this.onSubmit!({
+      _id: this.categ._id!,
+      name: this.nameInput.value,
+      timestamp: new Date()
+    })
+    this.remove()
   }
 }
