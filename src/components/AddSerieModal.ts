@@ -32,7 +32,6 @@ export class AddSerieModal extends ModalView {
     inputsContainer.className = 'inputs-container'
     allContainer.className = 'all-container'
     this.imgPrev.className = 'img-prev'
-    const autocompleteBtn = document.createElement('button')
     const suggestionList = new SuggestionsList()
     const suggestionListAlt = new SuggestionsList()
 
@@ -53,8 +52,7 @@ export class AddSerieModal extends ModalView {
       separator,
       allContainer,
       separator2,
-      this.submitBtn,
-      autocompleteBtn
+      this.submitBtn
     )
     this.titleDiv.append(this.titleSpan, this.modalClose)
 
@@ -111,7 +109,6 @@ export class AddSerieModal extends ModalView {
       this.imgPrev.src = this.imgInput.value
     }
 
-    autocompleteBtn.innerText = 'Autocompletar'
     this.nameInput.oninput = (mEv) => {
       if (this.nameInput.value.length < 3) return
       if (this.suggestionsWorker === undefined) {
