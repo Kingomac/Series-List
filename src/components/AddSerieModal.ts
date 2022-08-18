@@ -2,6 +2,7 @@ import ModalView from '../interfaces/ModalView'
 import { Serie } from '../interfaces/Models'
 import { isDebug } from '../../app.config'
 import { CustomElement } from '../interfaces/CustomElement'
+import { SuggestionsList } from './SuggestionsList'
 
 @CustomElement('sl-add-serie-modal')
 export class AddSerieModal extends ModalView {
@@ -19,6 +20,7 @@ export class AddSerieModal extends ModalView {
   private modalClose = document.createElement('button')
 
   private submitBtn = document.createElement('button')
+  private suggestionsWorker?: Worker
 
   async connectedCallback () {
     const separator = document.createElement('div')
@@ -30,10 +32,15 @@ export class AddSerieModal extends ModalView {
     inputsContainer.className = 'inputs-container'
     allContainer.className = 'all-container'
     this.imgPrev.className = 'img-prev'
+    const autocompleteBtn = document.createElement('button')
+    const suggestionList = new SuggestionsList()
+    const suggestionListAlt = new SuggestionsList()
 
     inputsContainer.append(
       this.nameInput,
+      suggestionList,
       this.altNameInput,
+      suggestionListAlt,
       this.imgInput,
       this.urlInput,
       this.chapterInput
@@ -46,7 +53,8 @@ export class AddSerieModal extends ModalView {
       separator,
       allContainer,
       separator2,
-      this.submitBtn
+      this.submitBtn,
+      autocompleteBtn
     )
     this.titleDiv.append(this.titleSpan, this.modalClose)
 
@@ -67,7 +75,12 @@ export class AddSerieModal extends ModalView {
     this.titleSpan.innerText = 'Añadir serie'
     this.modalClose.className = 'title-btn'
     this.modalClose.innerText = 'X'
-    this.modalClose.onclick = () => this.remove()
+    this.modalClose.onclick = () => {
+      if (this.suggestionsWorker !== undefined) {
+        this.suggestionsWorker.terminate()
+      }
+      this.remove()
+    }
     this.submitBtn.innerText = 'Añadir'
     this.submitBtn.onclick = async () => await this.submit()
     this.onkeydown = async (e) => {
@@ -97,6 +110,24 @@ export class AddSerieModal extends ModalView {
     this.imgInput.oninput = () => {
       this.imgPrev.src = this.imgInput.value
     }
+
+    autocompleteBtn.innerText = 'Autocompletar'
+    this.nameInput.oninput = (mEv) => {
+      if (this.nameInput.value.length < 3) return
+      if (this.suggestionsWorker === undefined) {
+        this.suggestionsWorker = new Worker(new URL('../../public/workers/autocomplete.js', import.meta.url), { type: 'classic' })
+      }
+      suggestionList.generateList!({ input: this.nameInput, worker: this.suggestionsWorker })
+    }
+
+    this.altNameInput.oninput = () => {
+      if (this.altNameInput.value.length < 3) return
+      if (this.suggestionsWorker === undefined) {
+        this.suggestionsWorker = new Worker(new URL('../../public/workers/autocomplete.js', import.meta.url), { type: 'classic' })
+      }
+      suggestionListAlt.generateList!({ input: this.altNameInput, worker: this.suggestionsWorker })
+    }
+
     this.generateData()
   }
 
