@@ -2,8 +2,8 @@
 self.onmessage = async (msg) => {
   /** @type string */
   const term = msg.data
-  const firstLet = term.charAt(0)
-  const link = `/assets/anime_completions/filtered_${firstLet.toUpperCase()}.csv`
+  const firstLet = term.charAt(0) + term.charAt(1)
+  const link = `/assets/anime_completions/${firstLet.toLowerCase()}.txt`
   if (link === undefined) {
     postMessage('sadge')
   } else {
@@ -12,9 +12,7 @@ self.onmessage = async (msg) => {
     const toret = []
     for await (const line of res.split(/\r?\n/)) {
       if (line.toLowerCase().startsWith(term.toLowerCase())) {
-        for await (const i of line.split('\t')) {
-          if (i !== '') toret.push(i)
-        }
+        toret.push(line)
       }
     }
     postMessage(toret)
