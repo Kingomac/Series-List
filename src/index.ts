@@ -11,20 +11,9 @@ import { IDbClient } from "./interfaces/DbClient";
 import { IAuthController } from "./interfaces/IAuthController";
 import { Route } from "./routes";
 import View from "./interfaces/View";
-
 import "./styles/main.scss";
-window.onload = async () => {
-  /* document.oncontextmenu = (ev) => {
-    console.log(ev.target);
-  }; */
-  if ("serviceWorker" in navigator) {
-    /* navigator.serviceWorker.register(
-      new URL("./service-worker.ts", import.meta.url),
-      { type: "module" }
-    ); */
-    //registerSW()
-  }
 
+window.onload = async () => {
   const main = document.querySelector("main");
   if (main == null) throw new Error("Main not found");
   const appDiv = document.createElement("div");
