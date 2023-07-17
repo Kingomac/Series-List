@@ -1,18 +1,18 @@
-import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
-import { isDebug } from './app.config'
+import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
+import { isDebug } from "./app.config";
 
 export default defineConfig({
-  base: './',
-  root: './',
+  base: "./",
+  root: "./",
   build: {
-    outDir: './dist',
-    minify: 'terser',
-    target: 'esnext',
-    cssCodeSplit: true
+    outDir: "./dist",
+    minify: "terser",
+    target: "esnext",
+    cssCodeSplit: true,
   },
   plugins: [
-    VitePWA({
+    /*VitePWA({
       mode: isDebug() ? 'development' : 'production',
       registerType: 'autoUpdate',
       srcDir: './src',
@@ -77,6 +77,6 @@ export default defineConfig({
           }
         ]
       }
-    })
-  ]
-})
+    })*/
+  ],
+});
